@@ -10,10 +10,14 @@ import java.util.List;
 public class FirstController {
 
     @GetMapping("/")
-    public  String test() {return "First Controller";}
+    public List<String> test() {
+        System.out.println("ㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱ");
+        return Arrays.asList("인사", "첫번재");
+    }
 
     @GetMapping("/showMe")
     public List<String> hello() {
+        System.out.println("sssssssssssss");
         return Arrays.asList("인사", "두번째");
     }
 }
