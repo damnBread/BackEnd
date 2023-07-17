@@ -13,18 +13,18 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @RequiredArgsConstructor
 //@RequestMapping("/exam/svc/v1")
-public class UserController {
+public class PostController {
 
-    @Autowired
-    private UserService userService;
-
-    @GetMapping("/users")
-    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
-        System.out.println("rrrrrrrrrrrrr");
-        List<User> list = userService.getUsers();
-        return ResponseEntity.ok().body(list);
-
-    }
+//    @Autowired
+//    private UserService userService;
+//
+//    @GetMapping("/posts")
+//    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
+//        System.out.println("rrrrrrrrrrrrr");
+//        List<User> list = userService.getUsers();
+//        return ResponseEntity.ok().body(list);
+//
+//    }
 
 
 }
