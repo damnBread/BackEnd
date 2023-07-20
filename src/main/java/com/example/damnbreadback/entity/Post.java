@@ -18,7 +18,7 @@ public class Post {
     private String location; // 근무지역
     private int hourPay; // 시급
     private boolean payMethod; // 임금 지불 방법 (true : 의뢰인 직접 지급 / false : 당일 현장 지급)
-    private String job; // 업/직종
+    private ArrayList<String> job; // 업/직종
 
     private Date workStart; // 근무 시작 일시
     private Date workFinish; // 근무 종료 일시
