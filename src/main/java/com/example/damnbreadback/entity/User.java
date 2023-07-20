@@ -18,7 +18,7 @@ public class User {
     private String nickname; // 닉네임
     private String password; // 비밀번호
     private String phone; // 전화번호
-    private String location; // 거주지
+    private HashMap<String, Double> location; // 거주지
 
     // firebase timestamp type
     private Date birth; // 생년월일
@@ -27,7 +27,7 @@ public class User {
     private int score; // 점수
     private HashMap<String, Integer> career; // 경력 사항
     private ArrayList<String> hopeJob; // 희망 업/직종
-    private ArrayList<String> hopeLocation; // 희망 지역
+    private ArrayList<HashMap<String, Double>> hopeLocation; // 희망 지역
     private HashMap<String, Boolean> isPublic; // 정보 공개 여부
 
     private ArrayList<History> history; // 땜빵 이력
