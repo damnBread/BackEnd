@@ -20,4 +20,16 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsers() throws ExecutionException, InterruptedException {
         return userDao.getUsers();
     }
+
+    @Override
+    public User loginCheck(String id, String pw) throws ExecutionException, InterruptedException {
+        return userDao.findUser(id, pw);
+    }
+
+    @Override
+    public void addUser(User user) throws ExecutionException, InterruptedException {
+        userDao.insertUser(user);
+    }
+
+
 }
