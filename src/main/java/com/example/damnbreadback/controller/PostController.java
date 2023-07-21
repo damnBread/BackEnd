@@ -4,6 +4,7 @@ import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.service.PostService;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +20,15 @@ public class PostController {
     private PostService postService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> getAllPosts() throws ExecutionException, InterruptedException {
         List<Post> list = postService.getPosts();
         return ResponseEntity.ok().body(list);
     }
 
+    @RequestMapping(path="/new", method = RequestMethod.POST)
+    public ResponseEntity<Object> createPost(@RequestBody Post post) throws ExecutionException, InterruptedException {
 
+        postService.createPost(post);
+        return new ResponseEntity<> (post, HttpStatus.OK);
+    }
 }

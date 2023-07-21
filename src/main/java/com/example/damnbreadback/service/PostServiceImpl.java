@@ -22,4 +22,10 @@ public class PostServiceImpl implements PostService {
     public List<Post> getPosts() throws ExecutionException, InterruptedException {
         return postDao.getPosts();
     }
+
+    @Override
+    public void createPost(Post post) throws ExecutionException, InterruptedException {
+        postDao.createPosts(post);
+    }
+
 }
