@@ -9,4 +9,6 @@ public interface UserService {
 
     List<User> getUsers() throws ExecutionException, InterruptedException;
 
+    User loginCheck(String id, String pw) throws ExecutionException, InterruptedException;
+    void addUser(User user) throws ExecutionException, InterruptedException;
 }
