@@ -31,4 +31,18 @@ public class PostController {
         postService.createPost(post);
         return new ResponseEntity<> (post, HttpStatus.OK);
     }
+
+//    @RequestMapping(path="/{postNum}", method = RequestMethod.GET)
+//    public ResponseEntity<Object> getPost(@PathVariable String postNum) throws ExecutionException, InterruptedException{
+//
+//        Post post = postService.getPost(postNum);
+//        return ResponseEntity.ok().body(post);
+//    }
+
+    @RequestMapping(path="/detail", method = RequestMethod.GET)
+    public ResponseEntity<Object> getPost(@RequestParam String postNum) throws ExecutionException, InterruptedException{
+
+        Post post = postService.getPost(postNum);
+        return ResponseEntity.ok().body(post);
+    }
 }

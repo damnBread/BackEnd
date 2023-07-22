@@ -28,4 +28,9 @@ public class PostServiceImpl implements PostService {
         postDao.createPosts(post);
     }
 
+    @Override
+    public Post getPost(String postName) throws ExecutionException, InterruptedException {
+        return postDao.getPost(postName);
+    }
+
 }
