@@ -36,7 +36,7 @@ public class Post {
 
     private boolean genderLimit; //성별 조건 (true : 남자, false : 여자)
     private HashMap<String , Integer> ageLimit; // 나이 조건
-    private int careerLimit; // 경력 조건
+    private int careerLimit; // 해당 업직종에 대한 경력 조건
 
     private ArrayList<String> scrap; //스크랩
 
