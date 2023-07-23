@@ -1,4 +1,4 @@
-package com.example.damnbreadback.SessionManager;
+package com.example.damnbreadback.sessionManager;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ public class SessionManager {
     private Map<String, Object> sessionStore = new ConcurrentHashMap<>();
 
     //## 세션 생성 ##//
-    public void createSession(Object value, HttpServletResponse response) {
+    public String  createSession(Object value, HttpServletResponse response) {
         //세션 id(UUID)를 생성하고, 값을 세션에 저장
         String sessionId = UUID.randomUUID().toString();
         sessionStore.put(sessionId, value);
@@ -25,6 +25,8 @@ public class SessionManager {
         //쿠키 생성
         Cookie mySessionCookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
         response.addCookie(mySessionCookie);
+
+        return sessionId;
     }
 
     //## 세션 조회 ##//
