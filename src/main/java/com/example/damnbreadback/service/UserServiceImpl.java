@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private final UserDao userDao;
-    
+
     @Override
     public List<User> getUsers() throws ExecutionException, InterruptedException {
         return userDao.getUsers();
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
         return userDao.findUser(id, pw);
     }
 
-    
+
     // 회원가입 -> 회원 정보 중복 확인
     @Override
     public Boolean verifyId(String id) throws ExecutionException, InterruptedException {
@@ -93,6 +94,16 @@ public class UserServiceImpl implements UserService {
     public List<User> getRankScore() throws ExecutionException, InterruptedException {
         List<User> users = userDao.getRankScore();
         return users;
+    }
+
+    @Override
+    public String getUserId(String id) throws ExecutionException, InterruptedException {
+        return userDao.getUserId(id);
+    }
+
+    @Override
+    public List<String> getBookmarks(String user) throws ExecutionException, InterruptedException {
+        return userDao.getScraps(user);
     }
 
 

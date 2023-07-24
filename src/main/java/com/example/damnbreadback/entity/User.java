@@ -32,7 +32,7 @@ public class User {
 
     private ArrayList<History> history; // 땜빵 이력
 
-
+    private ArrayList<String> scrap; // 북마크 게시물
 
 
 }

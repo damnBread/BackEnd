@@ -4,6 +4,7 @@ import com.example.damnbreadback.entity.LoginRequest;
 import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -25,4 +26,8 @@ public interface UserService {
     // 인재정보 rank 데이터 get
     List<User> getRankScore() throws ExecutionException, InterruptedException;
 
+
+    String getUserId(String id) throws ExecutionException, InterruptedException;
+
+    List<String> getBookmarks(String user) throws ExecutionException, InterruptedException;
 }
