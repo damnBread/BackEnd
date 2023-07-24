@@ -25,14 +25,16 @@ public class MyPageController {
 
     @GetMapping("/mypage/{userid}/bookmark")
     public ResponseEntity<Object> getBookmarks(@PathVariable String userid) throws ExecutionException, InterruptedException {
-        String user = userService.getUserId(userid);
-        List<String> bookmarked = userService.getBookmarks(user);
-        ArrayList<Post> bookmarkedPosts = new ArrayList<Post>();
-        for (String bookmarkedPost:bookmarked) {
-            bookmarkedPosts.add(postService.getPost(bookmarkedPost));
-        }
+//        String user = userService.getUserId(userid); // 세션에서 user 객체 가져오기
+//        List<String> bookmarked = userService.getBookmarks(user); // user 객체에서 scrap arraylist 뽑기
+//        ArrayList<Post> bookmarkedPosts = new ArrayList<Post>(); // scrap arraylist 통해서 post 컬랙션 뒤지고 객체로 가져오기
+//        for (String bookmarkedPost:bookmarked) {
+//            bookmarkedPosts.add(postService.getPost(bookmarkedPost));
+//        }
+//
+//        return ResponseEntity.ok().body(bookmarkedPosts);
 
-        return ResponseEntity.ok().body(bookmarkedPosts);
+        return null;
 
     }
 }

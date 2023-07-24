@@ -45,4 +45,15 @@ public class PostController {
         Post post = postService.getPost(postNum);
         return ResponseEntity.ok().body(post);
     }
+
+    @RequestMapping(path="/detail/bookmark", method = RequestMethod.POST)
+    public ResponseEntity<Object> bookmark(@RequestBody String userId, @RequestBody String postNum) throws  ExecutionException, InterruptedException{
+
+
+
+        return ResponseEntity.ok().body(null);
+    }
+
+    //@RequestMapping(path="/filter", method = RequestMethod.GET)
+    //public ResponseEntity<Object> filtering(@RequestParam String)
 }
