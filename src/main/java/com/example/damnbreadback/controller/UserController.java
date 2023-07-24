@@ -95,26 +95,31 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signupRequest(@RequestBody SignupRequest signupRequest) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> signupRequest(@RequestBody SignupRequest signupRequest) throws ExecutionException, InterruptedException {
         User user =  userService.addUser(signupRequest);
-        return new ResponseEntity<User>(user, HttpStatus.CREATED);
+        if(user == null) return new ResponseEntity<Object>("null exception", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(user, HttpStatus.CREATED);
     }
 
 
     @GetMapping("/signup/verify/id")
     public ResponseEntity<Object> verifyId(@RequestParam String id) throws ExecutionException, InterruptedException{
-        Boolean verifyResult = userService.verifyId(id);
-        return ResponseEntity.ok().body(verifyResult);
+        String verifyResult = userService.verifyId(id);
+        System.out.println(verifyResult);
+        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
+        else return ResponseEntity.ok().body(verifyResult);
     }
     @GetMapping("/signup/verify/nickname")
     public ResponseEntity<Object> verifyNickname(@RequestParam String nickname) throws ExecutionException, InterruptedException{
-        Boolean verifyResult = userService.verifyId(nickname);
-        return ResponseEntity.ok().body(verifyResult);
+        String verifyResult = userService.verifyId(nickname);
+        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
+        else return ResponseEntity.ok().body(verifyResult);
     }
     @GetMapping("/signup/verify/email")
     public ResponseEntity<Object> verifyEmail(@RequestParam String email) throws ExecutionException, InterruptedException{
-        Boolean verifyResult = userService.verifyId(email);
-        return ResponseEntity.ok().body(verifyResult);
+        String verifyResult = userService.verifyId(email);
+        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
+        else return ResponseEntity.ok().body(verifyResult);
     }
 
     @PostMapping("/logout")

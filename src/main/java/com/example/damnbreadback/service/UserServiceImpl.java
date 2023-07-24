@@ -36,57 +36,69 @@ public class UserServiceImpl implements UserService {
 
     // 회원가입 -> 회원 정보 중복 확인
     @Override
-    public Boolean verifyId(String id) throws ExecutionException, InterruptedException {
-        return userDao.findId(id);
+    public String verifyId(String id) throws ExecutionException, InterruptedException {
+        if(id == null) return "null exception";
+        return userDao.findId(id).toString();
     }
 
     @Override
-    public Boolean verifyNickname(String nickname) throws ExecutionException, InterruptedException {
-        return userDao.findNickname(nickname);
+    public String verifyNickname(String nickname) throws ExecutionException, InterruptedException {
+        if(nickname == null) return "null exception";
+        return userDao.findNickname(nickname).toString();
     }
 
     @Override
-    public Boolean verifyEmail(String email) throws ExecutionException, InterruptedException {
-        return userDao.findEmail(email);
+    public String verifyEmail(String email) throws ExecutionException, InterruptedException {
+        if(email == null) return "null exception";
+        return userDao.findEmail(email).toString();
     }
 
 
     // 회원가입 -> 신규 회원 저장
     @Override
     public User addUser(SignupRequest signupRequest) throws ExecutionException, InterruptedException {
-        User user = new User();
+        if(signupRequest.getId() == null || signupRequest.getBirth() == null ||
+                signupRequest.getEmail() == null || signupRequest.getHome() == null ||
+                signupRequest.getHopeJob() == null || signupRequest.getNickname() == null ||
+                signupRequest.getPw() == null || signupRequest.getPhone() == null ||
+                signupRequest.getName() == null || signupRequest.getHopeLocation() == null) {
+            return null;
+        }
 
-        // service로 옮기기..... -> MVC .
-        user.setPassword(signupRequest.getPw());
-        user.setName(signupRequest.getName());
-        user.setEmail(signupRequest.getEmail());
-        user.setNickname(signupRequest.getNickname());
-        user.setPhone(signupRequest.getPhone());
-        user.setBirth(signupRequest.getBirth());
-        user.setGender(signupRequest.isGender());
-        user.setHopeJob(signupRequest.getHopeJob());
-        user.setHopeLocation(signupRequest.getHopeLocation());
-        user.setHome(signupRequest.getHome());
+        else {
+            User user = new User();
+            user.setPassword(signupRequest.getPw());
+            user.setName(signupRequest.getName());
+            user.setEmail(signupRequest.getEmail());
+            user.setNickname(signupRequest.getNickname());
+            user.setPhone(signupRequest.getPhone());
+            user.setBirth(signupRequest.getBirth());
+            user.setGender(signupRequest.isGender());
+            user.setHopeJob(signupRequest.getHopeJob());
+            user.setHopeLocation(signupRequest.getHopeLocation());
+            user.setHome(signupRequest.getHome());
 
-        user.setNoShow(0);
-        user.setScore(0);
-        user.setCareer(null);
-        user.setJoinDate(new Date()); // 가입하는 현재 시간 저장
+            user.setNoShow(0);
+            user.setScore(0);
+            user.setCareer(null);
+            user.setJoinDate(new Date()); // 가입하는 현재 시간 저장
 
-        HashMap<String, Boolean> isPublicMap = new HashMap<>();
-        isPublicMap.put("birth", true);
-        isPublicMap.put("career", true);
-        isPublicMap.put("email", true);
-        isPublicMap.put("gender", true);
-        isPublicMap.put("hope-job", true);
-        isPublicMap.put("location", true);
-        isPublicMap.put("name", true);
-        isPublicMap.put("phone", true);
-        user.setIsPublic(isPublicMap);
+            HashMap<String, Boolean> isPublicMap = new HashMap<>();
+            isPublicMap.put("birth", true);
+            isPublicMap.put("career", true);
+            isPublicMap.put("email", true);
+            isPublicMap.put("gender", true);
+            isPublicMap.put("hope-job", true);
+            isPublicMap.put("location", true);
+            isPublicMap.put("name", true);
+            isPublicMap.put("phone", true);
+            user.setIsPublic(isPublicMap);
 
-        userDao.insertUser(user);
+            userDao.insertUser(user);
 
-        return user;
+            return user;
+        }
+
     }
 
     // 인재정보 -> rank 정보 get
