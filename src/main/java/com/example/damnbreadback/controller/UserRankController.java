@@ -4,7 +4,6 @@ import com.example.damnbreadback.entity.LoginRequest;
 import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.UserService;
-import com.example.damnbreadback.sessionManager.SessionManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,9 +41,10 @@ public class UserRankController {
     }
 
     //인재 상세 정보
-//    @PostMapping("/damnrank/{userid}")
-//    public ResponseEntity<Object> getUserDetail(@PathVariable id) throws ExecutionException, InterruptedException {
-//
-//    }
+    @PostMapping("/damnrank")
+    public ResponseEntity<Object> getUserDetail() throws ExecutionException, InterruptedException {
+
+        return ResponseEntity.ok().body("success~~");
+    }
 
 }
