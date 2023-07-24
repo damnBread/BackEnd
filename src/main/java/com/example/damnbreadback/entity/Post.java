@@ -12,8 +12,6 @@ import java.util.HashMap;
 @ToString
 public class Post {
 
-    private String id;
-
     private String branchName; // 점포명
     private String location; // 근무지역
     private int hourPay; // 시급
