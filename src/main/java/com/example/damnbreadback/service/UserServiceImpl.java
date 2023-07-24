@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -23,6 +24,8 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsers() throws ExecutionException, InterruptedException {
         return userDao.getUsers();
     }
+
+
 
     @Override
     public User loginCheck(String id, String pw) throws ExecutionException, InterruptedException {
@@ -79,6 +82,16 @@ public class UserServiceImpl implements UserService {
         userDao.insertUser(user);
 
         return user;
+    }
+
+    @Override
+    public String getUserId(String id) throws ExecutionException, InterruptedException {
+        return userDao.getUserId(id);
+    }
+
+    @Override
+    public List<String> getBookmarks(String user) throws ExecutionException, InterruptedException {
+        return userDao.getScraps(user);
     }
 
 

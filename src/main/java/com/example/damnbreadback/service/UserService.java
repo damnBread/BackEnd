@@ -4,6 +4,7 @@ import com.example.damnbreadback.entity.LoginRequest;
 import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -17,4 +18,8 @@ public interface UserService {
     Boolean verifyNickname(String nickname) throws ExecutionException, InterruptedException;
     Boolean verifyEmail(String email) throws ExecutionException, InterruptedException;
     User addUser(SignupRequest signupRequest) throws ExecutionException, InterruptedException ;
+
+    String getUserId(String id) throws ExecutionException, InterruptedException;
+
+    List<String> getBookmarks(String user) throws ExecutionException, InterruptedException;
 }

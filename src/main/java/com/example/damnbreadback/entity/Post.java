@@ -38,6 +38,4 @@ public class Post {
     private HashMap<String , Integer> ageLimit; // 나이 조건
     private int careerLimit; // 해당 업직종에 대한 경력 조건
 
-    private ArrayList<String> scrap; //스크랩
-
 }

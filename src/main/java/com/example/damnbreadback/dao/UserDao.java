@@ -4,6 +4,8 @@ import com.example.damnbreadback.entity.User;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.database.GenericTypeIndicator;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -32,6 +34,19 @@ public class UserDao {
         db.collection(COLLECTION_NAME).add(
                 user
         );
+    }
+
+    public String getUserId(String id) throws ExecutionException, InterruptedException {
+        String user = null;
+        CollectionReference cities = db.collection(COLLECTION_NAME);
+        Query query = cities.whereEqualTo("id", id);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+        for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+            user = document.getId();
+        }
+
+        return user;
     }
 
 
@@ -85,6 +100,31 @@ public class UserDao {
             }
         }
         return false;
+    }
+
+    public List<String> getScraps(String user) throws ExecutionException, InterruptedException{
+        DocumentReference docRef = db.collection(COLLECTION_NAME).document(user);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+        Object obj = document.get("scrap");
+        List<?> list = new ArrayList<>();
+        if (obj.getClass().isArray()) {
+            list = Arrays.asList((Object[])obj);
+        } else if (obj instanceof Collection) {
+            list = new ArrayList<>((Collection<?>)obj);
+        }
+        return (List<String>) list;
+
+//        ApiFuture<DocumentSnapshot> future = docRef.get();
+//        List<String> scraps = null;
+//
+//        DocumentSnapshot document = future.get();
+//        if (document.exists()) {
+//            scraps = document.get("scrap", List.class);
+//        } else {
+//            return null;
+//        }
+
     }
 
 }
