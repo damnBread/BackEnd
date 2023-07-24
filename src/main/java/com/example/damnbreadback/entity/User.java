@@ -11,7 +11,7 @@ import java.util.HashMap;
 @Setter
 @ToString
 public class User {
-
+    private Date joinDate; // 가입한 날짜
     private String id;
     private String name; // 이름
     private String email; // 이메일

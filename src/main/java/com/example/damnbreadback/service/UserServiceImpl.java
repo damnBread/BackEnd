@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -18,17 +20,20 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private final UserDao userDao;
-
+    
     @Override
     public List<User> getUsers() throws ExecutionException, InterruptedException {
         return userDao.getUsers();
     }
 
+    // 로그인
     @Override
     public User loginCheck(String id, String pw) throws ExecutionException, InterruptedException {
         return userDao.findUser(id, pw);
     }
 
+    
+    // 회원가입 -> 회원 정보 중복 확인
     @Override
     public Boolean verifyId(String id) throws ExecutionException, InterruptedException {
         return userDao.findId(id);
@@ -45,6 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    // 회원가입 -> 신규 회원 저장
     @Override
     public User addUser(SignupRequest signupRequest) throws ExecutionException, InterruptedException {
         User user = new User();
@@ -64,6 +70,7 @@ public class UserServiceImpl implements UserService {
         user.setNoShow(0);
         user.setScore(0);
         user.setCareer(null);
+        user.setJoinDate(new Date()); // 가입하는 현재 시간 저장
 
         HashMap<String, Boolean> isPublicMap = new HashMap<>();
         isPublicMap.put("birth", true);
@@ -79,6 +86,13 @@ public class UserServiceImpl implements UserService {
         userDao.insertUser(user);
 
         return user;
+    }
+
+    // 인재정보 -> rank 정보 get
+    @Override
+    public List<User> getRankScore() throws ExecutionException, InterruptedException {
+        List<User> users = userDao.getRankScore();
+        return users;
     }
 
 

@@ -35,25 +35,29 @@ public class UserDao {
     }
 
 
+    // 로그인 -> user 정보 찾기
     public User findUser(String id, String pw) throws ExecutionException, InterruptedException {
         User user = null;
         ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot document : documents) {
             user = document.toObject(User.class);
+
             if(user.getId().equals(id)){
+                System.out.println(user.getPassword() +"//"+ pw);
                 if(user.getPassword().equals(pw)){
-                    return user;
+                    System.out.println(user.getPassword() + "/" + pw);
                 }
                 else {
                     user.setId("incorrect password");
-                    return user;
                 }
+                return user;
             }
         }
         return user;
     }
 
+    // 회원가입 -> 중복확인
     public Boolean findId(String id) throws ExecutionException, InterruptedException {
         ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
@@ -85,6 +89,25 @@ public class UserDao {
             }
         }
         return false;
+    }
+
+    // 인재정보 가져오기. -> 페이징 (20명씩)
+    public List<User> getRankScore() throws ExecutionException, InterruptedException {
+            ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME)
+                    .orderBy("score", Query.Direction.DESCENDING)
+                    .limit(20)
+                    .get();
+
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            List<User> topUsers = new ArrayList<>();
+
+            for (QueryDocumentSnapshot document : documents) {
+                System.out.println(document.getId());
+                User user = document.toObject(User.class);
+                topUsers.add(user);
+            }
+
+            return topUsers;
     }
 
 }

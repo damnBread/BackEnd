@@ -46,34 +46,35 @@ public class UserController {
     // 3. 다음부터는 웹브라우저가 서버에 요청을 할 때 쿠키를 함께 전달.
 
     //test : zara0140 / 1234567a
-//    @RequestMapping(value="/login", method = {RequestMethod.POST})
-    @PostMapping("/login")
+    @RequestMapping(value="/login", method = {RequestMethod.POST, RequestMethod.GET})
+//    @PostMapping("/login")
     public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
         User user = null;
 
         Cookie[] cookies = request.getCookies();
-        ArrayList<Cookie> cookieList = new ArrayList<>(Arrays.asList(cookies));
-        System.out.println("gkgkgk"+sessionManager.getSession(request));
-        for (Cookie cookie: cookieList) {
-            System.out.println("cookiie : " + cookie.getName() );
-            if(cookie.getName().equals(SESSION_NAME)){
-                HttpSession session = request.getSession();
+        List<Cookie> cookieList = new ArrayList<>();
+        if(cookies != null){
+            cookieList = Arrays.asList(cookies);
+
+            for (Cookie cookie: cookieList) {
+                if(cookie.getName().equals(SESSION_NAME)){
+                    HttpSession session = request.getSession();
 
 
-                user = (User)session.getAttribute(SESSION_NAME);
-                System.out.println("cookieieie"+user);
-                return ResponseEntity.badRequest().body(user);
+                    user = (User)session.getAttribute(SESSION_NAME);
+                    return ResponseEntity.badRequest().body(user);
+                }
             }
         }
 
-        user = userService.loginCheck(loginRequest.getId(), loginRequest.getPw());
+        System.out.println(loginRequest.getId() +""+loginRequest.getPassword());
+        user = userService.loginCheck(loginRequest.getId(), loginRequest.getPassword());
 
-        if (user == null) { //사용자 정보 찾을 수 없음
-            System.out.println(user.getId());
+        if (user == null) { // 사용자 정보 찾을 수 없음
+            System.out.println(user);
             return ResponseEntity.badRequest().body("not found user");
         }
         else if(user.getId() == "incorrect password"){ //비밀번호 틀림
-            System.out.println(user.getId());
             return ResponseEntity.badRequest().body("incorrect password");
         }
         else{
