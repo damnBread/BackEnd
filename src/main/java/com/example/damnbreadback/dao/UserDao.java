@@ -36,6 +36,7 @@ public class UserDao {
         );
     }
 
+    // 아이디로 문서 id 가져오기
     public String getUserId(String id) throws ExecutionException, InterruptedException {
         String user = null;
         CollectionReference cities = db.collection(COLLECTION_NAME);

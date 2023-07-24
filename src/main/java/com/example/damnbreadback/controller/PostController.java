@@ -2,6 +2,7 @@ package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,9 +47,10 @@ public class PostController {
         return ResponseEntity.ok().body(post);
     }
 
-    @RequestMapping(path="/detail/bookmark", method = RequestMethod.POST)
+    //@RequestMapping(path="/detail/bookmark", method = RequestMethod.POST)
+    @PostMapping("/detail/bookmark")
     public ResponseEntity<Object> bookmark(@RequestBody String userId, @RequestBody String postNum) throws  ExecutionException, InterruptedException{
-
+        //HttpSession session = request.getSession();
 
 
         return ResponseEntity.ok().body(null);
