@@ -59,13 +59,9 @@ public class UserController {
             for (Cookie cookie: cookieList) {
                 if(cookie.getName().equals(SESSION_NAME)){
                     HttpSession session = request.getSession();
-                    System.out.println(cookie.getValue());
                     user = (User)session.getAttribute(cookie.getValue());
-                    if(user != null && user.getId() == loginRequest.getId() && user.getPassword() == loginRequest.getPassword()){
+                    if(user != null && user.getId().equals(loginRequest.getId()) && user.getPassword().equals(loginRequest.getPassword())){
                         return ResponseEntity.ok().body(user);
-                    }
-                    else {
-                        return ResponseEntity.badRequest().body("incorrect password");
                     }
 
                 }
@@ -90,7 +86,6 @@ public class UserController {
             session.setAttribute(sessionId, user);
 
             Cookie cookie = new Cookie(SESSION_NAME, sessionId);
-            cookie.setMaxAge(60*60*24*365);			//해당 쿠키의 유효시간을 설정 (초 기준)
             response.addCookie(cookie); // 사용자에게 해당 쿠키를 추가
 
             return ResponseEntity.ok().body(sessionId); //세션아이디 넘기기. (쿠키 넘기기)
