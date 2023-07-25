@@ -16,9 +16,9 @@ public interface UserService {
     User loginCheck(String id, String pw) throws ExecutionException, InterruptedException;
 
     // 회원가입 -> 중복 체크
-    Boolean verifyId(String id) throws ExecutionException, InterruptedException;
-    Boolean verifyNickname(String nickname) throws ExecutionException, InterruptedException;
-    Boolean verifyEmail(String email) throws ExecutionException, InterruptedException;
+    String verifyId(String id) throws ExecutionException, InterruptedException;
+    String verifyNickname(String nickname) throws ExecutionException, InterruptedException;
+    String verifyEmail(String email) throws ExecutionException, InterruptedException;
 
     // 회원가입 -> 신규 회원 저장
     User addUser(SignupRequest signupRequest) throws ExecutionException, InterruptedException ;

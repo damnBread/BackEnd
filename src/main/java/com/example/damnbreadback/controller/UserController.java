@@ -59,13 +59,9 @@ public class UserController {
             for (Cookie cookie: cookieList) {
                 if(cookie.getName().equals(SESSION_NAME)){
                     HttpSession session = request.getSession();
-                    System.out.println(cookie.getValue());
                     user = (User)session.getAttribute(cookie.getValue());
-                    if(user != null && user.getId() == loginRequest.getId() && user.getPassword() == loginRequest.getPassword()){
+                    if(user != null && user.getId().equals(loginRequest.getId()) && user.getPassword().equals(loginRequest.getPassword())){
                         return ResponseEntity.ok().body(user);
-                    }
-                    else {
-                        return ResponseEntity.badRequest().body("incorrect password");
                     }
 
                 }
@@ -90,7 +86,6 @@ public class UserController {
             session.setAttribute(sessionId, user);
 
             Cookie cookie = new Cookie(SESSION_NAME, sessionId);
-            cookie.setMaxAge(60*60*24*365);			//해당 쿠키의 유효시간을 설정 (초 기준)
             response.addCookie(cookie); // 사용자에게 해당 쿠키를 추가
 
             return ResponseEntity.ok().body(sessionId); //세션아이디 넘기기. (쿠키 넘기기)
@@ -100,26 +95,31 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signupRequest(@RequestBody SignupRequest signupRequest) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> signupRequest(@RequestBody SignupRequest signupRequest) throws ExecutionException, InterruptedException {
         User user =  userService.addUser(signupRequest);
-        return new ResponseEntity<User>(user, HttpStatus.CREATED);
+        if(user == null) return new ResponseEntity<Object>("null exception", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(user, HttpStatus.CREATED);
     }
 
 
     @GetMapping("/signup/verify/id")
     public ResponseEntity<Object> verifyId(@RequestParam String id) throws ExecutionException, InterruptedException{
-        Boolean verifyResult = userService.verifyId(id);
-        return ResponseEntity.ok().body(verifyResult);
+        String verifyResult = userService.verifyId(id);
+        System.out.println(verifyResult);
+        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
+        else return ResponseEntity.ok().body(verifyResult);
     }
     @GetMapping("/signup/verify/nickname")
     public ResponseEntity<Object> verifyNickname(@RequestParam String nickname) throws ExecutionException, InterruptedException{
-        Boolean verifyResult = userService.verifyId(nickname);
-        return ResponseEntity.ok().body(verifyResult);
+        String verifyResult = userService.verifyId(nickname);
+        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
+        else return ResponseEntity.ok().body(verifyResult);
     }
     @GetMapping("/signup/verify/email")
     public ResponseEntity<Object> verifyEmail(@RequestParam String email) throws ExecutionException, InterruptedException{
-        Boolean verifyResult = userService.verifyId(email);
-        return ResponseEntity.ok().body(verifyResult);
+        String verifyResult = userService.verifyId(email);
+        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
+        else return ResponseEntity.ok().body(verifyResult);
     }
 
     @PostMapping("/logout")
