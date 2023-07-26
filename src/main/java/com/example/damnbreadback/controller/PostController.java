@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +21,11 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Object> getAllPosts() throws ExecutionException, InterruptedException {
-        List<Post> list = postService.getPosts();
+    // "localhost:8080/damnlist"
+    @GetMapping
+    public ResponseEntity<Object> getAllPosts(@RequestParam Integer page) throws ExecutionException, InterruptedException, TimeoutException {
+        // Pagination 추가
+        List<Post> list = postService.getPosts(page.intValue());
         return ResponseEntity.ok().body(list);
     }
 

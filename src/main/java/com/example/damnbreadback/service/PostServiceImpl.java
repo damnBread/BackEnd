@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +20,8 @@ public class PostServiceImpl implements PostService {
     private final PostDao postDao;
 
     @Override
-    public List<Post> getPosts() throws ExecutionException, InterruptedException {
-        return postDao.getPosts();
+    public List<Post> getPosts(int page) throws ExecutionException, InterruptedException, TimeoutException {
+        return postDao.getPosts(page);
     }
 
     @Override
