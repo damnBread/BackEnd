@@ -5,7 +5,7 @@ import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.PostService;
 import com.example.damnbreadback.service.UserService;
-import com.google.api.Authentication;
+import org.springframework.security.core.Authentication;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class MyPageController {
 
     @GetMapping("/mypage")
     public ResponseEntity<Object> getMyPage(Authentication authentication) throws ExecutionException, InterruptedException {
-        return ResponseEntity.ok().body(authentication.getAllFields() + "님의 마이페이지 성공");
+        return ResponseEntity.ok().body(authentication.getName() + "님의 마이페이지 성공");
     }
 
     @GetMapping("/mypage/{userid}/bookmark")

@@ -35,6 +35,7 @@ public class UserController {
     }
 
 
+    //단순 쿠키 + 세션 방식===============================================================
     // 쿠키에는 세션 ID가 저장되어있음
     // 1. 웹브라우저가 서버에 요청 전송 (쿠키가 있다면 함께 전송)
     // 2. 웹브라우저로부터 쿠키를 받았다면 : 쿠키에 들어있는 세션ID 정보를 이용해서 session에서 user정보를 바로 받아와서 정보 제공
@@ -44,14 +45,25 @@ public class UserController {
     // 세션 SSID 생성 -> 쿠키에 USER로 저장 / 세션에 SSID : User객체 형식으로 저장
     // -> 쿠키가 넘어오면 USER에 해당하는 쿠키의 VALUE(서버에서 만들어준 쿠키 SSID) 받아오기 
     // -> 세션에서 VALUE에 맞는 세션 VALUE 받아오기
+    //================================================================================
+
+    //===================================================================================
+    //JWT + Spring Security 방식
+    // 서버 - Spring Security를 이용하여 인가 -> login , signup 페이지는 인증이 필요없도록 / 나머지 페이지는 USER 인증 후에만 사용가능
+    // 1. 웹브라우저가 서버에 로그인 요청
+    // 2. 서버는 로그인 정보 확인 (Valid Id?? / Valid Pw?? )
+    // 3. 올바른 로그인 정보 확인 후 -> Jwt 토큰을 만들어 (본 파일 중에서는 JwtUtils 기능)서 클라이언트에게 전달
+    // 4. ex. 서버로 마이페이지 접근 요청 -> 부여받은 토큰이 있다면 (로그인 된 사용자라면) 함께 전달
+    // 5. 서버는 토큰을 확인 -> 토큰이 있는 인증된 사용자 : 사용자 정보를 가져와서 마이페이지를 보여줌
+    //                    -> 토큰이 없는 인증되지 않은 사용자 : 로그인 화면으로 이동하거나 로그인(인증)이 필요하다는 메세지 등을 통해 사용자에게 알림.
+    //===================================================================================
 
     //test : zara0140 / 1234567a
-//    @RequestMapping(value="/login", method = {RequestMethod.POST, RequestMethod.GET})
     @PostMapping("/login")
     public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
-        //return ResponseEntity.ok().body(userService.login(loginRequest.getId(), loginRequest.getPassword()));
         String tok = userService.login(loginRequest.getId(), loginRequest.getPassword());
         return ResponseEntity.ok().body(tok);
+
 //        User user = null;
 //
 //        sessionManager = new SessionManager(request, response);
@@ -121,12 +133,14 @@ public class UserController {
         if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);
     }
+
     @GetMapping("/signup/verify/nickname")
     public ResponseEntity<Object> verifyNickname(@RequestParam String nickname) throws ExecutionException, InterruptedException{
         String verifyResult = userService.verifyId(nickname);
         if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);
     }
+
     @GetMapping("/signup/verify/email")
     public ResponseEntity<Object> verifyEmail(@RequestParam String email) throws ExecutionException, InterruptedException{
         String verifyResult = userService.verifyId(email);

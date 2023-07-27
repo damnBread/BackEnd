@@ -9,8 +9,6 @@ import java.util.Date;
 public class JwtUtils {
 
     public static String getUserName(String token, String secretKey){
-        System.out.println(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-                .getBody().get("userId", String.class));
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
                 .getBody().get("userId", String.class);
     }

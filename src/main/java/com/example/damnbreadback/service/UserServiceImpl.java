@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     public String login(String id, String pw ) throws ExecutionException, InterruptedException{
         //인증과정 생략
         User user = loginCheck(id, pw);
+        System.out.println(user.getId());
         if(user == null) return null;
         return JwtUtils.createJwt(id, secretKey, expiredMs);
 

@@ -69,6 +69,7 @@ public class UserDao {
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot document : documents) {
             user = document.toObject(User.class);
+            System.out.println(user);
 
             if(user.getId().equals(id)){
                 if(user.getPassword().equals(pw)){
