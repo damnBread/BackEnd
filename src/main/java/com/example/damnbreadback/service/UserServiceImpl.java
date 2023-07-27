@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
     // 회원가입 -> 회원 정보 중복 확인
     @Override
     public String verifyId(String id) throws ExecutionException, InterruptedException {
+        System.out.println("-aiaiaiaiaia" + userDao.findId(id).toString());
         if(id == null) return "null exception";
         return userDao.findId(id).toString();
     }
