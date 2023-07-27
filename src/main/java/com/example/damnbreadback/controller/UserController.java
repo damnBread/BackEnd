@@ -111,13 +111,13 @@ public class UserController {
     }
     @GetMapping("/signup/verify/nickname")
     public ResponseEntity<Object> verifyNickname(@RequestParam String nickname) throws ExecutionException, InterruptedException{
-        String verifyResult = userService.verifyId(nickname);
+        String verifyResult = userService.verifyNickname(nickname);
         if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);
     }
     @GetMapping("/signup/verify/email")
     public ResponseEntity<Object> verifyEmail(@RequestParam String email) throws ExecutionException, InterruptedException{
-        String verifyResult = userService.verifyId(email);
+        String verifyResult = userService.verifyEmail(email);
         if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);
     }
