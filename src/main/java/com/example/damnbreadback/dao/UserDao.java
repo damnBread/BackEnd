@@ -72,7 +72,7 @@ public class UserDao {
             String userId = document.toObject(User.class).getId();
             String userPw = document.toObject(User.class).getPw();
             System.out.println("gkgkg" + userId + "///" + userPw);
-            System.out.println("gkgkg" + id + "///" + pw);
+            System.out.println("param" + id + "///" + pw);
             if(userId!=null && userPw!= null){
                 if(userId.equals(id)){
                     if(userPw.equals(pw)){

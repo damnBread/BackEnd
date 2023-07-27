@@ -4,18 +4,29 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 
 public class JwtUtils {
 
-    public static String getUserName(String token, String secretKey){
+    public static String getUserName(String token, String secretKey) throws AccessDeniedException {
+        verify(token, secretKey);
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
                 .getBody().get("userId", String.class);
     }
 
-    public static boolean isExpired(String token, String secretKey){
+    public static boolean isExpired(String token, String secretKey) throws AccessDeniedException {
+        verify(token, secretKey);
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
                 .getBody().getExpiration().before(new Date());
+    }
+
+    public static void verify(String token, String secretKey) throws AccessDeniedException {
+        try{
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+        }catch (Exception e){
+            System.out.println("access Denied handler");
+        }
     }
 
     public static String createJwt(String id, String secretKey, Long expiredMs){

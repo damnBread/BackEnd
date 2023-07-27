@@ -39,11 +39,11 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         String token = authorization.split(" ")[1];
 
         //Token Expired 체크
         if(JwtUtils.isExpired(token, secretKey)){
+            System.out.println("3??authorization : {"+ authorization+"}");
             System.out.println("토큰이 만료되었습니다.");
             filterChain.doFilter(request, response);
             return;
@@ -61,6 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
         //Detail을 넣어줌
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        System.out.println("3 authorization : {"+ authorization+"}");
         filterChain.doFilter(request, response);
     }
 }

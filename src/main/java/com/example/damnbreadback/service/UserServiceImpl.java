@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
         else return JwtUtils.createJwt(id, secretKey, expiredMs);
 
     }
+
     @Override
     public List<User> getUsers() throws ExecutionException, InterruptedException {
         return userDao.getUsers();
