@@ -77,8 +77,10 @@ public class UserDao {
         ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot document : documents) {
-            if(document.toObject(User.class).getId().equals(id)){
-                return true;
+            String userId = document.toObject(User.class).getId();
+            if(userId!=null){
+                if(userId.equals(id))
+                    return true;
             }
         }
         return false;
@@ -88,8 +90,10 @@ public class UserDao {
         ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot document : documents) {
-            if(document.toObject(User.class).getNickname().equals(nickname)){
-                return true;
+            String userNickname = document.toObject(User.class).getNickname();
+            if(userNickname!=null){
+                if(userNickname.equals(nickname))
+                    return true;
             }
         }
         return false;
@@ -99,8 +103,10 @@ public class UserDao {
         ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot document : documents) {
-            if(document.toObject(User.class).getEmail().equals(email)){
-                return true;
+            String userEmail = document.toObject(User.class).getEmail();
+            if(userEmail!=null){
+                if(userEmail.equals(email))
+                    return true;
             }
         }
         return false;
