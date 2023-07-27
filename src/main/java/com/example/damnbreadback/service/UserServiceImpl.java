@@ -24,12 +24,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserDao userDao;
 
-    public String login(String id, String pw ) throws ExecutionException, InterruptedException{
+    public String login(String id, String pw) throws ExecutionException, InterruptedException{
         //인증과정 생략
         User user = loginCheck(id, pw);
-        System.out.println(user.getId());
-        if(user == null) return null;
-        return JwtUtils.createJwt(id, secretKey, expiredMs);
+        if(user== null) return null;
+
+        if (user.getId().equals("incorrect password")) return "incorrect password";
+        else if (user.getId().equals("fail to find user")) return "fail to find user";
+        else if(user.getId().equals("db null exception")) return "db null exception";
+        else return JwtUtils.createJwt(id, secretKey, expiredMs);
 
     }
     @Override

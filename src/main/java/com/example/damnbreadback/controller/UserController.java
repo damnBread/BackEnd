@@ -61,7 +61,15 @@ public class UserController {
     //test : zara0140 / 1234567a
     @PostMapping("/login")
     public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
-        String tok = userService.login(loginRequest.getId(), loginRequest.getPassword());
+        String tok = userService.login(loginRequest.getId(), loginRequest.getPw());
+
+        if(tok.equals("incorrect password"))
+            return ResponseEntity.badRequest().body("icnorrect password");
+        if(tok.equals("fail to find user"))
+            return ResponseEntity.badRequest().body("fail to find user");
+        if(tok.equals("db null exception"))
+            return ResponseEntity.badRequest().body("null exception");
+
         return ResponseEntity.ok().body(tok);
 
 //        User user = null;
@@ -127,9 +135,7 @@ public class UserController {
 
     @GetMapping("/signup/verify/id")
     public ResponseEntity<Object> verifyId(@RequestBody String id) throws ExecutionException, InterruptedException{
-        System.out.println("1/"+id);
         String verifyResult = userService.verifyId(id);
-        System.out.println("2/" + verifyResult);
         if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);
     }

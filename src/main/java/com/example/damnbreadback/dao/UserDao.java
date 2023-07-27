@@ -69,16 +69,21 @@ public class UserDao {
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot document : documents) {
             user = document.toObject(User.class);
-            System.out.println(user);
-
-            if(user.getId().equals(id)){
-                if(user.getPassword().equals(pw)){
+            String userId = document.toObject(User.class).getId();
+            String userPw = document.toObject(User.class).getPassword();
+            System.out.println("gkgkg" + userId + "///" + userPw);
+            System.out.println("gkgkg" + id + "///" + pw);
+            if(userId!=null && userPw!= null){
+                if(userId.equals(id)){
+                    if(userPw.equals(pw)){
+                        return user;
+                    }
+                    else user.setId("incorrect password");
                 }
-                else {
-                    user.setId("incorrect password");
-                }
-                return user;
+                else user.setId("fail to find user");
             }
+            else user.setId("db null exception");
+
         }
         return user;
     }
