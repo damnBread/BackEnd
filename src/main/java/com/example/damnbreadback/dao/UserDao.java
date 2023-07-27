@@ -70,7 +70,7 @@ public class UserDao {
         for (QueryDocumentSnapshot document : documents) {
             user = document.toObject(User.class);
             String userId = document.toObject(User.class).getId();
-            String userPw = document.toObject(User.class).getPassword();
+            String userPw = document.toObject(User.class).getPw();
             System.out.println("gkgkg" + userId + "///" + userPw);
             System.out.println("gkgkg" + id + "///" + pw);
             if(userId!=null && userPw!= null){

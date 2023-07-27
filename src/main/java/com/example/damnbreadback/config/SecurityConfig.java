@@ -25,7 +25,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/login", "/signup", "/signup/*");
+        return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/login", "/signup");
     }
 
     @Bean
@@ -35,6 +35,7 @@ public class SecurityConfig {
         });
         http.formLogin(Customizer.withDefaults());
         http.addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
+
 //      http.httpBasic(Customizer.withDefaults());
 //        http.sessionManagement()
 //            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

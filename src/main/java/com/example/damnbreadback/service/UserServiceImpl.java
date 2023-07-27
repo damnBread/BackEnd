@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
         else {
             User user = new User();
-            user.setPassword(signupRequest.getPw());
+            user.setPw(signupRequest.getPw());
             user.setName(signupRequest.getName());
             user.setEmail(signupRequest.getEmail());
             user.setNickname(signupRequest.getNickname());

@@ -16,7 +16,7 @@ public class User {
     private String name; // 이름
     private String email; // 이메일
     private String nickname; // 닉네임
-    private String password; // 비밀번호
+    private String pw; // 비밀번호
     private String phone; // 전화번호
     private String home; // 거주지 -> string 으로 (private String location)
 
