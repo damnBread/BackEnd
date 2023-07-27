@@ -102,6 +102,7 @@ public class UserDao {
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot document : documents) {
             String userNickname = document.toObject(User.class).getNickname();
+            System.out.println(userNickname + "??" + nickname);
             if(userNickname!=null){
                 if(userNickname.equals(nickname))
                     return true;
