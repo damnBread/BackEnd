@@ -1,16 +1,16 @@
 package com.example.damnbreadback.service;
 
-import com.example.damnbreadback.entity.LoginRequest;
-import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.entity.SignupRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface UserService {
 
+    String login(String userName, String password)  throws ExecutionException, InterruptedException;
     List<User> getUsers() throws ExecutionException, InterruptedException;
+    User getUserByUserId(String id)  throws ExecutionException, InterruptedException;
 
     // 로그인
     User loginCheck(String id, String pw) throws ExecutionException, InterruptedException;

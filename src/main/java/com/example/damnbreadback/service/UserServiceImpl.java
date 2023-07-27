@@ -1,16 +1,15 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dao.UserDao;
-import com.example.damnbreadback.entity.LoginRequest;
-import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.entity.SignupRequest;
+import com.example.damnbreadback.config.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -19,12 +18,27 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    @Value("${JWT.SECRET}")
+    private String secretKey;
+    private Long expiredMs = 1000 * 60 * 60l;
     @Autowired
     private final UserDao userDao;
 
+    public String login(String id, String pw ) throws ExecutionException, InterruptedException{
+        //인증과정 생략
+        User user = loginCheck(id, pw);
+        if(user == null) return null;
+        return JwtUtils.createJwt(id, secretKey, expiredMs);
+
+    }
     @Override
     public List<User> getUsers() throws ExecutionException, InterruptedException {
         return userDao.getUsers();
+    }
+
+    @Override
+    public User getUserByUserId(String id)  throws ExecutionException, InterruptedException {
+        return userDao.getUserByUserId(id);
     }
 
     // 로그인

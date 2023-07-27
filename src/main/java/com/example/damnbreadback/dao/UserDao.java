@@ -4,12 +4,9 @@ import com.example.damnbreadback.entity.User;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.database.GenericTypeIndicator;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Member;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -29,6 +26,21 @@ public class UserDao {
         }
         return list;
     }
+
+    public User getUserByUserId(String id) throws ExecutionException, InterruptedException {
+        User user = null;
+        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        for (QueryDocumentSnapshot document : documents) {
+            user = document.toObject(User.class);
+
+            if(user.getId().equals(id)){
+                return user;
+            }
+        }
+        return user;
+    }
+
 
     public void insertUser(User user) throws ExecutionException, InterruptedException {
         db.collection(COLLECTION_NAME).add(
@@ -59,9 +71,7 @@ public class UserDao {
             user = document.toObject(User.class);
 
             if(user.getId().equals(id)){
-                System.out.println(user.getPassword() +"//"+ pw);
                 if(user.getPassword().equals(pw)){
-                    System.out.println(user.getPassword() + "/" + pw);
                 }
                 else {
                     user.setId("incorrect password");

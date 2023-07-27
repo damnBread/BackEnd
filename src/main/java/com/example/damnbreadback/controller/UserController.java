@@ -1,10 +1,10 @@
 package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.entity.LoginRequest;
-import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.service.UserService;
-import jakarta.servlet.http.Cookie;
+import com.example.damnbreadback.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 //@RequestMapping("/exam/svc/v1")
 public class UserController {
     public static final String SESSION_NAME = "USER";
+    private SessionManager sessionManager;
 
     @Autowired
     private UserService userService;
@@ -48,49 +49,59 @@ public class UserController {
 //    @RequestMapping(value="/login", method = {RequestMethod.POST, RequestMethod.GET})
     @PostMapping("/login")
     public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
-        User user = null;
-
-        Cookie[] cookies = request.getCookies();
-
-        List<Cookie> cookieList = new ArrayList<>();
-        if(cookies != null){
-            cookieList = Arrays.asList(cookies);
-
-            for (Cookie cookie: cookieList) {
-                if(cookie.getName().equals(SESSION_NAME)){
-                    HttpSession session = request.getSession();
-                    user = (User)session.getAttribute(cookie.getValue());
-                    if(user != null && user.getId().equals(loginRequest.getId()) && user.getPassword().equals(loginRequest.getPassword())){
-                        return ResponseEntity.ok().body(user);
-                    }
-
-                }
-            }
-        }
-
-        user = userService.loginCheck(loginRequest.getId(), loginRequest.getPassword());
-
-        if (user == null) { // 사용자 정보 찾을 수 없음
-            return ResponseEntity.badRequest().body("not found user");
-        }
-        else if(user.getId() == "incorrect password"){ //비밀번호 틀림
-            return ResponseEntity.badRequest().body("incorrect password");
-        }
-        else{
-            //로그인 성공 처리
-
-            //세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
-            HttpSession session = request.getSession();
-            String sessionId = UUID.randomUUID().toString();
-            //세션에 로그인 회원 정보 보관 -> 홈에서 희망업직종이나 희망 지역 받아서 추천해줄 때, 혹은 마이페이지 이동해서 user 정보 db에서 직접 찾지 않아도 세션에서 가져올 수 있음.
-            session.setAttribute(sessionId, user);
-
-            Cookie cookie = new Cookie(SESSION_NAME, sessionId);
-            response.addCookie(cookie); // 사용자에게 해당 쿠키를 추가
-
-            return ResponseEntity.ok().body(sessionId); //세션아이디 넘기기. (쿠키 넘기기)
-
-        }
+        //return ResponseEntity.ok().body(userService.login(loginRequest.getId(), loginRequest.getPassword()));
+        String tok = userService.login(loginRequest.getId(), loginRequest.getPassword());
+        return ResponseEntity.ok().body(tok);
+//        User user = null;
+//
+//        sessionManager = new SessionManager(request, response);
+//
+//        user = (User)sessionManager.getSessionValue(SESSION_NAME);
+//        if(user != null && user.getId().equals(loginRequest.getId()) && user.getPassword().equals(loginRequest.getPassword())){
+//            return ResponseEntity.ok().body(user);
+//        }
+//
+////        Cookie[] cookies = request.getCookies();
+////
+////        List<Cookie> cookieList = new ArrayList<>();
+////        if(cookies != null){
+////            cookieList = Arrays.asList(cookies);
+////
+////            for (Cookie cookie: cookieList) {
+////                if(cookie.getName().equals(SESSION_NAME)){
+////                    HttpSession session = request.getSession();
+////                    user = (User)session.getAttribute(cookie.getValue());
+////                    if(user != null && user.getId().equals(loginRequest.getId()) && user.getPassword().equals(loginRequest.getPassword())){
+////                        return ResponseEntity.ok().body(user);
+////                    }
+////                }
+////            }
+////        }
+//
+//        user = userService.loginCheck(loginRequest.getId(), loginRequest.getPassword());
+//
+//        if (user == null) { // 사용자 정보 찾을 수 없음
+//            return ResponseEntity.badRequest().body("not found user");
+//        }
+//        else if(user.getId() == "incorrect password"){ //비밀번호 틀림
+//            return ResponseEntity.badRequest().body("incorrect password");
+//        }
+//        else{
+//            //로그인 성공 처리
+//
+//            String sessionId = sessionManager.createSession(SESSION_NAME, user);
+//            //세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
+////            HttpSession session = request.getSession();
+////            String sessionId = UUID.randomUUID().toString();
+////            //세션에 로그인 회원 정보 보관 -> 홈에서 희망업직종이나 희망 지역 받아서 추천해줄 때, 혹은 마이페이지 이동해서 user 정보 db에서 직접 찾지 않아도 세션에서 가져올 수 있음.
+////            session.setAttribute(sessionId, user);
+////
+////            Cookie cookie = new Cookie(SESSION_NAME, sessionId);
+////            response.addCookie(cookie); // 사용자에게 해당 쿠키를 추가
+//
+//            return ResponseEntity.ok().body(sessionId); //세션아이디 넘기기. (쿠키 넘기기)
+//
+//        }
     }
 
 
@@ -103,9 +114,10 @@ public class UserController {
 
 
     @GetMapping("/signup/verify/id")
-    public ResponseEntity<Object> verifyId(@RequestParam String id) throws ExecutionException, InterruptedException{
+    public ResponseEntity<Object> verifyId(@RequestBody String id) throws ExecutionException, InterruptedException{
+        System.out.println("1/"+id);
         String verifyResult = userService.verifyId(id);
-        System.out.println(verifyResult);
+        System.out.println("2/" + verifyResult);
         if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);
     }
