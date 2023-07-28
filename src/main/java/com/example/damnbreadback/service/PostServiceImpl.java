@@ -18,17 +18,17 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPosts() throws ExecutionException, InterruptedException {
-        return postDao.getPosts();
+        return postDao.getAllPosts();
     }
 
     @Override
-    public void createPost(Post post) throws ExecutionException, InterruptedException {
-        postDao.createPosts(post);
+    public Long createPost(Post post) throws ExecutionException, InterruptedException {
+        return postDao.createPosts(post);
     }
 
     @Override
-    public Post getPost(String postName) throws ExecutionException, InterruptedException {
-        return postDao.getPost(postName);
+    public Post getPostById(String postName) throws ExecutionException, InterruptedException {
+        return postDao.getPostById(postName);
     }
 
 }
