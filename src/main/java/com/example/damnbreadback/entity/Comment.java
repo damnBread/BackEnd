@@ -1,5 +1,6 @@
 package com.example.damnbreadback.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,11 +13,19 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@Entity
+@Table(name="comment")
 public class Comment {
 
-    private String id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
     private String content; // 댓글 내용
     private Date date; // 댓글 게시일
-    private String writer; // 댓글 게시자
+    private Long writer; // 댓글 게시자
+
+    @ManyToOne
+    @JoinColumn(name="story")
+    private Story story;
 }

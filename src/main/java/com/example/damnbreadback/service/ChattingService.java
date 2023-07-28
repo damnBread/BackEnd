@@ -1,13 +1,12 @@
 package com.example.damnbreadback.service;
 
-import com.example.damnbreadback.entity.Chatting;
-import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.entity.Chatroom;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface ChattingService {
 
-    List<Chatting> getChattings() throws ExecutionException, InterruptedException;
+    List<Chatroom> getChattings() throws ExecutionException, InterruptedException;
 
 }

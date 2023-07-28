@@ -60,7 +60,7 @@ public class UserController {
                 if(cookie.getName().equals(SESSION_NAME)){
                     HttpSession session = request.getSession();
                     user = (User)session.getAttribute(cookie.getValue());
-                    if(user != null && user.getId().equals(loginRequest.getId()) && user.getPassword().equals(loginRequest.getPassword())){
+                    if(user != null && user.getUserId().equals(loginRequest.getId()) && user.getPassword().equals(loginRequest.getPassword())){
                         return ResponseEntity.ok().body(user);
                     }
 
@@ -73,9 +73,9 @@ public class UserController {
         if (user == null) { // 사용자 정보 찾을 수 없음
             return ResponseEntity.badRequest().body("not found user");
         }
-        else if(user.getId() == "incorrect password"){ //비밀번호 틀림
-            return ResponseEntity.badRequest().body("incorrect password");
-        }
+//        else if(user.getUserId() == "incorrect password"){ //비밀번호 틀림
+//            return ResponseEntity.badRequest().body("incorrect password");
+//        }
         else{
             //로그인 성공 처리
 

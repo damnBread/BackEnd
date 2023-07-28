@@ -24,13 +24,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers() throws ExecutionException, InterruptedException {
-        return userDao.getUsers();
+        //return userDao.getUsers();
+        return null;
     }
 
     // 로그인
     @Override
     public User loginCheck(String id, String pw) throws ExecutionException, InterruptedException {
-        return userDao.findUser(id, pw);
+        //return userDao.findUser(id, pw);
+        return null;
     }
 
 
@@ -38,19 +40,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public String verifyId(String id) throws ExecutionException, InterruptedException {
         if(id == null) return "null exception";
-        return userDao.findId(id).toString();
+        //return userDao.findId(id).toString();
+        return null;
     }
 
     @Override
     public String verifyNickname(String nickname) throws ExecutionException, InterruptedException {
         if(nickname == null) return "null exception";
-        return userDao.findNickname(nickname).toString();
+        //return userDao.findNickname(nickname).toString();
+        return null;
     }
 
     @Override
     public String verifyEmail(String email) throws ExecutionException, InterruptedException {
         if(email == null) return "null exception";
-        return userDao.findEmail(email).toString();
+        //return userDao.findEmail(email).toString();
+        return null;
     }
 
 
@@ -74,13 +79,10 @@ public class UserServiceImpl implements UserService {
             user.setPhone(signupRequest.getPhone());
             user.setBirth(signupRequest.getBirth());
             user.setGender(signupRequest.isGender());
-            user.setHopeJob(signupRequest.getHopeJob());
-            user.setHopeLocation(signupRequest.getHopeLocation());
             user.setHome(signupRequest.getHome());
 
             user.setNoShow(0);
             user.setScore(0);
-            user.setCareer(null);
             user.setJoinDate(new Date()); // 가입하는 현재 시간 저장
 
             HashMap<String, Boolean> isPublicMap = new HashMap<>();
@@ -92,9 +94,8 @@ public class UserServiceImpl implements UserService {
             isPublicMap.put("location", true);
             isPublicMap.put("name", true);
             isPublicMap.put("phone", true);
-            user.setIsPublic(isPublicMap);
 
-            userDao.insertUser(user);
+            //userDao.insertUser(user);
 
             return user;
         }
@@ -104,18 +105,20 @@ public class UserServiceImpl implements UserService {
     // 인재정보 -> rank 정보 get
     @Override
     public List<User> getRankScore() throws ExecutionException, InterruptedException {
-        List<User> users = userDao.getRankScore();
-        return users;
+        //List<User> users = userDao.getRankScore();
+        return null;
     }
 
     @Override
     public String getUserId(String id) throws ExecutionException, InterruptedException {
-        return userDao.getUserId(id);
+        //return userDao.getUserId(id);
+        return null;
     }
 
     @Override
     public List<String> getBookmarks(String user) throws ExecutionException, InterruptedException {
-        return userDao.getScraps(user);
+        //return userDao.getScraps(user);
+        return null;
     }
 
 
