@@ -21,73 +21,73 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 //@RequestMapping("/exam/svc/v1")
 public class UserController {
-    public static final String SESSION_NAME = "USER";
-    private SessionManager sessionManager;
-
-    @Autowired
-    private UserService userService;
-
-    @GetMapping("/users")
-    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
-        List<User> list = userService.getUsers();
-        return ResponseEntity.ok().body(list);
-
-    }
-
-
-    //단순 쿠키 + 세션 방식===============================================================
-    // 쿠키에는 세션 ID가 저장되어있음
-    // 1. 웹브라우저가 서버에 요청 전송 (쿠키가 있다면 함께 전송)
-    // 2. 웹브라우저로부터 쿠키를 받았다면 : 쿠키에 들어있는 세션ID 정보를 이용해서 session에서 user정보를 바로 받아와서 정보 제공
-    //    웹브라우저로부터 쿠키를 받지 않았다면 : 로그인 요청 들어온 user정보를 확인하고, 로그인 정보가 맞다면 세션에 user정보 저장, 저장된 session의 ID를 담은 쿠키를 만들어서 response와 함께 전달.
-    // 3. 다음부터는 웹브라우저가 서버에 요청을 할 때 쿠키를 함께 전달.
-    
-    // 세션 SSID 생성 -> 쿠키에 USER로 저장 / 세션에 SSID : User객체 형식으로 저장
-    // -> 쿠키가 넘어오면 USER에 해당하는 쿠키의 VALUE(서버에서 만들어준 쿠키 SSID) 받아오기 
-    // -> 세션에서 VALUE에 맞는 세션 VALUE 받아오기
-    //================================================================================
-
-    //===================================================================================
-    //JWT + Spring Security 방식
-    // 서버 - Spring Security를 이용하여 인가 -> login , signup 페이지는 인증이 필요없도록 / 나머지 페이지는 USER 인증 후에만 사용가능
-    // 1. 웹브라우저가 서버에 로그인 요청
-    // 2. 서버는 로그인 정보 확인 (Valid Id?? / Valid Pw?? )
-    // 3. 올바른 로그인 정보 확인 후 -> Jwt 토큰을 만들어 (본 파일 중에서는 JwtUtils 기능)서 클라이언트에게 전달
-    // 4. ex. 서버로 마이페이지 접근 요청 -> 부여받은 토큰이 있다면 (로그인 된 사용자라면) 함께 전달
-    // 5. 서버는 토큰을 확인 -> 토큰이 있는 인증된 사용자 : 사용자 정보를 가져와서 마이페이지를 보여줌
-    //                    -> 토큰이 없는 인증되지 않은 사용자 : 로그인 화면으로 이동하거나 로그인(인증)이 필요하다는 메세지 등을 통해 사용자에게 알림.
-    //===================================================================================
-
-    //test : zara0140 / 1234567a
-    @PostMapping("/login")
-    public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
-        User user = null;
-
-        Cookie[] cookies = request.getCookies();
-
-        List<Cookie> cookieList = new ArrayList<>();
-        if(cookies != null){
-            cookieList = Arrays.asList(cookies);
-
-            for (Cookie cookie: cookieList) {
-                if(cookie.getName().equals(SESSION_NAME)){
-                    HttpSession session = request.getSession();
-                    user = (User)session.getAttribute(cookie.getValue());
-                    if(user != null && user.getUserId().equals(loginRequest.getId()) && user.getPassword().equals(loginRequest.getPassword())){
-                        return ResponseEntity.ok().body(user);
-                    }
-        String tok = userService.login(loginRequest.getId(), loginRequest.getPw());
-
-        if(tok.equals("incorrect password"))
-            return ResponseEntity.badRequest().body("icnorrect password");
-        if(tok.equals("fail to find user"))
-            return ResponseEntity.badRequest().body("fail to find user");
-        if(tok.equals("db null exception"))
-            return ResponseEntity.badRequest().body("null exception");
-
-        return ResponseEntity.ok().body(tok);
-
+//    public static final String SESSION_NAME = "USER";
+//    private SessionManager sessionManager;
+//
+//    @Autowired
+//    private UserService userService;
+//
+//    @GetMapping("/users")
+//    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
+//        List<User> list = userService.getUsers();
+//        return ResponseEntity.ok().body(list);
+//
+//    }
+//
+//
+//    //단순 쿠키 + 세션 방식===============================================================
+//    // 쿠키에는 세션 ID가 저장되어있음
+//    // 1. 웹브라우저가 서버에 요청 전송 (쿠키가 있다면 함께 전송)
+//    // 2. 웹브라우저로부터 쿠키를 받았다면 : 쿠키에 들어있는 세션ID 정보를 이용해서 session에서 user정보를 바로 받아와서 정보 제공
+//    //    웹브라우저로부터 쿠키를 받지 않았다면 : 로그인 요청 들어온 user정보를 확인하고, 로그인 정보가 맞다면 세션에 user정보 저장, 저장된 session의 ID를 담은 쿠키를 만들어서 response와 함께 전달.
+//    // 3. 다음부터는 웹브라우저가 서버에 요청을 할 때 쿠키를 함께 전달.
+//
+//    // 세션 SSID 생성 -> 쿠키에 USER로 저장 / 세션에 SSID : User객체 형식으로 저장
+//    // -> 쿠키가 넘어오면 USER에 해당하는 쿠키의 VALUE(서버에서 만들어준 쿠키 SSID) 받아오기
+//    // -> 세션에서 VALUE에 맞는 세션 VALUE 받아오기
+//    //================================================================================
+//
+//    //===================================================================================
+//    //JWT + Spring Security 방식
+//    // 서버 - Spring Security를 이용하여 인가 -> login , signup 페이지는 인증이 필요없도록 / 나머지 페이지는 USER 인증 후에만 사용가능
+//    // 1. 웹브라우저가 서버에 로그인 요청
+//    // 2. 서버는 로그인 정보 확인 (Valid Id?? / Valid Pw?? )
+//    // 3. 올바른 로그인 정보 확인 후 -> Jwt 토큰을 만들어 (본 파일 중에서는 JwtUtils 기능)서 클라이언트에게 전달
+//    // 4. ex. 서버로 마이페이지 접근 요청 -> 부여받은 토큰이 있다면 (로그인 된 사용자라면) 함께 전달
+//    // 5. 서버는 토큰을 확인 -> 토큰이 있는 인증된 사용자 : 사용자 정보를 가져와서 마이페이지를 보여줌
+//    //                    -> 토큰이 없는 인증되지 않은 사용자 : 로그인 화면으로 이동하거나 로그인(인증)이 필요하다는 메세지 등을 통해 사용자에게 알림.
+//    //===================================================================================
+//
+//    //test : zara0140 / 1234567a
+//    @PostMapping("/login")
+//    public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
 //        User user = null;
+//
+//        Cookie[] cookies = request.getCookies();
+//
+//        List<Cookie> cookieList = new ArrayList<>();
+//        if(cookies != null){
+//            cookieList = Arrays.asList(cookies);
+//
+//            for (Cookie cookie: cookieList) {
+//                if(cookie.getName().equals(SESSION_NAME)){
+//                    HttpSession session = request.getSession();
+//                    user = (User)session.getAttribute(cookie.getValue());
+//                    if(user != null && user.getUserId().equals(loginRequest.getId()) && user.getPassword().equals(loginRequest.getPassword())){
+//                        return ResponseEntity.ok().body(user);
+//                    }
+//        String tok = userService.login(loginRequest.getId(), loginRequest.getPw());
+//
+//        if(tok.equals("incorrect password"))
+//            return ResponseEntity.badRequest().body("icnorrect password");
+//        if(tok.equals("fail to find user"))
+//            return ResponseEntity.badRequest().body("fail to find user");
+//        if(tok.equals("db null exception"))
+//            return ResponseEntity.badRequest().body("null exception");
+//
+//        return ResponseEntity.ok().body(tok);
+//
+////        User user = null;
 //
 //        sessionManager = new SessionManager(request, response);
 //
@@ -134,70 +134,70 @@ public class UserController {
 ////            Cookie cookie = new Cookie(SESSION_NAME, sessionId);
 ////            response.addCookie(cookie); // 사용자에게 해당 쿠키를 추가
 //
+////            return ResponseEntity.ok().body(sessionId); //세션아이디 넘기기. (쿠키 넘기기)
+////
+////        }
+//        if (user == null) { // 사용자 정보 찾을 수 없음
+//            return ResponseEntity.badRequest().body("not found user");
+//        }
+////        else if(user.getUserId() == "incorrect password"){ //비밀번호 틀림
+////            return ResponseEntity.badRequest().body("incorrect password");
+////        }
+//        else{
+//            //로그인 성공 처리
+//
+//            //세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
+//            HttpSession session = request.getSession();
+//            String sessionId = UUID.randomUUID().toString();
+//            //세션에 로그인 회원 정보 보관 -> 홈에서 희망업직종이나 희망 지역 받아서 추천해줄 때, 혹은 마이페이지 이동해서 user 정보 db에서 직접 찾지 않아도 세션에서 가져올 수 있음.
+//            session.setAttribute(sessionId, user);
+//
+//            Cookie cookie = new Cookie(SESSION_NAME, sessionId);
+//            response.addCookie(cookie); // 사용자에게 해당 쿠키를 추가
+//
 //            return ResponseEntity.ok().body(sessionId); //세션아이디 넘기기. (쿠키 넘기기)
 //
 //        }
-        if (user == null) { // 사용자 정보 찾을 수 없음
-            return ResponseEntity.badRequest().body("not found user");
-        }
-//        else if(user.getUserId() == "incorrect password"){ //비밀번호 틀림
-//            return ResponseEntity.badRequest().body("incorrect password");
+//    }
+//
+//
+//    @PostMapping("/signup")
+//    public ResponseEntity<Object> signupRequest(@RequestBody SignupRequest signupRequest) throws ExecutionException, InterruptedException {
+//        User user =  userService.addUser(signupRequest);
+//        if(user == null) return new ResponseEntity<Object>("null exception", HttpStatus.BAD_REQUEST);
+//        return new ResponseEntity<Object>(user, HttpStatus.CREATED);
+//    }
+//
+//
+//    @PostMapping("/signup/verify/id")
+//    public ResponseEntity<Object> verifyId(@RequestBody String id) throws ExecutionException, InterruptedException{
+//        String verifyResult = userService.verifyId(id);
+//        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
+//        else return ResponseEntity.ok().body(verifyResult);
+//    }
+//
+//    @PostMapping("/signup/verify/nickname")
+//    public ResponseEntity<Object> verifyNickname(@RequestBody String nickname) throws ExecutionException, InterruptedException{
+//        String verifyResult = userService.verifyNickname(nickname);
+//        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
+//        else return ResponseEntity.ok().body(verifyResult);
+//    }
+//
+//    @PostMapping("/signup/verify/email")
+//    public ResponseEntity<Object> verifyEmail(@RequestBody String email) throws ExecutionException, InterruptedException{
+//        String verifyResult = userService.verifyEmail(email);
+//        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
+//        else return ResponseEntity.ok().body(verifyResult);
+//    }
+//
+//    @PostMapping("/logout")
+//    public String logout(HttpServletRequest request) {
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            session.invalidate();
 //        }
-        else{
-            //로그인 성공 처리
-
-            //세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
-            HttpSession session = request.getSession();
-            String sessionId = UUID.randomUUID().toString();
-            //세션에 로그인 회원 정보 보관 -> 홈에서 희망업직종이나 희망 지역 받아서 추천해줄 때, 혹은 마이페이지 이동해서 user 정보 db에서 직접 찾지 않아도 세션에서 가져올 수 있음.
-            session.setAttribute(sessionId, user);
-
-            Cookie cookie = new Cookie(SESSION_NAME, sessionId);
-            response.addCookie(cookie); // 사용자에게 해당 쿠키를 추가
-
-            return ResponseEntity.ok().body(sessionId); //세션아이디 넘기기. (쿠키 넘기기)
-
-        }
-    }
-
-
-    @PostMapping("/signup")
-    public ResponseEntity<Object> signupRequest(@RequestBody SignupRequest signupRequest) throws ExecutionException, InterruptedException {
-        User user =  userService.addUser(signupRequest);
-        if(user == null) return new ResponseEntity<Object>("null exception", HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<Object>(user, HttpStatus.CREATED);
-    }
-
-
-    @PostMapping("/signup/verify/id")
-    public ResponseEntity<Object> verifyId(@RequestBody String id) throws ExecutionException, InterruptedException{
-        String verifyResult = userService.verifyId(id);
-        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
-        else return ResponseEntity.ok().body(verifyResult);
-    }
-
-    @PostMapping("/signup/verify/nickname")
-    public ResponseEntity<Object> verifyNickname(@RequestBody String nickname) throws ExecutionException, InterruptedException{
-        String verifyResult = userService.verifyNickname(nickname);
-        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
-        else return ResponseEntity.ok().body(verifyResult);
-    }
-
-    @PostMapping("/signup/verify/email")
-    public ResponseEntity<Object> verifyEmail(@RequestBody String email) throws ExecutionException, InterruptedException{
-        String verifyResult = userService.verifyEmail(email);
-        if(verifyResult == "null exception") return ResponseEntity.badRequest().body("null exception");
-        else return ResponseEntity.ok().body(verifyResult);
-    }
-
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-
-        return "logout sucess";
-    }
+//
+//        return "logout sucess";
+//    }
 
 }

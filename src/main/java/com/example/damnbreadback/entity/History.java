@@ -1,9 +1,6 @@
 package com.example.damnbreadback.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +21,9 @@ public class History {
     @GeneratedValue
     private Long historyId;
 
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private User user;
     
     private String company; // 근무지
     private Date startDate; // 근무 시작 일시

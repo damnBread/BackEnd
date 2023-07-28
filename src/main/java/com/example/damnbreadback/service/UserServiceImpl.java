@@ -44,7 +44,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUserId(String id)  throws ExecutionException, InterruptedException {
-        return userDao.getUserByUserId(id);
+        //return userDao.getUserByUserId(id);
+        return null;
     }
 
     // 로그인
@@ -91,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
         else {
             User user = new User();
-            user.setPw(signupRequest.getPw());
+            //user.setPw(signupRequest.getPw());
             user.setName(signupRequest.getName());
             user.setEmail(signupRequest.getEmail());
             user.setNickname(signupRequest.getNickname());

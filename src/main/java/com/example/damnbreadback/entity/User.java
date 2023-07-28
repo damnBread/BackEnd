@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -41,5 +42,11 @@ public class User {
     private String isPublic; // 정보 공개 여부 "0101011" < 이런 식으로 이진값을 받아야할듯
 
     @ManyToMany( fetch = FetchType.EAGER, mappedBy = "scrapUsers")
-    private Set<Post> scraps;
+    private Set<Post> scraps; // 스크랩한 포스트 목록
+
+    @OneToMany(fetch=FetchType.EAGER)
+    private List<Career> career; // 경력
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<History> histories; // 땜빵이력
 }
