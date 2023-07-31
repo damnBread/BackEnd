@@ -1,6 +1,7 @@
 package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.entity.Post;
+import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import lombok.*;
@@ -30,23 +31,18 @@ public class PostController {
     }
 
     @RequestMapping(path="/new", method = RequestMethod.POST)
-    public ResponseEntity<Object> createPost(@RequestBody Post post) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> createPost(@RequestBody Post uploadRequest) throws ExecutionException, InterruptedException {
 
-        postService.createPost(post);
-        return new ResponseEntity<> (post, HttpStatus.OK);
+        Long postId = postService.createPost(uploadRequest);
+        if(postId == null) return new ResponseEntity<>("null exception", HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<> (postId, HttpStatus.OK);
     }
-
-//    @RequestMapping(path="/{postNum}", method = RequestMethod.GET)
-//    public ResponseEntity<Object> getPost(@PathVariable String postNum) throws ExecutionException, InterruptedException{
-//
-//        Post post = postService.getPost(postNum);
-//        return ResponseEntity.ok().body(post);
-//    }
 
     @RequestMapping(path="/detail", method = RequestMethod.GET)
     public ResponseEntity<Object> getPost(@RequestParam String postNum) throws ExecutionException, InterruptedException{
 
-        Post post = postService.getPost(postNum);
+        Post post = postService.getPostById(postNum);
         return ResponseEntity.ok().body(post);
     }
 
