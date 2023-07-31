@@ -1,8 +1,14 @@
 package com.example.damnbreadback.dao;
 
 import com.example.damnbreadback.entity.User;
-import lombok.NonNull;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -10,7 +16,42 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 @Slf4j
+@ComponentScan(basePackages={"com.example.damnbreadback.dao"})
 public class UserDao {
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    public List<User> getAllUsers() throws ExecutionException, InterruptedException {
+        // 모든 게시물 가져오기
+
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "from User";
+
+        Query<User> query = session.createQuery(hql, User.class);
+        List<User> userList = query.getResultList();
+
+        return userList;
+    }
+
+//    public List<User> getPagedPosts(int page) throws ExecutionException, InterruptedException {
+//        // 특정 페이지 (20개) 게시물 가져오기
+//
+//        return null;
+//    }
+//
+//    public List<Post> getFilteredPosts() throws ExecutionException, InterruptedException {
+//        // 필터링된 게시물 가져오기
+//
+//        return null;
+//    }
+
+    public User getUserById(String userId) throws ExecutionException, InterruptedException{
+
+        Session session = sessionFactory.getCurrentSession();
+        User user = (User) session.get(User.class, userId);
+
+        return user;
+    }
 
 //    public static final String COLLECTION_NAME = "users";
 //
@@ -25,11 +66,21 @@ public class UserDao {
 //        return list;
 //    }
 //
-//    public void insertUser(User user) throws ExecutionException, InterruptedException {
-//        db.collection(COLLECTION_NAME).add(
-//                user
-//        );
-//    }
+    public String insertUser(User user) throws ExecutionException, InterruptedException {
+        EntityManager entityManager = sessionFactory.createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(user);
+            entityManager.getTransaction().commit();
+            return user.getId(); // Assuming that the User entity has an auto-generated ID field.
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            throw e;
+        } finally {
+            entityManager.close();
+        }
+    }
 //
 //    public String getUserId(String id) throws ExecutionException, InterruptedException {
 //        String user = null;
@@ -45,61 +96,63 @@ public class UserDao {
 //    }
 //
 //
-//    // 로그인 -> user 정보 찾기
-//    public User findUser(String id, String pw) throws ExecutionException, InterruptedException {
-//        User user = null;
-//        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
-//        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//        for (QueryDocumentSnapshot document : documents) {
-//            user = document.toObject(User.class);
+    // 로그인 -> user 정보 찾기
+    public User findUser(String id, String pw) throws ExecutionException, InterruptedException {
+        EntityManager entityManager = sessionFactory.createEntityManager();
+
+        String hql = "FROM User WHERE id = :userId AND pw = :password";
+        TypedQuery<User> query = entityManager.createQuery(hql, User.class);
+        query.setParameter("userId", id);
+        query.setParameter("password", pw);
+
+        List<User> userList = query.getResultList();
+
+        System.out.println(userList);
+        if (userList.isEmpty()) {
+            User user = new User();
+            user.setId("fail to find user");
+            return user;
+        } else {
+            return userList.get(0);
+        }
+    }
 //
-//            if(user.getId().equals(id)){
-//                System.out.println(user.getPassword() +"//"+ pw);
-//                if(user.getPassword().equals(pw)){
-//                    System.out.println(user.getPassword() + "/" + pw);
-//                }
-//                else {
-//                    user.setId("incorrect password");
-//                }
-//                return user;
-//            }
-//        }
-//        return user;
-//    }
-//
-//    // 회원가입 -> 중복확인
-//    public Boolean findId(String id) throws ExecutionException, InterruptedException {
-//        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
-//        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//        for (QueryDocumentSnapshot document : documents) {
-//            if(document.toObject(User.class).getId().equals(id)){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    public Boolean findNickname(String nickname) throws ExecutionException, InterruptedException {
-//        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
-//        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//        for (QueryDocumentSnapshot document : documents) {
-//            if(document.toObject(User.class).getNickname().equals(nickname)){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    public Boolean findEmail(String email) throws ExecutionException, InterruptedException {
-//        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
-//        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//        for (QueryDocumentSnapshot document : documents) {
-//            if(document.toObject(User.class).getEmail().equals(email)){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    // 회원가입 -> 중복확인
+    public Boolean findId(String id) throws ExecutionException, InterruptedException {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "from User where id = :userId";
+
+        Query<User> query = session.createQuery(hql, User.class);
+        query.setParameter("userId", id);
+
+        List<User> userList = query.getResultList();
+
+        return !userList.isEmpty();
+    }
+
+    public Boolean findNickname(String nickname) throws ExecutionException, InterruptedException {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "from User where nickname = :nickname";
+
+        Query<User> query = session.createQuery(hql, User.class);
+        query.setParameter("nickname", nickname);
+
+        List<User> userList = query.getResultList();
+
+        return !userList.isEmpty();
+    }
+
+    public Boolean findEmail(String email) throws ExecutionException, InterruptedException {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "from User where email = :email";
+
+        Query<User> query = session.createQuery(hql, User.class);
+        query.setParameter("email", email);
+
+        List<User> userList = query.getResultList();
+
+        return !userList.isEmpty();
+    }
 //
 //    // 인재정보 가져오기. -> 페이징 (20명씩)
 //    public List<User> getRankScore() throws ExecutionException, InterruptedException {

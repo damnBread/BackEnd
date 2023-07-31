@@ -29,7 +29,7 @@ public class MyPageController {
     private PostService postService;
 
     @GetMapping("/mypage")
-    public ResponseEntity<Object> getMyPage(Authentication authentication) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> getMyPage(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws ExecutionException, InterruptedException {
         return ResponseEntity.ok().body(authentication.getName() + "님의 마이페이지 성공");
     }
 

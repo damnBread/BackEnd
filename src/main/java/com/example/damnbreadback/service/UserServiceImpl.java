@@ -29,8 +29,7 @@ public class UserServiceImpl implements UserService {
         User user = loginCheck(id, pw);
         if(user== null) return null;
 
-        if (user.getId().equals("incorrect password")) return "incorrect password";
-        else if (user.getId().equals("fail to find user")) return "fail to find user";
+        if (user.getId().equals("fail to find user")) return "fail to find user";
         else if(user.getId().equals("db null exception")) return "db null exception";
         else return JwtUtils.createJwt(id, secretKey, expiredMs);
 
@@ -38,21 +37,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers() throws ExecutionException, InterruptedException {
-        //return userDao.getUsers();
-        return null;
+        return userDao.getAllUsers();
+//        return null;
     }
 
     @Override
     public User getUserByUserId(String id)  throws ExecutionException, InterruptedException {
-        //return userDao.getUserByUserId(id);
-        return null;
+        return userDao.getUserById(id);
+//        return null;
     }
 
     // 로그인
     @Override
     public User loginCheck(String id, String pw) throws ExecutionException, InterruptedException {
-        //return userDao.findUser(id, pw);
-        return null;
+        return userDao.findUser(id, pw);
+//        return null;
     }
 
 
@@ -60,22 +59,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public String verifyId(String id) throws ExecutionException, InterruptedException {
         if(id == null) return "null exception";
-        //return userDao.findId(id).toString();
-        return null;
+        return userDao.findId(id).toString();
+//        return null;
     }
 
     @Override
     public String verifyNickname(String nickname) throws ExecutionException, InterruptedException {
         if(nickname == null) return "null exception";
-        //return userDao.findNickname(nickname).toString();
-        return null;
+        return userDao.findNickname(nickname).toString();
+//        return null;
     }
 
     @Override
     public String verifyEmail(String email) throws ExecutionException, InterruptedException {
         if(email == null) return "null exception";
-        //return userDao.findEmail(email).toString();
-        return null;
+        return userDao.findEmail(email).toString();
+//        return null;
     }
 
 
@@ -92,7 +91,8 @@ public class UserServiceImpl implements UserService {
 
         else {
             User user = new User();
-            //user.setPw(signupRequest.getPw());
+            user.setId(signupRequest.getId());
+            user.setPw(signupRequest.getPw());
             user.setName(signupRequest.getName());
             user.setEmail(signupRequest.getEmail());
             user.setNickname(signupRequest.getNickname());
@@ -100,10 +100,13 @@ public class UserServiceImpl implements UserService {
             user.setBirth(signupRequest.getBirth());
             user.setGender(signupRequest.isGender());
             user.setHome(signupRequest.getHome());
+            user.setHopeJob(signupRequest.getHopeJob());
+            user.setHopeLocation(signupRequest.getHopeLocation());
 
             user.setNoShow(0);
             user.setScore(0);
             user.setJoinDate(new Date()); // 가입하는 현재 시간 저장
+            user.setIsPublic("0000000");
 
             HashMap<String, Boolean> isPublicMap = new HashMap<>();
             isPublicMap.put("birth", true);
@@ -115,7 +118,7 @@ public class UserServiceImpl implements UserService {
             isPublicMap.put("name", true);
             isPublicMap.put("phone", true);
 
-            //userDao.insertUser(user);
+            userDao.insertUser(user);
 
             return user;
         }

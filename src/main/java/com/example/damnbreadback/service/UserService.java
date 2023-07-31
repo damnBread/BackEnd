@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface UserService {
-
     String login(String userName, String password)  throws ExecutionException, InterruptedException;
     List<User> getUsers() throws ExecutionException, InterruptedException;
     User getUserByUserId(String id)  throws ExecutionException, InterruptedException;

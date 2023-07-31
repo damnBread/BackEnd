@@ -21,6 +21,6 @@ public class SignupRequest {
     // firebase timestamp type
     private Date birth; // 생년월일
     private boolean gender; // 성별 (true : 남자 , false : 여자)
-    private ArrayList<String> hopeJob; // 희망 업/직종
-    private ArrayList<String> hopeLocation; // 희망 거주지 -> String Array
+    private String hopeJob; // 희망 업/직종
+    private String hopeLocation; // 희망 거주지 -> String Array
 }

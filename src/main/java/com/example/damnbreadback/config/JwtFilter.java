@@ -31,11 +31,9 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 //        final String authorization = request.getHeader("Authorization");
         System.out.println("authorization : {"+ authorization+"}");
-
         //token안보내면 권한 없음.
         if(authorization == null || authorization.startsWith("{Bearer ")) {
             System.out.println("잘못된 authorization 입니다.");
-
             filterChain.doFilter(request, response);
             return;
         }
@@ -43,7 +41,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         //Token Expired 체크
         if(JwtUtils.isExpired(token, secretKey)){
-            System.out.println("3??authorization : {"+ authorization+"}");
             System.out.println("토큰이 만료되었습니다.");
             filterChain.doFilter(request, response);
             return;
@@ -56,11 +53,8 @@ public class JwtFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userId, null, List.of(new SimpleGrantedAuthority("USER")));
 
-        System.out.println(authenticationToken);
-
         //Detail을 넣어줌
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         System.out.println("3 authorization : {"+ authorization+"}");
         filterChain.doFilter(request, response);
     }

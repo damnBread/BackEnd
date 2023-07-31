@@ -1,5 +1,6 @@
 package com.example.damnbreadback.config;
 
+import com.example.damnbreadback.exception.EntryPointUnauthorizedHandler;
 import com.example.damnbreadback.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,8 @@ public class SecurityConfig {
     @Value("${JWT.SECRET}")
     private String secretKey;
 
+    private final EntryPointUnauthorizedHandler unauthorizedHandler; // access denied 됐을때 핸들러
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/login", "/signup", "/signup/**");
@@ -33,9 +36,16 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests((requests) -> {
             ((AuthorizeHttpRequestsConfigurer.AuthorizedUrl)requests.anyRequest()).authenticated();
         });
+
         http.formLogin(Customizer.withDefaults());
         http.addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
 
