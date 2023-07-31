@@ -1,6 +1,9 @@
 package com.example.damnbreadback.dao;
 
 import com.example.damnbreadback.entity.User;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +25,12 @@ public class UserDao {
     private SessionFactory sessionFactory;
 
     public List<User> getAllUsers() throws ExecutionException, InterruptedException {
-        // 모든 게시물 가져오기
+        EntityManager entityManager = sessionFactory.createEntityManager();
 
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "from User";
+        String hql = "FROM User";
+        TypedQuery<User> query = entityManager.createQuery(hql, User.class);
 
-        Query<User> query = session.createQuery(hql, User.class);
         List<User> userList = query.getResultList();
-
         return userList;
     }
 
@@ -100,14 +101,15 @@ public class UserDao {
     public User findUser(String id, String pw) throws ExecutionException, InterruptedException {
         EntityManager entityManager = sessionFactory.createEntityManager();
 
+        System.out.println(id +"//" + pw);
         String hql = "FROM User WHERE id = :userId AND pw = :password";
         TypedQuery<User> query = entityManager.createQuery(hql, User.class);
         query.setParameter("userId", id);
         query.setParameter("password", pw);
 
         List<User> userList = query.getResultList();
+        System.out.println(userList.size());
 
-        System.out.println(userList);
         if (userList.isEmpty()) {
             User user = new User();
             user.setId("fail to find user");
@@ -119,10 +121,12 @@ public class UserDao {
 //
     // 회원가입 -> 중복확인
     public Boolean findId(String id) throws ExecutionException, InterruptedException {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "from User where id = :userId";
+        EntityManager entityManager = sessionFactory.createEntityManager();
 
-        Query<User> query = session.createQuery(hql, User.class);
+        System.out.println("id :: " +id);
+        String hql = "FROM User where id = :userId";
+        TypedQuery<User> query = entityManager.createQuery(hql, User.class);
+
         query.setParameter("userId", id);
 
         List<User> userList = query.getResultList();
@@ -131,10 +135,10 @@ public class UserDao {
     }
 
     public Boolean findNickname(String nickname) throws ExecutionException, InterruptedException {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "from User where nickname = :nickname";
-
-        Query<User> query = session.createQuery(hql, User.class);
+        EntityManager entityManager = sessionFactory.createEntityManager();
+        System.out.println("nickname :: " +nickname);
+        String hql = "FROM User where nickname = :nickname";
+        TypedQuery<User> query = entityManager.createQuery(hql, User.class);
         query.setParameter("nickname", nickname);
 
         List<User> userList = query.getResultList();
@@ -143,10 +147,10 @@ public class UserDao {
     }
 
     public Boolean findEmail(String email) throws ExecutionException, InterruptedException {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "from User where email = :email";
-
-        Query<User> query = session.createQuery(hql, User.class);
+        EntityManager entityManager = sessionFactory.createEntityManager();
+        System.out.println("email :: " +email);
+        String hql = "FROM User where email = :email";
+        TypedQuery<User> query = entityManager.createQuery(hql, User.class);
         query.setParameter("email", email);
 
         List<User> userList = query.getResultList();
@@ -154,24 +158,19 @@ public class UserDao {
         return !userList.isEmpty();
     }
 //
-//    // 인재정보 가져오기. -> 페이징 (20명씩)
-//    public List<User> getRankScore() throws ExecutionException, InterruptedException {
-//            ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME)
-//                    .orderBy("score", Query.Direction.DESCENDING)
-//                    .limit(20)
-//                    .get();
-//
-//            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//            List<User> topUsers = new ArrayList<>();
-//
-//            for (QueryDocumentSnapshot document : documents) {
-//                System.out.println(document.getId());
-//                User user = document.toObject(User.class);
-//                topUsers.add(user);
-//            }
-//
-//            return topUsers;
-//    }
+    // 인재정보 가져오기. -> 페이징 (20명씩)
+    public List<User> getRankScore() throws ExecutionException, InterruptedException {
+        EntityManager entityManager = sessionFactory.createEntityManager();
+
+        String hql = "FROM User ORDER BY score DESC";
+        TypedQuery<User> query = entityManager.createQuery(hql, User.class);
+        query.setMaxResults(20); // Set the maximum number of results to 20 to get the top 20 users.
+        List<User> userList = query.getResultList();
+
+        System.out.println(userList);
+
+        return userList;
+    }
 //
 //    public List<String> getScraps(String user) throws ExecutionException, InterruptedException{
 //        DocumentReference docRef = db.collection(COLLECTION_NAME).document(user);

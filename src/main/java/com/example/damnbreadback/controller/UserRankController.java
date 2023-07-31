@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +17,6 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 //@RequestMapping("/exam/svc/v1")
 public class UserRankController {
-
-    SessionManager sessionManager;
     public static final String SESSION_NAME = "USER";
     @Autowired
     UserService userService;
@@ -25,12 +24,11 @@ public class UserRankController {
     //인재 랭킹 3명 , 새로운 인재 20명 불러오기
     @GetMapping("/damnrank")
     public ResponseEntity<Object> getUserRank() throws ExecutionException, InterruptedException {
-        //인재 랭킹 3명 불러오기 ( db에서 스코어 기준으로 내림차순 정렬 후, 3명 불러오기 -> 같은 점수면 매칭 이력이 적은 사람이 상위 )
         List<User> rankScoreUsers = userService.getRankScore();
 
-        System.out.println(rankScoreUsers.get(0));
+        System.out.println("rank : "+rankScoreUsers.get(0));
 
-        if(rankScoreUsers == null)
+        if(rankScoreUsers.isEmpty())
             return ResponseEntity.badRequest().body("no rank data");
 
 
@@ -39,21 +37,26 @@ public class UserRankController {
 
     //인재 상세 정보
     @PostMapping("/damnrank/detail")
-    public ResponseEntity<Object> getUserDetail(@RequestBody String userid, HttpServletRequest request) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> getUserDetail(Authentication authentication, HttpServletRequest request) throws ExecutionException, InterruptedException {
         User user = null;
 
-        sessionManager = new SessionManager(request);
+        String userId = authentication.getName();
+        user = userService.getUserById(userId);
 
-        if((user = (User)sessionManager.getSessionValue(SESSION_NAME)) == null){
-            // 사용자 찾아서 정보 전달
-        }
-        else {
-            // 세션에서 사용자 찾아오기.
-            System.out.println(user);
-        }
+        System.out.println(user.getId());
+        if(user == null ) return  ResponseEntity.badRequest().body("can not find user");
+        return ResponseEntity.ok().body(user);
 
+//        sessionManager = new SessionManager(request);
+//
+//        if((user = (User)sessionManager.getSessionValue(SESSION_NAME)) == null){
+//            // 사용자 찾아서 정보 전달
+//        }
+//        else {
+//            // 세션에서 사용자 찾아오기.
+//            System.out.println(user);
+//        }
 
-        return ResponseEntity.ok().body("success~~");
     }
 
 }

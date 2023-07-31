@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     public String login(String id, String pw) throws ExecutionException, InterruptedException{
         //인증과정 생략
         User user = loginCheck(id, pw);
+
         if(user== null) return null;
 
         if (user.getId().equals("fail to find user")) return "fail to find user";
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUserId(String id)  throws ExecutionException, InterruptedException {
+    public User getUserById(String id)  throws ExecutionException, InterruptedException {
         return userDao.getUserById(id);
 //        return null;
     }
@@ -128,8 +129,8 @@ public class UserServiceImpl implements UserService {
     // 인재정보 -> rank 정보 get
     @Override
     public List<User> getRankScore() throws ExecutionException, InterruptedException {
-        //List<User> users = userDao.getRankScore();
-        return null;
+        return userDao.getRankScore();
+//        return null;
     }
 
     @Override

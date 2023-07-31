@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 public interface UserService {
     String login(String userName, String password)  throws ExecutionException, InterruptedException;
     List<User> getUsers() throws ExecutionException, InterruptedException;
-    User getUserByUserId(String id)  throws ExecutionException, InterruptedException;
+    User getUserById(String id)  throws ExecutionException, InterruptedException;
 
     // 로그인
     User loginCheck(String id, String pw) throws ExecutionException, InterruptedException;

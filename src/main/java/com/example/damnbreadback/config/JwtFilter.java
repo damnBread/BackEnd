@@ -32,22 +32,30 @@ public class JwtFilter extends OncePerRequestFilter {
 //        final String authorization = request.getHeader("Authorization");
         System.out.println("authorization : {"+ authorization+"}");
         //token안보내면 권한 없음.
-        if(authorization == null || authorization.startsWith("{Bearer ")) {
+        if(authorization == null || !authorization.startsWith("Bearer ")) {
             System.out.println("잘못된 authorization 입니다.");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set 401 Unauthorized status
+            response.getWriter().write("Unauthorized: Access denied"); // Optional response body message
+
             filterChain.doFilter(request, response);
             return;
         }
+
         String token = authorization.split(" ")[1];
 
         //Token Expired 체크
         if(JwtUtils.isExpired(token, secretKey)){
             System.out.println("토큰이 만료되었습니다.");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set 401 Unauthorized status
+            response.getWriter().write("Unauthorized: Access denied"); // Optional response body message
+
             filterChain.doFilter(request, response);
             return;
         }
 
         String userId = JwtUtils.getUserName(token, secretKey);
-
 
         //권한부여
         UsernamePasswordAuthenticationToken authenticationToken =
