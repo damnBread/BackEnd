@@ -27,11 +27,10 @@ public class MyPageController {
     private PostService postService;
 
     @GetMapping("/mypage")
-    public ResponseEntity<Object> getMyPage(@RequestBody String userid, Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws ExecutionException, InterruptedException {
-        System.out.println("gkgkk");
-        System.out.println(request.getHeader("Authorization"));
-        System.out.println(authentication.getName());
-        return ResponseEntity.ok().body(authentication.getName() + "님의 마이페이지 성공");
+    public ResponseEntity<Object> getMyPage(@RequestParam String userid, Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws ExecutionException, InterruptedException {
+//        System.out.println(authentication.getName());
+        return ResponseEntity.ok().body("님의 마이페이지 성공");
+//        return ResponseEntity.ok().body(authentication.getName() + "님의 마이페이지 성공");
     }
 
     @GetMapping("/mypage/{userid}/bookmark")

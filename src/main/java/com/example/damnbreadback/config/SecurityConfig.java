@@ -31,31 +31,26 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/login", "/signup", "/signup/**", "/damnrank/detail");
+        return (web) -> web.ignoring().requestMatchers("/signup", "/**");
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors().disable()
-                .csrf()
-                .ignoringRequestMatchers("/damnrank/detail")
-                .and()
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/damnrank").permitAll()
+//        http
+//                .cors().disable()
+//                .csrf()
+////                .ignoringRequestMatchers("/damnrank/{userid}/detail")
+//                .and()
+//                .authorizeHttpRequests(requests -> requests
+//                        .requestMatchers("/login", "/signup", "/signup/**" , "/damnrank","/damnrank/{userid}/detail").permitAll()
 //                        .requestMatchers("/mypage").hasAnyRole("USER")
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                );
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin(form -> form
+//                        .loginPage("/login")
+//                        .permitAll()
+//                );
 
-
-//        http.authorizeHttpRequests((requests) -> {
-//            ((AuthorizeHttpRequestsConfigurer.AuthorizedUrl)requests.requestMatchers(HttpMethod.POST,"/mypage").hasAnyRole("USER")
-//                    .requestMatchers(HttpMethod.GET,"/**").hasAnyRole("USER").anyRequest()).authenticated();
-//        });
         http.formLogin(Customizer.withDefaults());
         http.addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
 

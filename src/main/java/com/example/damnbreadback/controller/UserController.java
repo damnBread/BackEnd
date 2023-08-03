@@ -26,12 +26,12 @@ public class UserController {
 //
     @Autowired
     private UserService userService;
-//
-    @GetMapping("/users")
-    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
-        List<User> list = userService.getUsers();
-        return ResponseEntity.ok().body(list);
-    }
+
+//    @GetMapping("/users")
+//    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
+//        List<User> list = userService.getUsers();
+//        return ResponseEntity.ok().body(list);
+//    }
 
 //
 //
@@ -57,11 +57,11 @@ public class UserController {
 //    // 5. 서버는 토큰을 확인 -> 토큰이 있는 인증된 사용자 : 사용자 정보를 가져와서 마이페이지를 보여줌
 //    //                    -> 토큰이 없는 인증되지 않은 사용자 : 로그인 화면으로 이동하거나 로그인(인증)이 필요하다는 메세지 등을 통해 사용자에게 알림.
 //    //===================================================================================
-//
+
 //    //test : zara0140 / 1234567a
     @PostMapping("/login")
     public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
-        String tok = userService.login(loginRequest.getId(), loginRequest.getPassword());
+        String tok = userService.login(loginRequest.getId(), loginRequest.getPw());
 
         if(tok.equals("fail to find user"))
             return ResponseEntity.badRequest().body("fail to find user");
@@ -88,7 +88,7 @@ public class UserController {
     }
 
     @PostMapping("/signup/verify/nickname")
-    public ResponseEntity<Object> verifyNickname(@RequestBody  Map<String, String> nickname) throws ExecutionException, InterruptedException{
+    public ResponseEntity<Object> verifyNickname(@RequestBody Map<String, String> nickname) throws ExecutionException, InterruptedException{
         String verifyResult = userService.verifyNickname(nickname.get("nickname"));
         if(verifyResult.equals("null exception")) return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);

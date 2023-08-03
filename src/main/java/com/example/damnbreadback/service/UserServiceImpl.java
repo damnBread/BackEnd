@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserDao userDao;
 
+    // 로그인 ===============================================================================
     public String login(String id, String pw) throws ExecutionException, InterruptedException{
         //인증과정 생략
         User user = loginCheck(id, pw);
@@ -36,18 +37,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public List<User> getUsers() throws ExecutionException, InterruptedException {
-        return userDao.getAllUsers();
-//        return null;
-    }
-
-    @Override
-    public User getUserById(String id)  throws ExecutionException, InterruptedException {
-        return userDao.getUserById(id);
-//        return null;
-    }
-
     // 로그인
     @Override
     public User loginCheck(String id, String pw) throws ExecutionException, InterruptedException {
@@ -55,7 +44,9 @@ public class UserServiceImpl implements UserService {
 //        return null;
     }
 
+    //=========================================================================================
 
+    // 회원가입 ==============================================================================
     // 회원가입 -> 회원 정보 중복 확인
     @Override
     public String verifyId(String id) throws ExecutionException, InterruptedException {
@@ -126,10 +117,20 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    // ====================================================================================================
+
+
+    //기본키 userId로 user 찾기.
+    @Override
+    public User getUserById(Long id)  throws ExecutionException, InterruptedException {
+        return userDao.getUserById(id);
+//        return null;
+    }
+
     // 인재정보 -> rank 정보 get
     @Override
-    public List<User> getRankScore() throws ExecutionException, InterruptedException {
-        return userDao.getRankScore();
+    public List<User> getRankScore(int page) throws ExecutionException, InterruptedException {
+        return userDao.getRankScore(page);
 //        return null;
     }
 
@@ -145,5 +146,11 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+
+    @Override
+    public List<User> getUsers() throws ExecutionException, InterruptedException {
+        return userDao.getAllUsers();
+//        return null;
+    }
 
 }

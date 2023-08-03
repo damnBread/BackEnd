@@ -15,7 +15,6 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("/exam/svc/v1")
 public class UserRankController {
     public static final String SESSION_NAME = "USER";
     @Autowired
@@ -23,8 +22,8 @@ public class UserRankController {
 
     //인재 랭킹 3명 , 새로운 인재 20명 불러오기
     @GetMapping("/damnrank")
-    public ResponseEntity<Object> getUserRank() throws ExecutionException, InterruptedException {
-        List<User> rankScoreUsers = userService.getRankScore();
+    public ResponseEntity<Object> getUserRank(@RequestParam int page) throws ExecutionException, InterruptedException {
+        List<User> rankScoreUsers = userService.getRankScore(page);
 
         System.out.println("rank : "+rankScoreUsers.get(0));
 
@@ -36,26 +35,14 @@ public class UserRankController {
     }
 
     //인재 상세 정보
-    @PostMapping("/damnrank/detail")
-    public ResponseEntity<Object> getUserDetail(Authentication authentication, HttpServletRequest request) throws ExecutionException, InterruptedException {
+    @GetMapping("/damnrank/{userid}/detail")
+    public ResponseEntity<Object> getUserDetail(@PathVariable("userid") Long userId) throws ExecutionException, InterruptedException {
         User user = null;
 
-        String userId = authentication.getName();
         user = userService.getUserById(userId);
 
-        System.out.println(user.getId());
-        if(user == null ) return  ResponseEntity.badRequest().body("can not find user");
+        if(user == null) return  ResponseEntity.badRequest().body("can not find user");
         return ResponseEntity.ok().body(user);
-
-//        sessionManager = new SessionManager(request);
-//
-//        if((user = (User)sessionManager.getSessionValue(SESSION_NAME)) == null){
-//            // 사용자 찾아서 정보 전달
-//        }
-//        else {
-//            // 세션에서 사용자 찾아오기.
-//            System.out.println(user);
-//        }
 
     }
 
