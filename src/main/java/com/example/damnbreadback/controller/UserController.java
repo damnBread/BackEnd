@@ -68,6 +68,7 @@ public class UserController {
         if(tok.equals("db null exception"))
             return ResponseEntity.badRequest().body("null exception");
 
+        response.addHeader("Authorization", "Bearer " + tok);
         return ResponseEntity.ok().body(tok);
     }
 

@@ -5,6 +5,7 @@ import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.PostService;
 import com.example.damnbreadback.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,11 +27,14 @@ public class MyPageController {
     @Autowired
     private PostService postService;
 
+//    @PreAuthorize("hasRole('USER')") //접근권한 (우리 웹에 ADMIN이 생긴다면.. 필요할 아이)
     @GetMapping("/mypage")
-    public ResponseEntity<Object> getMyPage(@RequestParam String userid, Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> getMyPage(@RequestParam String userid, HttpServletRequest request, HttpServletResponse response) throws ExecutionException, InterruptedException {
+
 //        System.out.println(authentication.getName());
-        return ResponseEntity.ok().body("님의 마이페이지 성공");
 //        return ResponseEntity.ok().body(authentication.getName() + "님의 마이페이지 성공");
+
+        return ResponseEntity.ok().body("님의 마이페이지 성공");
     }
 
     @GetMapping("/mypage/{userid}/bookmark")

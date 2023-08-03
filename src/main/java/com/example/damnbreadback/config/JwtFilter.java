@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,6 +33,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
         //Token에서 Username 꺼내기
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 //        final String authorization = request.getHeader("Authorization");
@@ -39,8 +43,8 @@ public class JwtFilter extends OncePerRequestFilter {
         if(authorization == null || !authorization.startsWith("Bearer ")) {
             System.out.println("잘못된 authorization 입니다.");
 
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set 401 Unauthorized status
-            response.getWriter().write("Unauthorized: Access denied"); // Optional response body message
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set 401 Unauthorized status
+//            response.getWriter().write("Unauthorized: Access denied"); // Optional response body message
 
             filterChain.doFilter(request, response);
             return;
@@ -48,19 +52,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = authorization.split(" ")[1];
 
-        //Token Expired 체크
-        if(JwtUtils.isExpired(token, secretKey)){
-            System.out.println("토큰이 만료되었습니다.");
+        if(JwtUtils.validateTokenAndGetUserDetails(token, secretKey) == null){
+            System.out.println("올바르지 않은 토큰입니다.");
 
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set 401 Unauthorized status
-            response.getWriter().write("Unauthorized: Access denied"); // Optional response body message
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set 401 Unauthorized status
+//            response.getWriter().write("Unauthorized: Access denied"); // Optional response body message
 
             filterChain.doFilter(request, response);
             return;
         }
 
-        String userId = JwtUtils.getUserName(token, secretKey);
+        String userId = JwtUtils.getUserIdFromToken(token, secretKey);
+        System.out.println(JwtUtils.getRoleFromToken(token, secretKey));
 
+        System.out.println(userId);
         //권한부여
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userId, null, List.of(new SimpleGrantedAuthority("USER")));

@@ -33,7 +33,8 @@ public class UserServiceImpl implements UserService {
 
         if (user.getId().equals("fail to find user")) return "fail to find user";
         else if(user.getId().equals("db null exception")) return "db null exception";
-        else return JwtUtils.createJwt(id, secretKey, expiredMs);
+//        else return JwtUtils.createJwt(id, secretKey, expiredMs);
+        else return JwtUtils.generateToken(id, "USER", secretKey, expiredMs);
 
     }
 
