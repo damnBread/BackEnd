@@ -11,9 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -29,8 +27,10 @@ public class MyPageController {
     private PostService postService;
 
     @GetMapping("/mypage")
-    public ResponseEntity<Object> getMyPage(Authentication authentication) throws ExecutionException, InterruptedException {
-        return ResponseEntity.ok().body(authentication.getName() + "님의 마이페이지 성공");
+    public ResponseEntity<Object> getMyPage(@RequestParam String userid, Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws ExecutionException, InterruptedException {
+//        System.out.println(authentication.getName());
+        return ResponseEntity.ok().body("님의 마이페이지 성공");
+//        return ResponseEntity.ok().body(authentication.getName() + "님의 마이페이지 성공");
     }
 
     @GetMapping("/mypage/{userid}/bookmark")

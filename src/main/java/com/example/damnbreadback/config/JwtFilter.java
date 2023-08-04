@@ -7,7 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,43 +28,49 @@ public class JwtFilter extends OncePerRequestFilter {
     @Value("${JWT.SECRET}")
     private final String secretKey;
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //Token에서 Username 꺼내기
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 //        final String authorization = request.getHeader("Authorization");
         System.out.println("authorization : {"+ authorization+"}");
-
         //token안보내면 권한 없음.
-        if(authorization == null || authorization.startsWith("{Bearer ")) {
+        if(authorization == null || !authorization.startsWith("Bearer ")) {
             System.out.println("잘못된 authorization 입니다.");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set 401 Unauthorized status
+            response.getWriter().write("Unauthorized: Access denied"); // Optional response body message
 
             filterChain.doFilter(request, response);
             return;
         }
+
         String token = authorization.split(" ")[1];
 
         //Token Expired 체크
         if(JwtUtils.isExpired(token, secretKey)){
-            System.out.println("3??authorization : {"+ authorization+"}");
             System.out.println("토큰이 만료되었습니다.");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set 401 Unauthorized status
+            response.getWriter().write("Unauthorized: Access denied"); // Optional response body message
+
             filterChain.doFilter(request, response);
             return;
         }
 
         String userId = JwtUtils.getUserName(token, secretKey);
 
-
         //권한부여
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userId, null, List.of(new SimpleGrantedAuthority("USER")));
 
-        System.out.println(authenticationToken);
-
         //Detail을 넣어줌
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         System.out.println("3 authorization : {"+ authorization+"}");
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
         filterChain.doFilter(request, response);
     }
 }

@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface UserService {
-
     String login(String userName, String password)  throws ExecutionException, InterruptedException;
     List<User> getUsers() throws ExecutionException, InterruptedException;
-    User getUserByUserId(String id)  throws ExecutionException, InterruptedException;
+    User getUserById(Long id)  throws ExecutionException, InterruptedException;
 
     // 로그인
     User loginCheck(String id, String pw) throws ExecutionException, InterruptedException;
@@ -24,7 +23,7 @@ public interface UserService {
     User addUser(SignupRequest signupRequest) throws ExecutionException, InterruptedException ;
 
     // 인재정보 rank 데이터 get
-    List<User> getRankScore() throws ExecutionException, InterruptedException;
+    List<User> getRankScore(int page) throws ExecutionException, InterruptedException;
 
 
     String getUserId(String id) throws ExecutionException, InterruptedException;
