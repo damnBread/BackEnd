@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 @Slf4j
-@ComponentScan(basePackages={"com.example.damnbreadback.dao"})
+//@ComponentScan(basePackages={"com.example.damnbreadback.dao"})
 public class PostDao {
 
     @Autowired

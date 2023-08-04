@@ -26,7 +26,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<Object> getAllPosts(@RequestParam Integer page) throws ExecutionException, InterruptedException, TimeoutException {
         // Pagination 추가
-        List<Post> list = postService.getPosts(page.intValue());
+        List<Post> list = postService.getPosts();
         return ResponseEntity.ok().body(list);
     }
 

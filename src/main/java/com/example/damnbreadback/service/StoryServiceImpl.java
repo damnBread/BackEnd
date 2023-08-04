@@ -17,7 +17,7 @@ public class StoryServiceImpl implements StoryService {
     private final StoryDao storyDao;
 
     @Override
-    public List<Story> getStories() throws ExecutionException, InterruptedException {
-        return storyDao.getStories();
+    public List<Story> getAllStories() throws ExecutionException, InterruptedException {
+        return storyDao.getAllStories();
     }
 }
