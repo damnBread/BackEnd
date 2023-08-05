@@ -15,17 +15,16 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/damnrank")
 public class UserRankController {
-    public static final String SESSION_NAME = "USER";
+//    public static final String SESSION_NAME = "USER";
     @Autowired
     UserService userService;
 
     //인재 랭킹 3명 , 새로운 인재 20명 불러오기
-    @GetMapping("/damnrank")
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> getUserRank(@RequestParam int page) throws ExecutionException, InterruptedException {
         List<User> rankScoreUsers = userService.getRankScore(page);
-
-        System.out.println("rank : "+rankScoreUsers.get(0));
 
         if(rankScoreUsers.isEmpty())
             return ResponseEntity.badRequest().body("no rank data");
@@ -35,6 +34,7 @@ public class UserRankController {
     }
 
     //인재 상세 정보
+    @RequestMapping(value = "/{userid}/detail", method = RequestMethod.GET)
     @GetMapping("/damnrank/{userid}/detail")
     public ResponseEntity<Object> getUserDetail(@PathVariable("userid") Long userId) throws ExecutionException, InterruptedException {
         User user = null;

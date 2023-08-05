@@ -5,6 +5,7 @@ import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.PostService;
 import com.example.damnbreadback.service.UserService;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/mypage")
 public class MyPageController {
     private Long expiredMs = 1000 * 60 * 60l;
     @Autowired
@@ -28,7 +30,7 @@ public class MyPageController {
     private PostService postService;
 
 //    @PreAuthorize("hasRole('USER')") //접근권한 (우리 웹에 ADMIN이 생긴다면.. 필요할 아이)
-    @GetMapping("/mypage")
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> getMyPage(@RequestParam String userid, HttpServletRequest request, HttpServletResponse response) throws ExecutionException, InterruptedException {
 
 //        System.out.println(authentication.getName());
@@ -37,7 +39,7 @@ public class MyPageController {
         return ResponseEntity.ok().body("님의 마이페이지 성공");
     }
 
-    @GetMapping("/mypage/{userid}/bookmark")
+    @RequestMapping(value = "/{userid}/bookmark", method = RequestMethod.GET)
     public ResponseEntity<Object> getBookmarks(@PathVariable String userid) throws ExecutionException, InterruptedException {
         String user = userService.getUserId(userid);
         List<String> bookmarked = userService.getBookmarks(user);

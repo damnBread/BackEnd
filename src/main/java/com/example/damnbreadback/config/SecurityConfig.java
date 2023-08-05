@@ -84,7 +84,6 @@ public class SecurityConfig {
     //requestMathcers(ONLY_USER).permitAll() : token이 없어도 누구나 접근 가능
     //requestMathcers(ONLY_USER).authenticated : token이 인증된 사용자만 접근 가능
     //requestMathcers(ONLY_USER).hasRole("USER") : token이 인가된 사용자만 접근 가능
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

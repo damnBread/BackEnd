@@ -19,7 +19,6 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("/exam/svc/v1")
 public class UserController {
 //    public static final String SESSION_NAME = "USER";
 //    private SessionManager sessionManager;
