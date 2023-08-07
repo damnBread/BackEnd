@@ -1,13 +1,11 @@
 package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.entity.UserFilter;
 import com.example.damnbreadback.service.UserService;
-import com.example.damnbreadback.session.SessionManager;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("/damnrank")
 public class UserRankController {
 //    public static final String SESSION_NAME = "USER";
+
     @Autowired
     UserService userService;
 
@@ -35,7 +34,6 @@ public class UserRankController {
 
     //인재 상세 정보
     @RequestMapping(value = "/{userid}/detail", method = RequestMethod.GET)
-    @GetMapping("/damnrank/{userid}/detail")
     public ResponseEntity<Object> getUserDetail(@PathVariable("userid") Long userId) throws ExecutionException, InterruptedException {
         User user = null;
 
@@ -43,6 +41,17 @@ public class UserRankController {
 
         if(user == null) return  ResponseEntity.badRequest().body("can not find user");
         return ResponseEntity.ok().body(user);
+
+    }
+
+    @RequestMapping(value = "/filter", method = RequestMethod.GET)
+    public ResponseEntity<Object> getUserFilter(@RequestBody UserFilter userFilter, @RequestParam int page) throws ExecutionException, InterruptedException {
+        List<User> rankScoreUsers = userService.getRankFilter(userFilter, page);
+
+        if(rankScoreUsers.isEmpty())
+            return ResponseEntity.badRequest().body("no filtered data");
+
+        return ResponseEntity.ok().body(rankScoreUsers);
 
     }
 

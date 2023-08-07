@@ -1,6 +1,7 @@
 package com.example.damnbreadback.dao;
 
 import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.entity.UserFilter;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -21,6 +23,8 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 @ComponentScan(basePackages={"com.example.damnbreadback.dao"})
 public class UserDao {
+
+    private int COUNT_IN_PAGE = 20;
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -33,6 +37,7 @@ public class UserDao {
         List<User> userList = query.getResultList();
         return userList;
     }
+
 
     public User getUserById(Long userId) throws ExecutionException, InterruptedException{
         EntityManager entityManager = sessionFactory.createEntityManager();
@@ -130,16 +135,50 @@ public class UserDao {
     }
 //
     // 인재정보 가져오기. -> 페이징 (20명씩)
-    public List<User> getRankScore(int page) throws ExecutionException, InterruptedException {
+    public List<User> getRankScore(int page) {
         EntityManager entityManager = sessionFactory.createEntityManager();
 
         // user 테이블에서 score 로 내림차순 정렬 (score가 같을 경우 joinDate가 느린 사람이 상위로 정렬) 하여 상위 20명의 데이터 가져오기.
         String hql = "FROM User u " +
                 "ORDER BY u.score DESC, " +
                 "CASE WHEN u.score = (SELECT MAX(u2.score) FROM User u2) THEN u.joinDate END DESC ";
+        TypedQuery<User> query = entityManager.createQuery(hql, User.class);
+        query.setFirstResult((page-1)*COUNT_IN_PAGE);
+        query.setMaxResults(COUNT_IN_PAGE);
+        List<User> userList = query.getResultList();
+
+        return userList;
+    }
+
+    public List<User> getRankFilter(String[] location, String[] job, Boolean[] gender, Date birth, int page){
+        EntityManager entityManager = sessionFactory.createEntityManager();
+
+        System.out.println(birth);
+
+        //Todo
+        //Date 검색이 안됨..
+
+        // user 테이블에서 score 로 내림차순 정렬 (score가 같을 경우 joinDate가 느린 사람이 상위로 정렬) 하여 상위 20명의 데이터 가져오기.
+        String hql = "FROM User u " +
+                "WHERE (u.hopeLocation Like CONCAT('%', :location1, '%')  OR u.hopeLocation Like CONCAT('%', :location2, '%') OR u.hopeLocation Like CONCAT('%', :location3, '%')) " +
+                "AND (u.hopeJob Like CONCAT('%', :job1, '%') OR u.hopeJob Like CONCAT('%', :job2, '%') OR u.hopeJob  Like CONCAT('%', :job3, '%')) " +
+                "AND (u.gender = :gender1 OR u.gender = :gender2) " +
+                "AND u.birth <= :birth " +
+                "ORDER BY u.score DESC, " +
+                "CASE WHEN u.score = (SELECT MAX(u2.score) FROM User u2) THEN u.joinDate END DESC";
 
         TypedQuery<User> query = entityManager.createQuery(hql, User.class);
-        query.setFirstResult(page-1);
+        query.setParameter("location1", location[0]);
+        query.setParameter("location2", location[1]);
+        query.setParameter("location3", location[2]);
+        query.setParameter("job1", job[0]);
+        query.setParameter("job2", job[1]);
+        query.setParameter("job3", job[2]);
+        query.setParameter("gender1", gender[0]);
+        query.setParameter("gender2", gender[1]);
+        query.setParameter("birth", birth);
+
+        query.setFirstResult((page-1)*20);
         query.setMaxResults(20);
         List<User> userList = query.getResultList();
 

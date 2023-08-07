@@ -2,7 +2,9 @@ package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.entity.SignupRequest;
+import com.example.damnbreadback.entity.UserFilter;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -20,11 +22,12 @@ public interface UserService {
     String verifyEmail(String email) throws ExecutionException, InterruptedException;
 
     // 회원가입 -> 신규 회원 저장
-    User addUser(SignupRequest signupRequest) throws ExecutionException, InterruptedException ;
+    User addUser(User user) throws ExecutionException, InterruptedException ;
 
     // 인재정보 rank 데이터 get
     List<User> getRankScore(int page) throws ExecutionException, InterruptedException;
-
+    List<User> getRankFilter(UserFilter userFilter, int page) throws ExecutionException, InterruptedException;
+    Date calculateBirthDateFromAge(int age);
 
     String getUserId(String id) throws ExecutionException, InterruptedException;
 

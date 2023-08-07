@@ -95,7 +95,7 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .authorizeRequests()
                 .requestMatchers(ONLY_USER).authenticated()
-//                .requestMatchers("/damnrank").permitAll()
+                .requestMatchers("/damnrank/**").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .exceptionHandling()
