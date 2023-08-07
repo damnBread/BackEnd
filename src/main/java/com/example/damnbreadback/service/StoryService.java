@@ -1,5 +1,6 @@
 package com.example.damnbreadback.service;
 
+import com.example.damnbreadback.dto.StoryDTO;
 import com.example.damnbreadback.entity.Story;
 import org.springframework.data.domain.Page;
 
@@ -13,6 +14,6 @@ public interface StoryService {
 
     public List<Story> getAllStories() throws ExecutionException, InterruptedException;
     public Optional<Story> getStory(Long id) throws ExecutionException, InterruptedException;
-    public Story createStory(Story story) throws ExecutionException, InterruptedException;
+    public Story createStory(StoryDTO uploadRequest) throws ExecutionException, InterruptedException;
 
 }

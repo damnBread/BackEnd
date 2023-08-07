@@ -1,6 +1,7 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dao.StoryRepository;
+import com.example.damnbreadback.dto.StoryDTO;
 import com.example.damnbreadback.entity.Story;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class StoryServiceImpl implements StoryService {
 
     @Autowired
     private final StoryRepository storyRepository;
+
+    @Autowired
+    private final UserService userService;
 //
 //    @Override
 //    public List<Story> getAllStories() throws ExecutionException, InterruptedException {
@@ -46,7 +50,11 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public Story createStory(Story story) throws ExecutionException, InterruptedException {
+    public Story createStory(StoryDTO uploadRequest) throws ExecutionException, InterruptedException {
+        Story story = new Story();
+        story.setTitle(uploadRequest.getTitle());
+        story.setContent(uploadRequest.getContent());
+        story.setWriter(userService.findUserIdById(uploadRequest.getWriterId()));
         return storyRepository.save(story);
     }
 }
