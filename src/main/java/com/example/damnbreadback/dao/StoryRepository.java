@@ -39,7 +39,7 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
     @Override
     Optional<Story> findById(Long storyId);
 
-    Page<Story> findAllByOrderByDateDesc(PageRequest pageable);
+    Page<Story> findAllByOrderByCreatedDateDesc(PageRequest pageable);
 
 
     @Override

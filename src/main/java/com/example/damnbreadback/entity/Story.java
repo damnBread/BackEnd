@@ -25,7 +25,7 @@ public class Story extends BaseTimeEntity {
 
     private String title; // 썰 제목
     private String content; // 썰 내용
-    private Long writerId; // 썰 게시자
+    private Long writer; // 썰 게시자
 
     @ColumnDefault("0")
     private int viewCount; // 썰 조회수

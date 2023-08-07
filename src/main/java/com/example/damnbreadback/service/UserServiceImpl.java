@@ -181,6 +181,11 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public Long findUserIdById(String id) throws ExecutionException, InterruptedException {
+        return userRepository.findUserById(id).getUserId();
+    }
+
 
     @Override
     public List<User> getUsers() throws ExecutionException, InterruptedException {

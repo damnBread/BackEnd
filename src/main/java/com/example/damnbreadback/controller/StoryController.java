@@ -1,8 +1,10 @@
 package com.example.damnbreadback.controller;
 
+import com.example.damnbreadback.dto.StoryDTO;
 import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.Story;
 import com.example.damnbreadback.service.StoryService;
+import com.example.damnbreadback.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +37,9 @@ public class StoryController {
     @Autowired
     private StoryService storyService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping
     public ResponseEntity<Object> getAllStories(@RequestParam int page) throws ExecutionException, InterruptedException {
 
@@ -54,10 +59,13 @@ public class StoryController {
 
 
     @RequestMapping(path="/new", method = RequestMethod.POST)
-    public ResponseEntity<Object> createPost(@RequestBody Story uploadRequest) throws ExecutionException, InterruptedException {
-        
+    public ResponseEntity<Object> createPost(@RequestBody StoryDTO uploadRequest) throws ExecutionException, InterruptedException {
+        Story story = new Story();
+        story.setTitle(uploadRequest.getTitle());
+        story.setContent(uploadRequest.getContent());
+        story.setWriter(userService.findUserIdById(uploadRequest.getWriterId()));
 
-        Story created = storyService.createStory(uploadRequest);
+        Story created = storyService.createStory(story);
         if(created == null) return new ResponseEntity<>("null exception", HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<> (created, HttpStatus.OK);

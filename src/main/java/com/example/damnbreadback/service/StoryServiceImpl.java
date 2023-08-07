@@ -32,7 +32,7 @@ public class StoryServiceImpl implements StoryService {
 
     public Page<Story> findStories(int page) {
         PageRequest pageRequest = PageRequest.of(page, 20);
-        return storyRepository.findAllByOrderByDateDesc(pageRequest);
+        return storyRepository.findAllByOrderByCreatedDateDesc(pageRequest);
     }
 
     @Override
