@@ -55,6 +55,7 @@ public class StoryController {
 
     @RequestMapping(path="/new", method = RequestMethod.POST)
     public ResponseEntity<Object> createPost(@RequestBody Story uploadRequest) throws ExecutionException, InterruptedException {
+        
 
         Story created = storyService.createStory(uploadRequest);
         if(created == null) return new ResponseEntity<>("null exception", HttpStatus.BAD_REQUEST);
