@@ -10,7 +10,7 @@ import java.util.*;
 @ToString
 @Entity
 @Table(name = "post")
-public class Post {
+public class Post extends BaseTimeEntity{
 
     @Id
     @GeneratedValue
@@ -33,7 +33,6 @@ public class Post {
     private String content; // 공고 내용
 
     private String publisher; // 게시자
-    private Date publishDate; // 게시일
     private Date deadline; // 마감일
 
     private boolean genderLimit; //성별 조건 (true : 남자, false : 여자)
