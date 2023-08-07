@@ -1,17 +1,18 @@
 package com.example.damnbreadback.service;
 
+import com.example.damnbreadback.UserRepository;
 import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.config.JwtUtils;
+import com.example.damnbreadback.entity.UserFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -24,6 +25,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserDao userDao;
 
+    @Autowired
+    UserRepository userRepository;
+
     // 로그인 ===============================================================================
     public String login(String id, String pw) throws ExecutionException, InterruptedException{
         //인증과정 생략
@@ -33,14 +37,21 @@ public class UserServiceImpl implements UserService {
 
         if (user.getId().equals("fail to find user")) return "fail to find user";
         else if(user.getId().equals("db null exception")) return "db null exception";
-        else return JwtUtils.createJwt(id, secretKey, expiredMs);
+//        else return JwtUtils.createJwt(id, secretKey, expiredMs);
+        else return JwtUtils.generateToken(id, "USER", secretKey, expiredMs);
 
     }
 
     // 로그인
     @Override
-    public User loginCheck(String id, String pw) throws ExecutionException, InterruptedException {
-        return userDao.findUser(id, pw);
+    public User loginCheck(String id, String pw){
+        User user = userRepository.findUserById(id);
+        System.out.println(user);
+        if(user == null) return null;
+
+        if(user.getPw().equals(pw)) return user;
+        else return null;
+//        return userDao.findUser(id, pw);
 //        return null;
     }
 
@@ -51,70 +62,50 @@ public class UserServiceImpl implements UserService {
     @Override
     public String verifyId(String id) throws ExecutionException, InterruptedException {
         if(id == null) return "null exception";
-        return userDao.findId(id).toString();
+        User user = userRepository.findUserById(id);
+        System.out.println("user :: "+ user.getUserId());
+        if(user == null) return "false";
+        else return "true";
+//        return userDao.findId(id).toString();
 //        return null;
     }
 
     @Override
     public String verifyNickname(String nickname) throws ExecutionException, InterruptedException {
         if(nickname == null) return "null exception";
-        return userDao.findNickname(nickname).toString();
+        User user = userRepository.findUserByNickname(nickname);
+        if(user == null) return "false";
+        else return "true";
+//        return userDao.findNickname(nickname).toString();
 //        return null;
     }
 
     @Override
     public String verifyEmail(String email) throws ExecutionException, InterruptedException {
         if(email == null) return "null exception";
-        return userDao.findEmail(email).toString();
+        User user = userRepository.findUserByEmail(email);
+        if(user == null) return "false";
+        else return "true";
+//        return userDao.findEmail(email).toString();
 //        return null;
     }
 
 
     // 회원가입 -> 신규 회원 저장
     @Override
-    public User addUser(SignupRequest signupRequest) throws ExecutionException, InterruptedException {
-        if(signupRequest.getId() == null || signupRequest.getBirth() == null ||
-                signupRequest.getEmail() == null || signupRequest.getHome() == null ||
-                signupRequest.getHopeJob() == null || signupRequest.getNickname() == null ||
-                signupRequest.getPw() == null || signupRequest.getPhone() == null ||
-                signupRequest.getName() == null || signupRequest.getHopeLocation() == null) {
+    public User addUser(User user) {
+        if(user.getId() == null || user.getBirth() == null ||
+                user.getEmail() == null || user.getHome() == null ||
+                user.getHopeJob() == null || user.getNickname() == null ||
+                user.getPw() == null || user.getPhone() == null ||
+                user.getName() == null || user.getHopeLocation() == null) {
             return null;
         }
 
-        else {
-            User user = new User();
-            user.setId(signupRequest.getId());
-            user.setPw(signupRequest.getPw());
-            user.setName(signupRequest.getName());
-            user.setEmail(signupRequest.getEmail());
-            user.setNickname(signupRequest.getNickname());
-            user.setPhone(signupRequest.getPhone());
-            user.setBirth(signupRequest.getBirth());
-            user.setGender(signupRequest.isGender());
-            user.setHome(signupRequest.getHome());
-            user.setHopeJob(signupRequest.getHopeJob());
-            user.setHopeLocation(signupRequest.getHopeLocation());
+//      userDao.insertUser(user);
+        userRepository.save(user);
 
-            user.setNoShow(0);
-            user.setScore(0);
-            user.setJoinDate(new Date()); // 가입하는 현재 시간 저장
-            user.setIsPublic("0000000");
-
-            HashMap<String, Boolean> isPublicMap = new HashMap<>();
-            isPublicMap.put("birth", true);
-            isPublicMap.put("career", true);
-            isPublicMap.put("email", true);
-            isPublicMap.put("gender", true);
-            isPublicMap.put("hope-job", true);
-            isPublicMap.put("location", true);
-            isPublicMap.put("name", true);
-            isPublicMap.put("phone", true);
-
-            userDao.insertUser(user);
-
-            return user;
-        }
-
+        return user;
     }
 
     // ====================================================================================================
@@ -123,15 +114,59 @@ public class UserServiceImpl implements UserService {
     //기본키 userId로 user 찾기.
     @Override
     public User getUserById(Long id)  throws ExecutionException, InterruptedException {
-        return userDao.getUserById(id);
+        return userRepository.findById(String.valueOf(id)).get();
+//        return userDao.getUserById(id);
 //        return null;
     }
 
     // 인재정보 -> rank 정보 get
     @Override
-    public List<User> getRankScore(int page) throws ExecutionException, InterruptedException {
-        return userDao.getRankScore(page);
+    public List<User> getRankScore(int page){
+        PageRequest pageRequest = PageRequest.of(0, 5);
+//        return userRepository.findAll(pageRequest);
+
+        return userRepository.findUsersByOOrderByScoreDesc();
+//        return userDao.getRankScore(page);
 //        return null;
+    }
+
+    @Override
+    public List<User> getRankFilter(UserFilter userFilter, int page) throws ExecutionException, InterruptedException{
+        String[] location = userFilter.getLocation().split("\\|");
+        if(location.length == 0)
+            location[0] = location[1] = location[2] = "";
+        else if(location.length == 1)
+            location[1] = location[2] = "";
+        else if(location.length == 2)
+            location[2] = "";
+
+        String[] job = userFilter.getJob().split("\\|");
+        if(job.length == 0)
+            job[0] = job[1] = job[2] = "";
+        else if(job.length == 1)
+            job[1] = job[2] = "";
+        else if(job.length == 2)
+            job[2] = "";
+
+        Boolean[] gender = new Boolean[]{true, false};
+        if(userFilter.getGender().get(0) == 0) gender[0] = null;
+        if(userFilter.getGender().get(1) == 0) gender[1] = null;
+
+        Date birth = calculateBirthDateFromAge(userFilter.getAge());
+
+        return userDao.getRankFilter(location, job, gender, birth, page);
+    }
+
+    public Date calculateBirthDateFromAge(int age) {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDate = calendar.get(Calendar.DATE);
+        int birthYear = currentYear - age;
+
+        // Assuming birth date on January 1st of the calculated birth year
+        calendar.set(birthYear, currentMonth, currentDate);
+        return calendar.getTime();
     }
 
     @Override

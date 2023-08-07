@@ -19,7 +19,6 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("/exam/svc/v1")
 public class UserController {
 //    public static final String SESSION_NAME = "USER";
 //    private SessionManager sessionManager;
@@ -68,14 +67,15 @@ public class UserController {
         if(tok.equals("db null exception"))
             return ResponseEntity.badRequest().body("null exception");
 
+        response.addHeader("Authorization", "Bearer " + tok);
         return ResponseEntity.ok().body(tok);
     }
 
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> signupRequest(@RequestBody SignupRequest signupRequest) throws ExecutionException, InterruptedException {
-        User user =  userService.addUser(signupRequest);
-        if(user == null) return new ResponseEntity<Object>("null exception", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> signupRequest(@RequestBody User user) throws ExecutionException, InterruptedException {
+        User newUser =  userService.addUser(user);
+        if(newUser == null) return new ResponseEntity<Object>("null exception", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Object>(user, HttpStatus.CREATED);
     }
 
