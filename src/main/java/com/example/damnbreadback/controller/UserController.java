@@ -81,22 +81,22 @@ public class UserController {
 
 
     @PostMapping("/signup/verify/id")
-    public ResponseEntity<Object> verifyId(@RequestBody Map<String, String> id) throws ExecutionException, InterruptedException{
-        String verifyResult = userService.verifyId(id.get("id"));
+    public ResponseEntity<Object> verifyId(@RequestBody String id) throws ExecutionException, InterruptedException{
+        String verifyResult = userService.verifyId(id);
         if(verifyResult.equals("null exception")) return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);
     }
 
     @PostMapping("/signup/verify/nickname")
-    public ResponseEntity<Object> verifyNickname(@RequestBody Map<String, String> nickname) throws ExecutionException, InterruptedException{
-        String verifyResult = userService.verifyNickname(nickname.get("nickname"));
+    public ResponseEntity<Object> verifyNickname(@RequestBody String nickname) throws ExecutionException, InterruptedException{
+        String verifyResult = userService.verifyNickname(nickname);
         if(verifyResult.equals("null exception")) return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);
     }
 
     @PostMapping("/signup/verify/email")
-    public ResponseEntity<Object> verifyEmail(@RequestBody Map<String, String> email) throws ExecutionException, InterruptedException{
-        String verifyResult = userService.verifyEmail(email.get("email"));
+    public ResponseEntity<Object> verifyEmail(@RequestBody String email) throws ExecutionException, InterruptedException{
+        String verifyResult = userService.verifyEmail(email);
         if(verifyResult.equals("null exception")) return ResponseEntity.badRequest().body("null exception");
         else return ResponseEntity.ok().body(verifyResult);
     }

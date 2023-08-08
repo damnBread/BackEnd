@@ -63,7 +63,6 @@ public class UserServiceImpl implements UserService {
     public String verifyId(String id) throws ExecutionException, InterruptedException {
         if(id == null) return "null exception";
         User user = userRepository.findUserById(id);
-        System.out.println("user :: "+ user.getUserId());
         if(user == null) return "false";
         else return "true";
 //        return userDao.findId(id).toString();
