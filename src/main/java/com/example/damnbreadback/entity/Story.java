@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.util.Set;
 @ToString
 @Entity
 @Table(name="story")
-public class Story {
+public class Story extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -24,8 +25,9 @@ public class Story {
 
     private String title; // 썰 제목
     private String content; // 썰 내용
-    private Date date; // 썰 게시일
     private Long writer; // 썰 게시자
+
+    @ColumnDefault("0")
     private int viewCount; // 썰 조회수
 
     @OneToMany

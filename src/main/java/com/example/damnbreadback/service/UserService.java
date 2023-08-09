@@ -32,4 +32,6 @@ public interface UserService {
     String getUserId(String id) throws ExecutionException, InterruptedException;
 
     List<String> getBookmarks(String user) throws ExecutionException, InterruptedException;
+
+    Long findUserIdById(String id) throws ExecutionException, InterruptedException;
 }

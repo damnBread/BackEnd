@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query(value = "SELECT FROM User u ORDER BY u.score DESC, CASE WHEN u.score = (SELECT MAX(u2.score) FROM User u2) THEN u.joinDate END DESC",
             nativeQuery = true)
     List<User> findUsersByOOrderByScoreDesc();
+
+
 }
