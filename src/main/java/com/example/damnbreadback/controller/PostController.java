@@ -3,6 +3,7 @@ package com.example.damnbreadback.controller;
 import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,8 +22,10 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Object> getAllPosts() throws ExecutionException, InterruptedException {
+    // "localhost:8080/damnlist"
+    @GetMapping
+    public ResponseEntity<Object> getAllPosts(@RequestParam Integer page) throws ExecutionException, InterruptedException, TimeoutException {
+        // Pagination 추가
         List<Post> list = postService.getPosts();
         return ResponseEntity.ok().body(list);
     }
@@ -41,4 +45,16 @@ public class PostController {
         Post post = postService.getPostById(postNum);
         return ResponseEntity.ok().body(post);
     }
+
+    //@RequestMapping(path="/detail/bookmark", method = RequestMethod.POST)
+    @PostMapping("/detail/bookmark")
+    public ResponseEntity<Object> bookmark(@RequestBody String userId, @RequestBody String postNum) throws  ExecutionException, InterruptedException{
+        //HttpSession session = request.getSession();
+
+
+        return ResponseEntity.ok().body(null);
+    }
+
+    //@RequestMapping(path="/filter", method = RequestMethod.GET)
+    //public ResponseEntity<Object> filtering(@RequestParam String)
 }

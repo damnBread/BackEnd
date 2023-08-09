@@ -7,6 +7,6 @@ import java.util.concurrent.ExecutionException;
 
 public interface StoryService {
 
-    List<Story> getStories() throws ExecutionException, InterruptedException;
+    List<Story> getAllStories() throws ExecutionException, InterruptedException;
 
 }
