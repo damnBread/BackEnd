@@ -50,8 +50,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Boolean bookmark(String name, Long postNum) throws ExecutionException, InterruptedException{
-        Optional<Post> post = postRepository.findById(postNum);
+    public Boolean bookmark(String name, int postNum) throws ExecutionException, InterruptedException{
+        Optional<Post> post = postRepository.findById((long) postNum);
         User user = userService.getUserById(userService.findUserIdById(name));
 
         if(post.isPresent()) {

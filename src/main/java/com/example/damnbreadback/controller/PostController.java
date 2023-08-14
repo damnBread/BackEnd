@@ -32,8 +32,8 @@ public class PostController {
         return ResponseEntity.ok().body(list);
     }
 
-    @RequestMapping(path="/detail", method = RequestMethod.GET)
-    public ResponseEntity<Object> getPost(@RequestParam Long postNum) throws ExecutionException, InterruptedException{
+    @RequestMapping(path="/{postNum}", method = RequestMethod.GET)
+    public ResponseEntity<Object> getPost(@PathVariable Long postNum) throws ExecutionException, InterruptedException{
 
         Optional<Post> post = postService.getPostById(postNum);
         if(post.isPresent()) return ResponseEntity.ok().body(post);
@@ -50,10 +50,11 @@ public class PostController {
     }
 
     //@RequestMapping(path="/detail/bookmark", method = RequestMethod.POST)
-    @PostMapping("/detail/bookmark")
-    public ResponseEntity<Object> bookmark(Authentication authentication, @RequestBody Long postNum) throws  ExecutionException, InterruptedException{
+    @PostMapping("/{postNum}/bookmark")
+    public ResponseEntity<Object> bookmark(Authentication authentication, @PathVariable int postNum) throws  ExecutionException, InterruptedException{
         Boolean isSuccess = postService.bookmark(authentication.getName(), postNum);
 
-        return ResponseEntity.ok().body(null);
+        if(isSuccess) return new ResponseEntity<> (HttpStatus.ACCEPTED);
+        else return new ResponseEntity<>("cannot find post", HttpStatus.NOT_FOUND);
     }
 }

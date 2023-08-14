@@ -15,5 +15,5 @@ public interface PostService {
     Optional<Post> getPostById(Long id) throws ExecutionException, InterruptedException;
     Page<Post> findStories(int page);
 
-    Boolean bookmark(String name, Long postNum) throws ExecutionException, InterruptedException;
+    Boolean bookmark(String name, int postNum) throws ExecutionException, InterruptedException;
 }
