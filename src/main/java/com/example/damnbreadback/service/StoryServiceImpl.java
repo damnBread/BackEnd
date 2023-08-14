@@ -2,6 +2,7 @@ package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dao.StoryRepository;
 import com.example.damnbreadback.dto.StoryDTO;
+import com.example.damnbreadback.repository.StoryRepository;
 import com.example.damnbreadback.entity.Story;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

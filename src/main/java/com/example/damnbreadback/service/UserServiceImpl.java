@@ -1,15 +1,16 @@
 package com.example.damnbreadback.service;
 
-import com.example.damnbreadback.UserRepository;
+import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.entity.UserFilter;
+import com.example.damnbreadback.repository.UserSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -63,7 +64,6 @@ public class UserServiceImpl implements UserService {
     public String verifyId(String id) throws ExecutionException, InterruptedException {
         if(id == null) return "null exception";
         User user = userRepository.findUserById(id);
-        System.out.println("user :: "+ user.getUserId());
         if(user == null) return "false";
         else return "true";
 //        return userDao.findId(id).toString();
@@ -102,6 +102,9 @@ public class UserServiceImpl implements UserService {
             return null;
         }
 
+//        Authority authority = Authority.builder()
+//                .authorityName("ROLE_USER")
+//                .build();
 //      userDao.insertUser(user);
         userRepository.save(user);
 
@@ -122,39 +125,45 @@ public class UserServiceImpl implements UserService {
     // 인재정보 -> rank 정보 get
     @Override
     public List<User> getRankScore(int page){
-        PageRequest pageRequest = PageRequest.of(0, 5);
+        PageRequest pageRequest = PageRequest.of(page, 20);
 //        return userRepository.findAll(pageRequest);
 
-        return userRepository.findUsersByOOrderByScoreDesc();
+        return userRepository.findUsersByOrderByScoreDesc(pageRequest);
 //        return userDao.getRankScore(page);
 //        return null;
     }
 
     @Override
     public List<User> getRankFilter(UserFilter userFilter, int page) throws ExecutionException, InterruptedException{
-        String[] location = userFilter.getLocation().split("\\|");
-        if(location.length == 0)
-            location[0] = location[1] = location[2] = "";
-        else if(location.length == 1)
-            location[1] = location[2] = "";
-        else if(location.length == 2)
-            location[2] = "";
+        PageRequest pageRequest = PageRequest.of(page, 20);
 
-        String[] job = userFilter.getJob().split("\\|");
-        if(job.length == 0)
-            job[0] = job[1] = job[2] = "";
-        else if(job.length == 1)
-            job[1] = job[2] = "";
-        else if(job.length == 2)
-            job[2] = "";
+        List<String> location = Arrays.asList(userFilter.getLocation().split("\\|"));
 
-        Boolean[] gender = new Boolean[]{true, false};
-        if(userFilter.getGender().get(0) == 0) gender[0] = null;
-        if(userFilter.getGender().get(1) == 0) gender[1] = null;
+
+        List<String> job = Arrays.asList(userFilter.getJob().split("\\|"));
+
+
+        List<Boolean> gender = new ArrayList<Boolean>();
+        if(userFilter.getGender().get(0) != 0) gender.add(true);
+        if(userFilter.getGender().get(1) != 0) gender.add(false);
 
         Date birth = calculateBirthDateFromAge(userFilter.getAge());
+        System.out.println(birth);
 
-        return userDao.getRankFilter(location, job, gender, birth, page);
+        Specification<User> spec = (root, query, criteriaBuilder) -> null;
+
+        if(location != null)
+            spec = spec.and(UserSpecification.hasLocation(location));
+        if(job != null)
+            spec = spec.and(UserSpecification.hasJob(job));
+        if (gender != null)
+            spec = spec.and(UserSpecification.isGender(gender));
+        if (birth != null)
+            spec = spec.and(UserSpecification.overAge(birth));
+
+        return userRepository.findAll(spec);
+
+//        return userDao.getRankFilter(location, job, gender, birth, page);
     }
 
     public Date calculateBirthDateFromAge(int age) {

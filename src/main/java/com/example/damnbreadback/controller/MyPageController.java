@@ -31,12 +31,13 @@ public class MyPageController {
 
 //    @PreAuthorize("hasRole('USER')") //접근권한 (우리 웹에 ADMIN이 생긴다면.. 필요할 아이)
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Object> getMyPage(@RequestParam String userid, HttpServletRequest request, HttpServletResponse response) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> getMyPage(Authentication authentication, @RequestParam String userid, HttpServletRequest request, HttpServletResponse response) throws ExecutionException, InterruptedException {
 
-//        System.out.println(authentication.getName());
-//        return ResponseEntity.ok().body(authentication.getName() + "님의 마이페이지 성공");
+        if(authentication == null) return ResponseEntity.ok().body("올바르지 않은 인증입니다");
+        System.out.println(authentication.getName());
+        return ResponseEntity.ok().body(authentication.getName() + "님의 마이페이지 성공");
 
-        return ResponseEntity.ok().body("님의 마이페이지 성공");
+//        return ResponseEntity.ok().body("님의 마이페이지 성공");
     }
 
     @RequestMapping(value = "/{userid}/bookmark", method = RequestMethod.GET)
