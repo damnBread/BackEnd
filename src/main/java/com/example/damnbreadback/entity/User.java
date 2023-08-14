@@ -78,8 +78,8 @@ public class User {
 
 
 
-    @ManyToMany( fetch = FetchType.EAGER, mappedBy = "scrapUsers")
-    private Set<Post> scraps; // 스크랩한 포스트 목록
+    @OneToMany(mappedBy = "user")
+    private Set<Scrap> scraps; // 스크랩한 포스트 목록
 
     @OneToMany(fetch=FetchType.EAGER)
     private List<Career> career; // 경력

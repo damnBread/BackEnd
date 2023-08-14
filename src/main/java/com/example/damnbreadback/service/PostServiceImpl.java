@@ -1,8 +1,10 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dao.PostRepository;
+import com.example.damnbreadback.dao.ScrapRepository;
 import com.example.damnbreadback.entity.Post;
-import com.example.damnbreadback.entity.Story;
+import com.example.damnbreadback.entity.Scrap;
+import com.example.damnbreadback.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,14 +22,21 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private final PostRepository postRepository;
 
+    @Autowired
+    private final UserService userService;
+
+    @Autowired
+    private final ScrapRepository scrapRepository;
+
     @Override
     public List<Post> getPosts() throws ExecutionException, InterruptedException {
         return postRepository.findAll();
     }
 
     @Override
-    public Long createPost(Post post) throws ExecutionException, InterruptedException {
-        return postRepository.save(post).getPostId();
+    public Long createPost(String writerId, Post postRequest) throws ExecutionException, InterruptedException {
+        postRequest.setPublisher(userService.findUserIdById(writerId));
+        return postRepository.save(postRequest).getPostId();
     }
 
     public Optional<Post> getPostById(Long id) throws ExecutionException, InterruptedException {
@@ -38,6 +47,19 @@ public class PostServiceImpl implements PostService {
     public Page<Post> findStories(int page) {
         PageRequest pageRequest = PageRequest.of(page, 20);
         return postRepository.findAllByOrderByCreatedDateDesc(pageRequest);
+    }
+
+    @Override
+    public Boolean bookmark(String name, Long postNum) throws ExecutionException, InterruptedException{
+        Optional<Post> post = postRepository.findById(postNum);
+        User user = userService.getUserById(userService.findUserIdById(name));
+
+        if(post.isPresent()) {
+            Scrap newScrap = new Scrap(post.get(), user);
+            scrapRepository.save(newScrap);
+            return true;
+        }
+        else return false;
     }
 
 }

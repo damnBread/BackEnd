@@ -50,11 +50,11 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public Story createStory(StoryDTO uploadRequest) throws ExecutionException, InterruptedException {
+    public Story createStory(String writerId, StoryDTO uploadRequest) throws ExecutionException, InterruptedException {
         Story story = new Story();
         story.setTitle(uploadRequest.getTitle());
         story.setContent(uploadRequest.getContent());
-        story.setWriter(userService.findUserIdById(uploadRequest.getWriterId()));
+        story.setWriter(userService.findUserIdById(writerId));
         return storyRepository.save(story);
     }
 }

@@ -1,7 +1,10 @@
 package com.example.damnbreadback.entity;
 
+import com.example.damnbreadback.dto.PostDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
 import java.util.*;
 
 @NoArgsConstructor
@@ -16,6 +19,12 @@ public class Post extends BaseTimeEntity{
     @GeneratedValue
     private Long postId;
 
+    private String title; // 공고 제목
+    private String content; // 공고 내용
+    private Long publisher; // 게시자
+
+    private Date deadline; // 마감일
+
     private String branchName; // 점포명
     private String location; // 근무지역
     private int hourPay; // 시급
@@ -26,21 +35,29 @@ public class Post extends BaseTimeEntity{
     private Date workFinish; // 근무 종료 일시
     private int workPeriod; // 근무 기간
 
+    @ColumnDefault("0")
     private int applicantCount; // 지원자 수
+
+    @ColumnDefault("0")
     private int viewCount; // 조회 수
 
-    private String title; // 공고 제목
-    private String content; // 공고 내용
+    private boolean genderLimit; //성별 조건 (true : 남자, false : 여자, null : 무관)
+    private int ageMax; // 나이 조건 (최대나이 / -1 : 무관 )
+    private int ageMin; // 나이 조건 (최소나이 / -1 : 무관 )
+    private int careerLimit; // 해당 업직종에 대한 경력 조건 ( -1 : 무관 / 0 : 신입 )
 
-    private String publisher; // 게시자
-    private Date deadline; // 마감일
+    @OneToMany(mappedBy = "post")
+    private Set<Scrap> scrap;
 
-    private boolean genderLimit; //성별 조건 (true : 남자, false : 여자)
-    private int ageMax; // 나이 조건 (최대나이)
-    private int ageMin; // 나이 조건 (최소나이)
-    private int careerLimit; // 해당 업직종에 대한 경력 조건
 
-    @ManyToMany( fetch = FetchType.EAGER)
-    @JoinTable(name = "post_scrap_users", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> scrapUsers;
+    public Post(PostDto dto) throws CloneNotSupportedException {
+//        this.title = dto.getTitle();
+//        this.content = dto.getContent();
+//        this.deadline = dto.getDeadline();
+//        this.branchName = dto.getBranchName();
+//        this.location = dto.getLocation();
+//        this.hourPay = dto.getHourPay();
+//        this.payMethod = dto.isPayMethod();
+//        this.job = dto.getJob();
+    }
 }

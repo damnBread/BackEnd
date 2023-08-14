@@ -1,17 +1,15 @@
 package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.dto.StoryDTO;
-import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.Story;
 import com.example.damnbreadback.service.StoryService;
 import com.example.damnbreadback.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,17 +20,6 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 @RequestMapping("/damnstory")
 public class StoryController {
-
-//    @Autowired
-//    private UserService userService;
-//
-//    @GetMapping("/users")
-//    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
-//        System.out.println("rrrrrrrrrrrrr");
-//        List<User> list = userService.getUsers();
-//        return ResponseEntity.ok().body(list);
-//
-//    }
 
     @Autowired
     private StoryService storyService;
@@ -59,9 +46,9 @@ public class StoryController {
 
 
     @RequestMapping(path="/new", method = RequestMethod.POST)
-    public ResponseEntity<Object> createPost(@RequestBody StoryDTO uploadRequest) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> createPost(Authentication authentication, @RequestBody StoryDTO uploadRequest) throws ExecutionException, InterruptedException {
 
-        Story created = storyService.createStory(uploadRequest);
+        Story created = storyService.createStory(authentication.getName(), uploadRequest);
         if(created == null) return new ResponseEntity<>("null exception", HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<> (created, HttpStatus.OK);

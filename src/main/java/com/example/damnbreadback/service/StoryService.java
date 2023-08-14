@@ -14,6 +14,6 @@ public interface StoryService {
 
     public List<Story> getAllStories() throws ExecutionException, InterruptedException;
     public Optional<Story> getStory(Long id) throws ExecutionException, InterruptedException;
-    public Story createStory(StoryDTO uploadRequest) throws ExecutionException, InterruptedException;
+    public Story createStory(String writerId, StoryDTO uploadRequest) throws ExecutionException, InterruptedException;
 
 }

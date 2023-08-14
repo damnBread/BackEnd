@@ -45,7 +45,7 @@ public class MyPageController {
         List<String> bookmarked = userService.getBookmarks(user);
         ArrayList<Post> bookmarkedPosts = new ArrayList<Post>();
         for (String bookmarkedPost:bookmarked) {
-            bookmarkedPosts.add(postService.getPostById(bookmarkedPost));
+            //bookmarkedPosts.add(postService.getPostById(bookmarkedPost));
         }
 
         return ResponseEntity.ok().body(bookmarkedPosts);
