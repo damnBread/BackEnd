@@ -23,7 +23,7 @@ public class UserRankController {
     //인재 랭킹 3명 , 새로운 인재 20명 불러오기
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> getUserRank(@RequestParam int page) throws ExecutionException, InterruptedException {
-        List<User> rankScoreUsers = userService.getRankScore(page);
+        List<User> rankScoreUsers = userService.getRankScore(page-1);
 
         if(rankScoreUsers.isEmpty())
             return ResponseEntity.badRequest().body("no rank data");
@@ -46,7 +46,7 @@ public class UserRankController {
 
     @RequestMapping(value = "/filter", method = RequestMethod.GET)
     public ResponseEntity<Object> getUserFilter(@RequestBody UserFilter userFilter, @RequestParam int page) throws ExecutionException, InterruptedException {
-        List<User> rankScoreUsers = userService.getRankFilter(userFilter, page);
+        List<User> rankScoreUsers = userService.getRankFilter(userFilter, page-1);
 
         if(rankScoreUsers.isEmpty())
             return ResponseEntity.badRequest().body("no filtered data");

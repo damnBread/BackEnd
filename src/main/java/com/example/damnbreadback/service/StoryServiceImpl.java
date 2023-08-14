@@ -1,6 +1,6 @@
 package com.example.damnbreadback.service;
 
-import com.example.damnbreadback.dao.StoryRepository;
+import com.example.damnbreadback.repository.StoryRepository;
 import com.example.damnbreadback.entity.Story;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
