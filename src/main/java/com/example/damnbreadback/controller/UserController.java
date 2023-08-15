@@ -21,9 +21,6 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
-//    public static final String SESSION_NAME = "USER";
-//    private SessionManager sessionManager;
-//
     @Autowired
     private UserService userService;
 
@@ -45,12 +42,11 @@ public class UserController {
                 response.addHeader("Authorization", "Bearer " + tokenDto.getAcessToken());
                 response.addHeader("RefreshToken", "Bearer " + tokenDto.getRefreshToken());
 
-                return ResponseEntity.ok().body(tokenDto.getAcessToken());
+                return ResponseEntity.ok().body("success to refresh the token");
             }
         }
         return ResponseEntity.badRequest().body("fail to refresh the token");
 
-//        return ResponseEntity.ok().body("ok");
     }
 
 //
@@ -69,13 +65,15 @@ public class UserController {
 //
 //    //===================================================================================
 //    //JWT + Spring Security 방식
-//    // 서버 - Spring Security를 이용하여 인가 -> login , signup 페이지는 인증이 필요없도록 / 나머지 페이지는 USER 인증 후에만 사용가능
+//    // 서버 - Spring Security를 이용하여 인가 -> login , signup 페이지는 인증이 필요없도록 / 나머지 페이지는 사용자 인증 후에만 사용가능
 //    // 1. 웹브라우저가 서버에 로그인 요청
 //    // 2. 서버는 로그인 정보 확인 (Valid Id?? / Valid Pw?? )
-//    // 3. 올바른 로그인 정보 확인 후 -> Jwt 토큰을 만들어 (본 파일 중에서는 JwtUtils 기능)서 클라이언트에게 전달
+//    // 3. 올바른 로그인 정보 확인 후 -> AccessToken 과 RefreshToken 을 만들어 (본 파일 중에서는 JwtUtils 기능)서 클라이언트에게 전달
 //    // 4. ex. 서버로 마이페이지 접근 요청 -> 부여받은 토큰이 있다면 (로그인 된 사용자라면) 함께 전달
 //    // 5. 서버는 토큰을 확인 -> 토큰이 있는 인증된 사용자 : 사용자 정보를 가져와서 마이페이지를 보여줌
 //    //                    -> 토큰이 없는 인증되지 않은 사용자 : 로그인 화면으로 이동하거나 로그인(인증)이 필요하다는 메세지 등을 통해 사용자에게 알림.
+      // 6. 만료된 토큰일 때 -> 클라이언트에게 만료됨을 알림, 클라이언트는 부여받았던 refresh token을 전송해줌.
+      // -> refershToken 인증 후, 새로운 AccessToken을 발급하여 전송. (동시에 refreshToken도 갱신)
 //    //===================================================================================
 
 //    //test : zara0140 / 1234567a
@@ -83,13 +81,15 @@ public class UserController {
     public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
         String tok = userService.login(loginRequest.getId(), loginRequest.getPw(), response);
 
+        if(tok == null) return ResponseEntity.badRequest().body("fail to find user");
+
         if(tok.equals("fail to find user"))
             return ResponseEntity.badRequest().body("fail to find user");
         if(tok.equals("db null exception"))
             return ResponseEntity.badRequest().body("null exception");
 
-//        response.addHeader("Authorization", "Bearer " + tok);
-        return ResponseEntity.ok().body(tok);
+//        return ResponseEntity.ok().body(tok);
+        return ResponseEntity.ok().body("success to login");
     }
 
 

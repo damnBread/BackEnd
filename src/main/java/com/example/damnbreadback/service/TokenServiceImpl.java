@@ -64,10 +64,10 @@ public class TokenServiceImpl implements TokenService {
                 tokenDto.setAcessToken(newAcessToken);
                 tokenDto.setRefreshToken(newRefreshToken);
 
-                tokenRepository.deleteRefreshTokenByRefreshToken(refreshToken);
+                tokenRepository.deleteByRefreshToken(refreshToken);
 
                 RefreshToken saveNewRefreshToken = new RefreshToken();
-                saveNewRefreshToken.setRefreshToken(refreshToken);
+                saveNewRefreshToken.setRefreshToken(newRefreshToken);
                 tokenRepository.save(saveNewRefreshToken);
             }
             else{
