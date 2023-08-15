@@ -2,11 +2,8 @@ package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.config.JwtFilter;
 import com.example.damnbreadback.entity.Post;
-import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.PostService;
 import com.example.damnbreadback.service.UserService;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

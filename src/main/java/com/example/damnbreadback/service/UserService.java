@@ -3,6 +3,7 @@ package com.example.damnbreadback.service;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.entity.UserFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface UserService {
-    String login(String userName, String password)  throws ExecutionException, InterruptedException;
+    String login(String userName, String password, HttpServletResponse response)  throws ExecutionException, InterruptedException;
     List<User> getUsers() throws ExecutionException, InterruptedException;
     User getUserById(Long id)  throws ExecutionException, InterruptedException;
 
@@ -31,7 +32,7 @@ public interface UserService {
     Date calculateBirthDateFromAge(int age);
 
     String getUserId(String id) throws ExecutionException, InterruptedException;
-
+    User getUserByUserid(String id) throws ExecutionException, InterruptedException;
     List<String> getBookmarks(String user) throws ExecutionException, InterruptedException;
 
     Long findUserIdById(String id) throws ExecutionException, InterruptedException;

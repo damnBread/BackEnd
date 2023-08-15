@@ -21,7 +21,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
-        String responseContent = objectMapper.writeValueAsString(BaseResponse.ofFail(401, "로그인해주세요.", null));
+        String responseContent = objectMapper.writeValueAsString(BaseResponse.ofFail(401, "로그인을 해주세요.", null));
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");

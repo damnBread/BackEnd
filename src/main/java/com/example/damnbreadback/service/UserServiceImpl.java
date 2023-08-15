@@ -1,11 +1,12 @@
 package com.example.damnbreadback.service;
 
+import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.entity.UserFilter;
 import com.example.damnbreadback.repository.UserSpecification;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,18 @@ public class UserServiceImpl implements UserService {
 
     @Value("${JWT.SECRET}")
     private String secretKey;
-    private Long expiredMs = 1000 * 60 * 60l;
-    @Autowired
+
     private final UserDao userDao;
+
 
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    TokenService tokenService;
+
     // 로그인 ===============================================================================
-    public String login(String id, String pw) throws ExecutionException, InterruptedException{
+    public String login(String id, String pw, HttpServletResponse response) throws ExecutionException, InterruptedException{
         //인증과정 생략
         User user = loginCheck(id, pw);
 
@@ -40,7 +44,17 @@ public class UserServiceImpl implements UserService {
         if (user.getId().equals("fail to find user")) return "fail to find user";
         else if(user.getId().equals("db null exception")) return "db null exception";
 //        else return JwtUtils.createJwt(id, secretKey, expiredMs);
-        else return JwtUtils.generateToken(id, "USER", secretKey, expiredMs);
+        else{
+            String accessToken = JwtUtils.createAccessToken(id, "USER", secretKey);
+            String refreshToken = JwtUtils.createRefreshToken(id, "USER", secretKey);
+            tokenService.addToken(refreshToken);
+
+            JwtUtils.setHeaderAccessToken(response, accessToken);
+            JwtUtils.setHeaderRefreshToken(response, refreshToken);
+
+            return accessToken;
+
+        }
 
     }
 
@@ -63,6 +77,7 @@ public class UserServiceImpl implements UserService {
     // 회원가입 -> 회원 정보 중복 확인
     @Override
     public String verifyId(String id) throws ExecutionException, InterruptedException {
+        System.out.println(id);
         if(id == null) return "null exception";
         User user = userRepository.findUserById(id);
         if(user == null) return "false";
@@ -119,6 +134,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long id)  throws ExecutionException, InterruptedException {
         return userRepository.findById(String.valueOf(id)).get();
+//        return userDao.getUserById(id);
+//        return null;
+    }
+
+    public User getUserByUserid(String id) throws ExecutionException, InterruptedException {
+        return userRepository.findUserById(id);
 //        return userDao.getUserById(id);
 //        return null;
     }

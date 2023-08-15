@@ -1,10 +1,11 @@
 package com.example.damnbreadback.controller;
 
+import com.example.damnbreadback.config.JwtUtils;
+import com.example.damnbreadback.dto.TokenDTO;
 import com.example.damnbreadback.entity.LoginRequest;
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.entity.SignupRequest;
+import com.example.damnbreadback.service.TokenService;
 import com.example.damnbreadback.service.UserService;
-import com.example.damnbreadback.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.nio.file.AccessDeniedException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -26,11 +27,31 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @GetMapping("/users")
-//    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
-//        List<User> list = userService.getUsers();
-//        return ResponseEntity.ok().body(list);
-//    }
+    @Autowired
+    private TokenService tokenService;
+
+    @PostMapping("/issue")
+    public ResponseEntity<Object> issueAccessToken(HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException, AccessDeniedException {
+        String accessToken = JwtUtils.resolveAccessToken(request);
+        String refreshToken = JwtUtils.resolveRefreshToken(request);
+
+        TokenDTO tokenDto = tokenService.tokenValidIssue(accessToken, refreshToken);
+
+        if(tokenDto.getAcessToken() != null && tokenDto.getRefreshToken()!=null){
+            if(tokenDto.getAcessToken().equals("fail")||tokenDto.getRefreshToken().equals("fail"))
+                return ResponseEntity.badRequest().body("fail to refresh the token");
+
+            else {
+                response.addHeader("Authorization", "Bearer " + tokenDto.getAcessToken());
+                response.addHeader("RefreshToken", "Bearer " + tokenDto.getRefreshToken());
+
+                return ResponseEntity.ok().body(tokenDto.getAcessToken());
+            }
+        }
+        return ResponseEntity.badRequest().body("fail to refresh the token");
+
+//        return ResponseEntity.ok().body("ok");
+    }
 
 //
 //
@@ -60,14 +81,14 @@ public class UserController {
 //    //test : zara0140 / 1234567a
     @PostMapping("/login")
     public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
-        String tok = userService.login(loginRequest.getId(), loginRequest.getPw());
+        String tok = userService.login(loginRequest.getId(), loginRequest.getPw(), response);
 
         if(tok.equals("fail to find user"))
             return ResponseEntity.badRequest().body("fail to find user");
         if(tok.equals("db null exception"))
             return ResponseEntity.badRequest().body("null exception");
 
-        response.addHeader("Authorization", "Bearer " + tok);
+//        response.addHeader("Authorization", "Bearer " + tok);
         return ResponseEntity.ok().body(tok);
     }
 

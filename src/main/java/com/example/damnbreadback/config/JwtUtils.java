@@ -1,18 +1,25 @@
 package com.example.damnbreadback.config;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.nio.file.AccessDeniedException;
 import java.util.Date;
+import java.util.List;
 
 public class JwtUtils {
+    // 어세스 토큰 유효시간 | 20s
+    private static long accessTokenValidTime = 1000 * 60 * 60L; //1시간
+    // 리프레시 토큰 유효시간 | 1m
+    private static long refreshTokenValidTime = 1000 * 60 * 60L * 24 * 14; //2주
 
     // This method extracts the userId from the JWT token
     public static String getUserIdFromToken(String token, String secretKey) throws AccessDeniedException {
-        verify(token, secretKey);
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
                 .getBody().getSubject();
@@ -48,42 +55,50 @@ public class JwtUtils {
         }
     }
 
-    public static boolean isExpired(String token, String secretKey) throws AccessDeniedException {
-        verify(token, secretKey);
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-                .getBody().getExpiration().before(new Date());
-    }
 
-    public static void verify(String token, String secretKey) throws AccessDeniedException {
-        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-    }
 
-    public static String createJwt(String id, String secretKey, Long expiredMs){
-        Claims claims = Jwts.claims(); // Jwt에서 제공하는 claims라는 map형식의 타입 사용해서 토큰쌍들 저장
-        claims.put("userId", id);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-
-//        return Jwts.builder()
-//                .claim("userId", "USER")
-//                .setIssuedAt(new Date())
-//                .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
-//                .signWith(SignatureAlgorithm.HS512, secretKey)
-//                .compact();
-    }
-
-    public static String generateToken(String userId, String role, String secretKey,  Long expiredMs) {
+    public static String createAccessToken(String userId, String role, String secretKey) {
         return Jwts.builder()
                 .setSubject(userId)
                 .claim("role", role) // Adding the "role" claim to include the user's role
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidTime))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
+
+    public static String createRefreshToken(String userId, String role, String secretKey) {
+        return Jwts.builder()
+                .setSubject(userId)
+                .claim("role", role) // Adding the "role" claim to include the user's role
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenValidTime))
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact();
+    }
+
+    // 어세스 토큰 헤더 설정
+    public static void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
+        response.setHeader("Authorization", "Bearer "+ accessToken);
+    }
+
+    // 리프레시 토큰 헤더 설정
+    public static void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
+        response.setHeader("RefreshToken", "Bearer "+ refreshToken);
+    }
+
+    // Request의 Header에서 AccessToken 값을 가져옵니다. "authorization" : "token'
+    public static String resolveAccessToken(HttpServletRequest request) {
+        if(request.getHeader("Authorization") != null )
+            return request.getHeader("Authorization").substring(7);
+        return null;
+    }
+    // Request의 Header에서 RefreshToken 값을 가져옵니다. "authorization" : "token'
+    public static String resolveRefreshToken(HttpServletRequest request) {
+        if(request.getHeader("RefreshToken") != null )
+            return request.getHeader("RefreshToken").substring(7);
+        return null;
+    }
+
+
 }
