@@ -1,7 +1,7 @@
 package com.example.damnbreadback.service;
 
-import com.example.damnbreadback.dao.PostRepository;
-import com.example.damnbreadback.dao.ScrapRepository;
+import com.example.damnbreadback.repository.PostRepository;
+import com.example.damnbreadback.repository.ScrapRepository;
 import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.Scrap;
 import com.example.damnbreadback.entity.User;

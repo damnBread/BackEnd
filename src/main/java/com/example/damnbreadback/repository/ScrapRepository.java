@@ -1,4 +1,4 @@
-package com.example.damnbreadback.dao;
+package com.example.damnbreadback.repository;
 
 import com.example.damnbreadback.entity.Scrap;
 import org.springframework.data.jpa.repository.JpaRepository;
