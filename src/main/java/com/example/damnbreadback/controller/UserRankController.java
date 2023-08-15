@@ -48,7 +48,6 @@ public class UserRankController {
     public ResponseEntity<Object> getUserFilter(@RequestBody UserFilter userFilter, @RequestParam int page) throws ExecutionException, InterruptedException {
         Page rankScoreUsers = userService.getRankFilter(userFilter, page-1);
         System.out.println(rankScoreUsers);
-//        List<User> rankScoreUsers = userService.getRankFilter(userFilter, page-1);
 
         if(rankScoreUsers.isEmpty())
             return ResponseEntity.badRequest().body("no filtered data");
