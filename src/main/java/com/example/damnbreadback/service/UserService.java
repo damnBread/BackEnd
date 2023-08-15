@@ -3,6 +3,7 @@ package com.example.damnbreadback.service;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.entity.UserFilter;
+import org.springframework.data.domain.Page;
 
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ public interface UserService {
 
     // 인재정보 rank 데이터 get
     List<User> getRankScore(int page) throws ExecutionException, InterruptedException;
-    List<User> getRankFilter(UserFilter userFilter, int page) throws ExecutionException, InterruptedException;
+    Page getRankFilter(UserFilter userFilter, int page) throws ExecutionException, InterruptedException;
     Date calculateBirthDateFromAge(int age);
 
     String getUserId(String id) throws ExecutionException, InterruptedException;

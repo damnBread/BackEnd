@@ -7,6 +7,7 @@ import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.entity.UserFilter;
 import com.example.damnbreadback.repository.UserSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -134,7 +135,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getRankFilter(UserFilter userFilter, int page) throws ExecutionException, InterruptedException{
+    public Page getRankFilter(UserFilter userFilter, int page){
         PageRequest pageRequest = PageRequest.of(page, 20);
 
         List<String> location = Arrays.asList(userFilter.getLocation().split("\\|"));
@@ -161,7 +162,7 @@ public class UserServiceImpl implements UserService {
         if (birth != null)
             spec = spec.and(UserSpecification.overAge(birth));
 
-        return userRepository.findAll(spec);
+        return userRepository.findAll(spec, pageRequest);
 
 //        return userDao.getRankFilter(location, job, gender, birth, page);
     }

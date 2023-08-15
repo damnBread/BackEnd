@@ -5,6 +5,7 @@ import com.example.damnbreadback.entity.UserFilter;
 import com.example.damnbreadback.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,12 +42,13 @@ public class UserRankController {
 
         if(user == null) return  ResponseEntity.badRequest().body("can not find user");
         return ResponseEntity.ok().body(user);
-
     }
 
     @RequestMapping(value = "/filter", method = RequestMethod.GET)
     public ResponseEntity<Object> getUserFilter(@RequestBody UserFilter userFilter, @RequestParam int page) throws ExecutionException, InterruptedException {
-        List<User> rankScoreUsers = userService.getRankFilter(userFilter, page-1);
+        Page rankScoreUsers = userService.getRankFilter(userFilter, page-1);
+        System.out.println(rankScoreUsers);
+//        List<User> rankScoreUsers = userService.getRankFilter(userFilter, page-1);
 
         if(rankScoreUsers.isEmpty())
             return ResponseEntity.badRequest().body("no filtered data");
