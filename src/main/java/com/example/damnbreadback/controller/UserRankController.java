@@ -1,7 +1,7 @@
 package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.entity.UserFilter;
+import com.example.damnbreadback.dto.UserFilter;
 import com.example.damnbreadback.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.example.damnbreadback.entity;
+package com.example.damnbreadback.dto;
 
 import lombok.Getter;
 import lombok.Setter;

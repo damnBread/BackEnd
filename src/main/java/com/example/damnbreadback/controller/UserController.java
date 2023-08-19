@@ -1,10 +1,8 @@
 package com.example.damnbreadback.controller;
 
-import com.example.damnbreadback.entity.LoginRequest;
+import com.example.damnbreadback.dto.LoginRequest;
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.service.UserService;
-import com.example.damnbreadback.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @RestController
