@@ -1,11 +1,14 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.config.JwtUtils;
+import com.example.damnbreadback.entity.RefreshToken;
+import com.example.damnbreadback.repository.TokenRepository;
 import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.entity.UserFilter;
 import com.example.damnbreadback.repository.UserSpecification;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,26 +16,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
+    private static long accessTokenValidTime = 1000 * 60 * 60L; //1시간
+    // 리프레시 토큰 유효시간 | 1m
+    private static long refreshTokenValidTime = 1000 * 60 * 60L * 24 * 14; //2주
     @Value("${JWT.SECRET}")
     private String secretKey;
 
     private final UserDao userDao;
 
-
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TokenRepository tokenRepository;
 
     @Autowired
     TokenService tokenService;
+
+
+
 
     // 로그인 ===============================================================================
     public String login(String id, String pw, HttpServletResponse response) throws ExecutionException, InterruptedException{
@@ -47,15 +60,48 @@ public class UserServiceImpl implements UserService {
         else{
             String accessToken = JwtUtils.createAccessToken(id, "USER", secretKey);
             String refreshToken = JwtUtils.createRefreshToken(id, "USER", secretKey);
-            tokenService.addToken(refreshToken);
+            tokenService.addToken(id, accessToken, refreshToken);
 
             JwtUtils.setHeaderAccessToken(response, accessToken);
             JwtUtils.setHeaderRefreshToken(response, refreshToken);
+
+//            redisTemplate.opsForValue().set("JWT_TOKEN:" + id, accessToken, JwtUtils.getExpiration(accessToken, secretKey));
 
             return accessToken;
 
         }
 
+    }
+
+    public String logout(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException {
+
+        final String accessHeader = request.getHeader("Authorization");
+        final String refreshHeader = request.getHeader("RefreshToken");
+        final String accessToken;
+        final String refreshToken;
+        if (accessHeader == null || !accessHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        if (refreshHeader == null || !refreshHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        accessToken = accessHeader.substring(7);
+        refreshToken = refreshHeader.substring(7);
+        tokenRepository.deleteByRefreshToken(refreshToken);
+//        if (storedToken != null) {
+//            storedToken.setExpired(true);
+//            storedToken.setRevoked(true);
+//            tokenRepository.save(storedToken);
+            SecurityContextHolder.clearContext();
+//        }
+        return "logout";
+    }
+
+    private void verifiedRefreshToken(String encryptedRefreshToken) {
+        if (encryptedRefreshToken == null) {
+            System.out.println("token not Exist");
+//            throw new BusinessLogicException(ExceptionCode.HEADER_REFRESH_TOKEN_NOT_EXISTS);
+        }
     }
 
     // 로그인

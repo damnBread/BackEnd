@@ -3,6 +3,7 @@ package com.example.damnbreadback.config;
 import com.example.damnbreadback.exception.CustomAccessDeniedHandler;
 import com.example.damnbreadback.exception.CustomAuthenticationEntryPoint;
 import com.example.damnbreadback.exception.EntryPointUnauthorizedHandler;
+import com.example.damnbreadback.service.LogoutService;
 import com.example.damnbreadback.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -24,10 +25,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -43,7 +46,8 @@ public class SecurityConfig {
 
     public static String[] ONLY_USER = {
             "/mypage",
-            "/damnrank/{userid}/detail"
+            "/damnrank/{userid}/detail",
+            "/logout"
     };
 
     private final UserService userService;
@@ -51,6 +55,7 @@ public class SecurityConfig {
     private String secretKey;
 
     private final ObjectMapper objectMapper;
+    private final LogoutHandler logoutHandler;
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new CustomAuthenticationEntryPoint(objectMapper);
@@ -64,7 +69,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/signup", "/login");
+        return (web) -> web.ignoring().requestMatchers("/signup", "/login", "/logout");
     }
 
     @Bean
@@ -94,36 +99,28 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
-                .requestMatchers(ONLY_USER).authenticated()
+//                .requestMatchers(ONLY_USER).authenticated()
 //                .requestMatchers("/damnrank/**").permitAll()
-//                .requestMatchers("/**").permitAll()
+                .requestMatchers("/**").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler())
                 .and()
-                .addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .logout()
+                .logoutUrl("/logout")
+                .addLogoutHandler(logoutHandler)
+                .logoutSuccessHandler(
+                        ((request, response, authentication) ->{
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            SecurityContextHolder.clearContext();
+                        })
+                );
 
         return http.build();
 
-//        http
-//                .cors().disable()
-//                .csrf().disable()
-//                .authorizeHttpRequests(requests -> requests
-//                        .requestMatchers("/damnrank","/damnrank/{userid}/detail").permitAll()
-//                        .requestMatchers("/mypage").hasAnyRole("USER")
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(form -> form
-//                        .loginPage("/login")
-//                        .permitAll()
-//                );
-//
-//        http.formLogin(Customizer.withDefaults());
-//        http.addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
-//
-//        return (SecurityFilterChain)http.build();
 
     }
 

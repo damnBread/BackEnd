@@ -63,6 +63,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 String userId = JwtUtils.getUserIdFromToken(token, secretKey);
                 System.out.println(JwtUtils.getRoleFromToken(token, secretKey));
 
+
                 System.out.println(userId);
                 //권한부여
                 UsernamePasswordAuthenticationToken authenticationToken =

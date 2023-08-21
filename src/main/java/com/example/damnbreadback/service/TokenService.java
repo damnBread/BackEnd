@@ -13,6 +13,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface TokenService {
-    RefreshToken addToken(String token) throws ExecutionException, InterruptedException ;
+    RefreshToken addToken(String id, String accessToken, String refreshToken) throws ExecutionException, InterruptedException ;
     TokenDTO tokenValidIssue(String accessToken, String refreshToken) throws AccessDeniedException, ExecutionException, InterruptedException;
 }

@@ -6,6 +6,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.nio.file.AccessDeniedException;
@@ -18,6 +20,7 @@ public class JwtUtils {
     // 리프레시 토큰 유효시간 | 1m
     private static long refreshTokenValidTime = 1000 * 60 * 60L * 24 * 14; //2주
 
+
     // This method extracts the userId from the JWT token
     public static String getUserIdFromToken(String token, String secretKey) throws AccessDeniedException {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
@@ -29,6 +32,18 @@ public class JwtUtils {
     public static String getRoleFromToken(String token, String secretKey) {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         return (String) claims.get("role");
+    }
+
+    public static Long getExpiration(String accessToken, String secretKey) {
+        // accessToken 남은 유효시간
+        Date expiration = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
+        // 현재 시간
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 
     // This method validates the JWT token and returns the user details if the token is valid

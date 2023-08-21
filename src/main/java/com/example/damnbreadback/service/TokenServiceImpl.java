@@ -38,9 +38,10 @@ public class TokenServiceImpl implements TokenService {
 
 
     @Override
-    public RefreshToken addToken(String token) {
+    public RefreshToken addToken(String id, String accessTk, String refreshTk) {
         RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setRefreshToken(token);
+        refreshToken.setAccessToken(accessTk);
+        refreshToken.setRefreshToken(refreshTk);
 
         tokenRepository.save(refreshToken);
 

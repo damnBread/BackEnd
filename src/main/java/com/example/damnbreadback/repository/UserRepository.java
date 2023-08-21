@@ -1,6 +1,7 @@
 package com.example.damnbreadback.repository;
 
 import com.example.damnbreadback.entity.User;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> , JpaSpecificationExecutor{
+    @Cacheable(key = "#id", value = "user")
     User findUserById(String id);
 
     User findUserByNickname(String nickname);

@@ -121,14 +121,26 @@ public class UserController {
         else return ResponseEntity.ok().body(verifyResult);
     }
 
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+    //1. 헤더에서 발급되어있는 JWT 토큰을 가져옴
+    //2. 발급되어있는 JWT 토큰의 시간을 가져오기
+    //3. SecurityContextHolder에 등록되어있는 정보에서 id를 가져온다.
+    //4. 로그인할 때 key(id) : value(RefreshToken) 형식으로 저장했기 때문에 가져온 id(key)로 redis에 value가 존재하는지 체크
+    //5. 존재한다면 redis에 저장되어있는 RefreshToken 삭제
+    //6. [ 블랙리스트 생성 단계 ] redis에 가져온 key(JWT 토큰) : value("logout")으로 저장
+    //7. Filter에서 redis에 요청받은 토큰이 존재하는지 체크 -> 있다면 Exception 발생
 
-        return "logout sucess";
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException {
+
+        userService.logout(request);
+
+        return ResponseEntity.ok().build();
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            session.invalidate();
+//        }
+//
+//        return "logout sucess";
     }
 
 }
