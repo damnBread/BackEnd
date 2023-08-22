@@ -75,25 +75,11 @@ public class UserServiceImpl implements UserService {
 
     public String logout(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException {
 
-        final String accessHeader = request.getHeader("Authorization");
-        final String refreshHeader = request.getHeader("RefreshToken");
-        final String accessToken;
-        final String refreshToken;
-        if (accessHeader == null || !accessHeader.startsWith("Bearer ")) {
-            return null;
-        }
-        if (refreshHeader == null || !refreshHeader.startsWith("Bearer ")) {
-            return null;
-        }
-        accessToken = accessHeader.substring(7);
-        refreshToken = refreshHeader.substring(7);
+        String accessToken = JwtUtils.resolveAccessToken(request);
+        String refreshToken = JwtUtils.resolveRefreshToken(request);
+
         tokenRepository.deleteByRefreshToken(refreshToken);
-//        if (storedToken != null) {
-//            storedToken.setExpired(true);
-//            storedToken.setRevoked(true);
-//            tokenRepository.save(storedToken);
-            SecurityContextHolder.clearContext();
-//        }
+
         return "logout";
     }
 

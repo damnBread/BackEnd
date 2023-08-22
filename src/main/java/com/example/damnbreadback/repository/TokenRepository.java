@@ -20,4 +20,5 @@ public interface TokenRepository extends JpaRepository<RefreshToken, Long> {
             nativeQuery = true)
     String findByRefreshToken(@Param("token") String token);
 
+
 }
