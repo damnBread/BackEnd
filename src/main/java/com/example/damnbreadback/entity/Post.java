@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @NoArgsConstructor
@@ -31,9 +32,10 @@ public class Post extends BaseTimeEntity{
     private boolean payMethod; // 임금 지불 방법 (true : 의뢰인 직접 지급 / false : 당일 현장 지급)
     private String job; // 업/직종
 
-    private Date workStart; // 근무 시작 일시
-    private Date workFinish; // 근무 종료 일시
-    private int workPeriod; // 근무 기간
+    private LocalDate workDate; // 근무 날짜
+    private int workDay; // 근무 요일
+    private Float workStart; // 근무시작 시간 ex. 4.25 = 4시 25분
+    private Float workEnd; // 근무종료 시간 ex. 10.30 = 10시 30분
 
     @ColumnDefault("0")
     private int applicantCount; // 지원자 수

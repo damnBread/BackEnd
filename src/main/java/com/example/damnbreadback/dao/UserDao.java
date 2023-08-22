@@ -1,21 +1,14 @@
 package com.example.damnbreadback.dao;
 
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.entity.UserFilter;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 

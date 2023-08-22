@@ -1,5 +1,6 @@
 package com.example.damnbreadback.service;
 
+import com.example.damnbreadback.dto.PostFilter;
 import com.example.damnbreadback.entity.Post;
 import org.springframework.data.domain.Page;
 
@@ -13,7 +14,8 @@ public interface PostService {
     Long createPost(String writerId, Post postRequest) throws ExecutionException, InterruptedException;
 
     Optional<Post> getPostById(Long id) throws ExecutionException, InterruptedException;
-    Page<Post> findStories(int page);
+    Page<Post> findPosts(int page);
+    Page getPostFilter(PostFilter postFilter, int page);
 
     Boolean bookmark(String name, int postNum) throws ExecutionException, InterruptedException;
 }

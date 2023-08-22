@@ -4,6 +4,7 @@ import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.entity.SignupRequest;
 import com.example.damnbreadback.entity.UserFilter;
 import jakarta.servlet.http.HttpServletResponse;
+import com.example.damnbreadback.dto.UserFilter;
 import org.springframework.data.domain.Page;
 
 import java.util.Date;

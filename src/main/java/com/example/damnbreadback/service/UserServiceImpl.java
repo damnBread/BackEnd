@@ -77,7 +77,6 @@ public class UserServiceImpl implements UserService {
     // 회원가입 -> 회원 정보 중복 확인
     @Override
     public String verifyId(String id) throws ExecutionException, InterruptedException {
-        System.out.println(id);
         if(id == null) return "null exception";
         User user = userRepository.findUserById(id);
         if(user == null) return "false";

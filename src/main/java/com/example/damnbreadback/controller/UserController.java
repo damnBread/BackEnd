@@ -2,7 +2,7 @@ package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.dto.TokenDTO;
-import com.example.damnbreadback.entity.LoginRequest;
+import com.example.damnbreadback.dto.LoginRequest;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.TokenService;
 import com.example.damnbreadback.service.UserService;
