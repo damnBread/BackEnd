@@ -191,15 +191,26 @@ public class UserServiceImpl implements UserService {
     public Page getRankFilter(UserFilter userFilter, int page){
         PageRequest pageRequest = PageRequest.of(page, 20);
 
-        List<String> location = Arrays.asList(userFilter.getLocation().split("\\|"));
+        System.out.println(userFilter.getAge());
+        if(userFilter.getLocation() == null)
+            userFilter.setLocation("");
+        if(userFilter.getJob() == null)
+            userFilter.setJob("");
+        if(userFilter.getGender() == null)
+            userFilter.setGender(new Integer[]{1,1});
+        if(userFilter.getAge() < 0)
+            userFilter.setAge(-1);
+        if(userFilter.getCareer() < 0)
+            userFilter.setAge(-1);
 
+
+        List<String> location = Arrays.asList(userFilter.getLocation().split("\\|"));
 
         List<String> job = Arrays.asList(userFilter.getJob().split("\\|"));
 
-
         List<Boolean> gender = new ArrayList<Boolean>();
-        if(userFilter.getGender().get(0) != 0) gender.add(true);
-        if(userFilter.getGender().get(1) != 0) gender.add(false);
+        if(userFilter.getGender()[0] != 0) gender.add(true);
+        if(userFilter.getGender()[1] != 0) gender.add(false);
 
         Date birth = calculateBirthDateFromAge(userFilter.getAge());
         System.out.println(birth);
@@ -224,6 +235,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public Date calculateBirthDateFromAge(int age) {
+        if(age < 0) return null;
+
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH);

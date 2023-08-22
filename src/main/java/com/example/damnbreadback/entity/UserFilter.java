@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class UserFilter {
     String location;// 지역
     String job; // 업직종
-    ArrayList<Integer> gender; //성별 조건
+    Integer[] gender; //성별 조건
     int age;  // 연령 조건
     int career; // 경력 조건
 }
