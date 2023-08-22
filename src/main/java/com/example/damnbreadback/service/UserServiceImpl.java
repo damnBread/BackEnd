@@ -4,7 +4,7 @@ import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.entity.UserFilter;
+import com.example.damnbreadback.dto.UserFilter;
 import com.example.damnbreadback.repository.UserSpecification;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
