@@ -12,4 +12,5 @@ public class UserFilter {
     String job; // 업직종
     ArrayList<Integer> gender; //성별 조건
     int age;  // 연령 조건
+    int career; // 경력 조건
 }

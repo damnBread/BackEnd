@@ -1,8 +1,8 @@
 package com.example.damnbreadback.repository;
 
+import com.example.damnbreadback.entity.Career;
 import com.example.damnbreadback.entity.User;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
@@ -36,5 +36,28 @@ public class UserSpecification {
 
     public static Specification<User> overAge(Date birth) {
         return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("birth"), birth);
+    }
+
+    public static Specification<User> overCareer(int career){
+        return (root, query, criteriaBuilder) -> {
+//            Join<Career, User> careerUserJoin = root.join("career");
+//            return criteriaBuilder.equal(careerUserJoin.get(""), career);
+//            Join<User, Career> careerUserJoin = root.join("career");
+
+            // Create a subquery to calculate the sum of 'period' grouped by 'id'
+            Subquery<Integer> subquery = query.subquery(Integer.class);
+            Root<Career> subqueryRoot = subquery.from(Career.class);
+            subquery.select(criteriaBuilder.sum(subqueryRoot.get("period")));
+            subquery.groupBy(subqueryRoot.get("id"));
+
+            // Use a correlated subquery to relate 'User' to the subquery
+            Predicate correlatedPredicate = criteriaBuilder.equal(root, subqueryRoot.get("user"));
+            subquery.where(correlatedPredicate);
+
+            // Create the main query to check if the sum is greater than 'career'
+            Predicate overCareerPredicate = criteriaBuilder.greaterThanOrEqualTo(subquery, career);
+
+            return overCareerPredicate;
+        };
     }
 }

@@ -206,6 +206,7 @@ public class UserServiceImpl implements UserService {
 
         Specification<User> spec = (root, query, criteriaBuilder) -> null;
 
+        System.out.println(userFilter.getCareer());
         if(location != null)
             spec = spec.and(UserSpecification.hasLocation(location));
         if(job != null)
@@ -214,6 +215,8 @@ public class UserServiceImpl implements UserService {
             spec = spec.and(UserSpecification.isGender(gender));
         if (birth != null)
             spec = spec.and(UserSpecification.overAge(birth));
+        if (userFilter.getCareer() != -1)
+            spec = spec.and(UserSpecification.overCareer(userFilter.getCareer()));
 
         return userRepository.findAll(spec, pageRequest);
 
