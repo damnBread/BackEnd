@@ -1,6 +1,7 @@
 package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.dto.PostDto;
+import com.example.damnbreadback.dto.PostFilter;
 import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.service.PostService;
 import lombok.*;
@@ -26,10 +27,21 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<Object> getAllPosts(@RequestParam int page) throws ExecutionException, InterruptedException, TimeoutException {
-        Page<Post> postPage = postService.findStories(page-1);
+        Page<Post> postPage = postService.findPosts(page-1);
         List<Post> list = postPage.getContent();
         if(list.isEmpty()) return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
         return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(path="/filter")
+    public ResponseEntity<Object> getPostFilter(@RequestBody PostFilter postFilter, @RequestParam int page) throws ExecutionException, InterruptedException {
+        Page postPageFilter = postService.getPostFilter(postFilter, page-1);
+        System.out.println(postPageFilter);
+
+        if(postPageFilter.isEmpty())
+            return ResponseEntity.badRequest().body("no filtered data");
+
+        return ResponseEntity.ok().body(postPageFilter);
     }
 
     @RequestMapping(path="/{postNum}", method = RequestMethod.GET)

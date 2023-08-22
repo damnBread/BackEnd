@@ -1,10 +1,8 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.entity.SignupRequest;
-import com.example.damnbreadback.entity.UserFilter;
-import com.google.api.Http;
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.damnbreadback.dto.SignupRequest;
+import com.example.damnbreadback.dto.UserFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 
