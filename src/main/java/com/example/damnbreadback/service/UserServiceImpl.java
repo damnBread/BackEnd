@@ -172,6 +172,7 @@ public class UserServiceImpl implements UserService {
 
 
         List<Boolean> gender = new ArrayList<Boolean>();
+        System.out.println(userFilter.getGender());
         if(userFilter.getGender().get(0) != 0) gender.add(true);
         if(userFilter.getGender().get(1) != 0) gender.add(false);
 

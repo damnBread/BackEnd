@@ -43,8 +43,8 @@ public class UserRankController {
         return ResponseEntity.ok().body(user);
     }
 
-    @RequestMapping(value = "/filter", method = RequestMethod.GET)
-    public ResponseEntity<Object> getUserFilter(@RequestParam UserFilter userFilter, @RequestParam int page) throws ExecutionException, InterruptedException {
+    @RequestMapping(value = "/filter", method = RequestMethod.POST)
+    public ResponseEntity<Object> getUserFilter(@RequestBody UserFilter userFilter, @RequestParam int page) throws ExecutionException, InterruptedException {
         System.out.println(userFilter);
         Page rankScoreUsers = userService.getRankFilter(userFilter, page-1);
         System.out.println(rankScoreUsers.getTotalPages());
