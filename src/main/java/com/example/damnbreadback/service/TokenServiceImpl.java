@@ -3,6 +3,7 @@ package com.example.damnbreadback.service;
 import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.dto.TokenDTO;
 import com.example.damnbreadback.entity.RefreshToken;
+import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.repository.TokenRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +26,10 @@ public class TokenServiceImpl implements TokenService {
 
 
     @Override
-    public RefreshToken addToken(String id, String accessTk, String refreshTk) {
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setAccessToken(accessTk);
-        refreshToken.setRefreshToken(refreshTk);
+    public RefreshToken addToken(RefreshToken refreshTokenEntity) {
+        tokenRepository.save(refreshTokenEntity);
 
-        tokenRepository.save(refreshToken);
-
-        return refreshToken;
+        return refreshTokenEntity;
     }
 
     @Override
@@ -56,6 +53,7 @@ public class TokenServiceImpl implements TokenService {
 
                 RefreshToken saveNewRefreshToken = new RefreshToken();
                 saveNewRefreshToken.setRefreshToken(newRefreshToken);
+                saveNewRefreshToken.setAccessToken(newAcessToken);
                 tokenRepository.save(saveNewRefreshToken);
             }
             else{

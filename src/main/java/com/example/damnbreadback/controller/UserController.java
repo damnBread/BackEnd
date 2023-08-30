@@ -88,7 +88,7 @@ public class UserController {
         if(tok.equals("db null exception"))
             return ResponseEntity.badRequest().body("null exception");
 
-        return ResponseEntity.ok().body("success to login");
+        return ResponseEntity.ok().body(tok);
     }
 
 

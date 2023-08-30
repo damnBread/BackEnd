@@ -29,7 +29,6 @@ public class UserRankController {
         if(rankScoreUsers.isEmpty())
             return ResponseEntity.badRequest().body("no rank data");
 
-
         return ResponseEntity.ok().body(rankScoreUsers);
     }
 
@@ -44,9 +43,11 @@ public class UserRankController {
         return ResponseEntity.ok().body(user);
     }
 
-    @RequestMapping(value = "/filter", method = RequestMethod.GET)
+    @RequestMapping(value = "/filter", method = RequestMethod.POST)
     public ResponseEntity<Object> getUserFilter(@RequestBody UserFilter userFilter, @RequestParam int page) throws ExecutionException, InterruptedException {
+        System.out.println(userFilter);
         Page rankScoreUsers = userService.getRankFilter(userFilter, page-1);
+        System.out.println(rankScoreUsers.getTotalPages());
 
         if(rankScoreUsers.isEmpty())
             return ResponseEntity.badRequest().body("no filtered data");

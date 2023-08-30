@@ -46,8 +46,8 @@ public class SecurityConfig {
 
     public static String[] ONLY_USER = {
             "/mypage",
-            "/damnrank/{userid}/detail",
-            "/logout"
+            "/damnrank/{userid}/detail"
+//            "/damnstory/new"
     };
 
     private final UserService userService;
@@ -121,6 +121,23 @@ public class SecurityConfig {
 
         return http.build();
 
+//        http
+//                .cors().disable()
+//                .csrf().disable()
+//                .authorizeHttpRequests(requests -> requests
+//                        .requestMatchers("/damnrank","/damnrank/{userid}/detail").permitAll()
+//                        .requestMatchers("/mypage").hasAnyRole("USER")
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin(form -> form
+//                        .loginPage("/login")
+//                        .permitAll()
+//                );
+//
+//        http.formLogin(Customizer.withDefaults());
+//        http.addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
+//
+//        return (SecurityFilterChain)http.build();
 
     }
 

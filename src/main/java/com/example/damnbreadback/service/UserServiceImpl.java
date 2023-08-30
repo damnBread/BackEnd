@@ -2,7 +2,6 @@ package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.entity.RefreshToken;
-import com.example.damnbreadback.repository.TokenRepository;
 import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.entity.User;
@@ -60,12 +59,17 @@ public class UserServiceImpl implements UserService {
         else{
             String accessToken = JwtUtils.createAccessToken(id, "USER", secretKey);
             String refreshToken = JwtUtils.createRefreshToken(id, "USER", secretKey);
-            tokenService.addToken(id, accessToken, refreshToken);
+
+            RefreshToken refreshTokenEntity = new RefreshToken();
+            refreshTokenEntity.setRefreshToken(refreshToken);
+            refreshTokenEntity.setAccessToken(accessToken);
+
+            tokenService.addToken(refreshTokenEntity);
+
+
 
             JwtUtils.setHeaderAccessToken(response, accessToken);
             JwtUtils.setHeaderRefreshToken(response, refreshToken);
-
-//            redisTemplate.opsForValue().set("JWT_TOKEN:" + id, accessToken, JwtUtils.getExpiration(accessToken, secretKey));
 
             return accessToken;
 
@@ -190,26 +194,16 @@ public class UserServiceImpl implements UserService {
     public Page getRankFilter(UserFilter userFilter, int page){
         PageRequest pageRequest = PageRequest.of(page, 20);
 
-        System.out.println(userFilter.getAge());
-        if(userFilter.getLocation() == null)
-            userFilter.setLocation("");
-        if(userFilter.getJob() == null)
-            userFilter.setJob("");
-        if(userFilter.getGender() == null)
-            userFilter.setGender(new Integer[]{1,1});
-        if(userFilter.getAge() < 0)
-            userFilter.setAge(-1);
-        if(userFilter.getCareer() < 0)
-            userFilter.setAge(-1);
-
-
         List<String> location = Arrays.asList(userFilter.getLocation().split("\\|"));
+
 
         List<String> job = Arrays.asList(userFilter.getJob().split("\\|"));
 
+
         List<Boolean> gender = new ArrayList<Boolean>();
-        if(userFilter.getGender()[0] != 0) gender.add(true);
-        if(userFilter.getGender()[1] != 0) gender.add(false);
+        System.out.println(userFilter.getGender());
+        if(userFilter.getGender().get(0) != 0) gender.add(true);
+        if(userFilter.getGender().get(1) != 0) gender.add(false);
 
         Date birth = calculateBirthDateFromAge(userFilter.getAge());
         System.out.println(birth);
