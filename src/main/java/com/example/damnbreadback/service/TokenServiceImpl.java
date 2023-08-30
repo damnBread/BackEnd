@@ -1,29 +1,16 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.config.JwtUtils;
-import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.dto.TokenDTO;
 import com.example.damnbreadback.entity.RefreshToken;
-import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.entity.UserFilter;
 import com.example.damnbreadback.repository.TokenRepository;
-import com.example.damnbreadback.repository.UserRepository;
-import com.example.damnbreadback.repository.UserSpecification;
-import com.google.api.client.auth.oauth2.TokenResponse;
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
-import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service

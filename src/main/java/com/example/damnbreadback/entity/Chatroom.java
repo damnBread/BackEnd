@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.springframework.web.socket.WebSocketSession;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -28,4 +31,5 @@ public class Chatroom {
     @OneToMany( fetch = FetchType.EAGER)
     @JoinColumn(name = "chat")
     private Set<Message> chats; // 채팅메세지
+
 }
