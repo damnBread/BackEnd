@@ -5,7 +5,6 @@ import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.dto.TokenDTO;
 import com.example.damnbreadback.entity.RefreshToken;
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.entity.UserFilter;
 import com.example.damnbreadback.repository.TokenRepository;
 import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.repository.UserSpecification;
