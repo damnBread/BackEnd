@@ -44,6 +44,7 @@ public class SecurityConfig {
     public static String[] ONLY_USER = {
             "/mypage",
             "/damnrank/{userid}/detail"
+//            "/damnstory/new"
     };
 
     private final UserService userService;

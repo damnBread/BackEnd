@@ -37,13 +37,10 @@ public class TokenServiceImpl implements TokenService {
 
 
     @Override
-    public RefreshToken addToken(String token) {
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setRefreshToken(token);
+    public RefreshToken addToken(RefreshToken refreshTokenEntity) {
+        tokenRepository.save(refreshTokenEntity);
 
-        tokenRepository.save(refreshToken);
-
-        return refreshToken;
+        return refreshTokenEntity;
     }
 
     @Override
@@ -67,6 +64,7 @@ public class TokenServiceImpl implements TokenService {
 
                 RefreshToken saveNewRefreshToken = new RefreshToken();
                 saveNewRefreshToken.setRefreshToken(newRefreshToken);
+                saveNewRefreshToken.setAccessToken(newAcessToken);
                 tokenRepository.save(saveNewRefreshToken);
             }
             else{

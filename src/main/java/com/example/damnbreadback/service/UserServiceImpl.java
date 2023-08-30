@@ -1,6 +1,7 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.config.JwtUtils;
+import com.example.damnbreadback.entity.RefreshToken;
 import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.entity.User;
@@ -47,7 +48,14 @@ public class UserServiceImpl implements UserService {
         else{
             String accessToken = JwtUtils.createAccessToken(id, "USER", secretKey);
             String refreshToken = JwtUtils.createRefreshToken(id, "USER", secretKey);
-            tokenService.addToken(refreshToken);
+
+            RefreshToken refreshTokenEntity = new RefreshToken();
+            refreshTokenEntity.setRefreshToken(refreshToken);
+            refreshTokenEntity.setAccessToken(accessToken);
+
+            tokenService.addToken(refreshTokenEntity);
+
+
 
             JwtUtils.setHeaderAccessToken(response, accessToken);
             JwtUtils.setHeaderRefreshToken(response, refreshToken);
@@ -159,7 +167,6 @@ public class UserServiceImpl implements UserService {
         PageRequest pageRequest = PageRequest.of(page, 20);
 
         List<String> location = Arrays.asList(userFilter.getLocation().split("\\|"));
-
 
         List<String> job = Arrays.asList(userFilter.getJob().split("\\|"));
 
