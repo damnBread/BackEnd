@@ -17,5 +17,7 @@ public interface PostService {
     Page<Post> findPosts(int page);
     Page getPostFilter(PostFilter postFilter, int page);
 
-    Boolean bookmark(String name, int postNum) throws ExecutionException, InterruptedException;
+    Boolean deletePost(Long id) throws ExecutionException, InterruptedException;
+
+    Boolean bookmark(String name, int postNum, Boolean isDelete) throws ExecutionException, InterruptedException;
 }

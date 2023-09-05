@@ -7,7 +7,6 @@ import com.example.damnbreadback.repository.ScrapRepository;
 import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.Scrap;
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.repository.UserSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -99,14 +97,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Boolean bookmark(String name, int postNum) throws ExecutionException, InterruptedException{
+    public Boolean deletePost(Long id) throws ExecutionException, InterruptedException {
+        postRepository.delete(getPostById(id).get());
+
+        if(getPostById(id).isPresent()) return false;
+        else return true;
+    }
+
+    @Override
+    public Boolean bookmark(String name, int postNum, Boolean isDelete) throws ExecutionException, InterruptedException{
         Optional<Post> post = postRepository.findById((long) postNum);
         User user = userService.getUserById(userService.findUserIdById(name));
 
         if(post.isPresent()) {
-            Scrap newScrap = new Scrap(post.get(), user);
-            scrapRepository.save(newScrap);
-            return true;
+            if(isDelete) {
+                Scrap newScrap = new Scrap(post.get(), user);
+                scrapRepository.save(newScrap);
+                return true;
+            }
+            else{
+                // name(User)이랑 postNum(post)로 scrap 객체 찾아서
+                List<Scrap> deleteScrap = scrapRepository.findAllByUserAndPost(user, post.get());
+                scrapRepository.delete(deleteScrap.remove(0));
+                return true;
+            }
         }
         else return false;
     }

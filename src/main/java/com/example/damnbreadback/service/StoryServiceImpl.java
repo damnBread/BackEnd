@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -57,4 +56,14 @@ public class StoryServiceImpl implements StoryService {
         story.setWriter(userService.findUserIdById(writerId));
         return storyRepository.save(story);
     }
+
+    @Override
+    public Boolean deleteStory(Long id) throws ExecutionException, InterruptedException {
+        storyRepository.delete(getStory(id).get());
+
+        if(getStory(id).isPresent()) return false;
+        else return true;
+    }
+
+
 }

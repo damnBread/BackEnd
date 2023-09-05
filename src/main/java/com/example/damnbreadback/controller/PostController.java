@@ -64,9 +64,17 @@ public class PostController {
     //@RequestMapping(path="/detail/bookmark", method = RequestMethod.POST)
     @PostMapping("/{postNum}/bookmark")
     public ResponseEntity<Object> bookmark(Authentication authentication, @PathVariable int postNum) throws  ExecutionException, InterruptedException{
-        Boolean isSuccess = postService.bookmark(authentication.getName(), postNum);
+        Boolean isSuccess = postService.bookmark(authentication.getName(), postNum, false);
 
         if(isSuccess) return new ResponseEntity<> (HttpStatus.ACCEPTED);
+        else return new ResponseEntity<>("cannot find post", HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/{postNum}/bookmark")
+    public ResponseEntity<Object> bookmarkDelete(Authentication authentication, @PathVariable int postNum) throws ExecutionException, InterruptedException {
+        Boolean isSuccess = postService.bookmark(authentication.getName(), postNum, true);
+
+        if(isSuccess) return new ResponseEntity<>(HttpStatus.ACCEPTED);
         else return new ResponseEntity<>("cannot find post", HttpStatus.NOT_FOUND);
     }
 }
