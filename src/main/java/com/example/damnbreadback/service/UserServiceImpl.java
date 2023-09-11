@@ -2,6 +2,7 @@ package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.entity.RefreshToken;
+import com.example.damnbreadback.repository.TokenRepository;
 import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.entity.User;
@@ -15,14 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -42,9 +39,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     TokenService tokenService;
-
-
-
 
     // 로그인 ===============================================================================
     public String login(String id, String pw, HttpServletResponse response) throws ExecutionException, InterruptedException{
@@ -66,8 +60,6 @@ public class UserServiceImpl implements UserService {
 
             tokenService.addToken(refreshTokenEntity);
 
-
-
             JwtUtils.setHeaderAccessToken(response, accessToken);
             JwtUtils.setHeaderRefreshToken(response, refreshToken);
 
@@ -77,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public String logout(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException {
+    public String logout(HttpServletRequest request) {
 
         String accessToken = JwtUtils.resolveAccessToken(request);
         String refreshToken = JwtUtils.resolveRefreshToken(request);
@@ -112,7 +104,7 @@ public class UserServiceImpl implements UserService {
     // 회원가입 ==============================================================================
     // 회원가입 -> 회원 정보 중복 확인
     @Override
-    public String verifyId(String id) throws ExecutionException, InterruptedException {
+    public String verifyId(String id){
         if(id == null) return "null exception";
         User user = userRepository.findUserById(id);
         if(user == null) return "false";
@@ -122,7 +114,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String verifyNickname(String nickname) throws ExecutionException, InterruptedException {
+    public String verifyNickname(String nickname) {
         if(nickname == null) return "null exception";
         User user = userRepository.findUserByNickname(nickname);
         if(user == null) return "false";
@@ -132,7 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String verifyEmail(String email) throws ExecutionException, InterruptedException {
+    public String verifyEmail(String email) {
         if(email == null) return "null exception";
         User user = userRepository.findUserByEmail(email);
         if(user == null) return "false";
@@ -167,13 +159,13 @@ public class UserServiceImpl implements UserService {
 
     //기본키 userId로 user 찾기.
     @Override
-    public User getUserById(Long id)  throws ExecutionException, InterruptedException {
+    public User getUserById(Long id) {
         return userRepository.findById(String.valueOf(id)).get();
 //        return userDao.getUserById(id);
 //        return null;
     }
 
-    public User getUserByUserid(String id) throws ExecutionException, InterruptedException {
+    public User getUserByUserid(String id){
         return userRepository.findUserById(id);
 //        return userDao.getUserById(id);
 //        return null;
@@ -202,8 +194,8 @@ public class UserServiceImpl implements UserService {
 
         List<Boolean> gender = new ArrayList<Boolean>();
         System.out.println(userFilter.getGender());
-        if(userFilter.getGender().get(0) != 0) gender.add(true);
-        if(userFilter.getGender().get(1) != 0) gender.add(false);
+        if(userFilter.getGender()[0] != 0) gender.add(true);
+        if(userFilter.getGender()[1] != 0) gender.add(false);
 
         Date birth = calculateBirthDateFromAge(userFilter.getAge());
         System.out.println(birth);
@@ -224,7 +216,6 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.findAll(spec, pageRequest);
 
-//        return userDao.getRankFilter(location, job, gender, birth, page);
     }
 
     public Date calculateBirthDateFromAge(int age) {
@@ -242,19 +233,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getUserId(String id) throws ExecutionException, InterruptedException {
+    public String getUserId(String id)  {
         //return userDao.getUserId(id);
         return null;
     }
 
     @Override
-    public List<String> getBookmarks(String user) throws ExecutionException, InterruptedException {
+    public List<String> getBookmarks(String user) {
         //return userDao.getScraps(user);
         return null;
     }
 
     @Override
-    public Long findUserIdById(String id) throws ExecutionException, InterruptedException {
+    public Long findUserIdById(String id) {
         return userRepository.findUserById(id).getUserId();
     }
 
