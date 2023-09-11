@@ -37,9 +37,9 @@ public class UserDTO {
     private String hopeJob; // 희망 업/직종
     private String hopeLocation; // 희망 근무지역 -> String Array
     private String isPublic; // 정보 공개 여부 "0101011" < 이런 식으로 이진값을 받아야할듯
-    private Set<Scrap> scraps; // 스크랩한 포스트 목록
-    private List<Career> career; // 경력
-    private List<History> histories; // 땜빵이력
+//    private Set<Scrap> scraps; // 스크랩한 포스트 목록
+//    private List<Career> career; // 경력
+//    private List<History> histories; // 땜빵이력
 
     public static UserDTO toDTO(User entity){
         return UserDTO.builder()
@@ -61,9 +61,9 @@ public class UserDTO {
                 .hopeJob(entity.getHopeJob())
                 .hopeLocation(entity.getHopeLocation())
                 .isPublic(entity.getIsPublic())
-                .scraps(entity.getScraps())
-                .career(entity.getCareer())
-                .histories(entity.getHistories())
+//                .scraps(entity.getScraps())
+//                .career(entity.getCareer())
+//                .histories(entity.getHistories())
                 .build();
                 
     }

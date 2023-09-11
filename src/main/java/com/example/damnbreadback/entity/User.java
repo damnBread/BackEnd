@@ -56,7 +56,7 @@ public class User {
     @Column(name = "gender")
     private boolean gender; // 성별 (true : 남자 , false : 여자)
 
-    @ColumnDefault("introduce")
+    @ColumnDefault("'introduce'")
     @Column(name = "introduce")
     private String introduce; //소개글
 
@@ -115,9 +115,9 @@ public class User {
                 .hopeJob(dto.getHopeJob())
                 .hopeLocation(dto.getHopeLocation())
                 .isPublic(dto.getIsPublic())
-                .scraps(dto.getScraps())
-                .career(dto.getCareer())
-                .histories(dto.getHistories())
+//                .scraps(dto.getScraps())
+//                .career(dto.getCareer())
+//                .histories(dto.getHistories())
                 .build();
 
     }

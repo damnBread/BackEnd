@@ -30,6 +30,8 @@ public interface UserService {
     // 회원가입 -> 신규 회원 저장
     UserDTO addUser(UserDTO user) throws ExecutionException, InterruptedException ;
 
+    UserDTO patchUserInfo(String id, UserDTO user) throws ExecutionException, InterruptedException ;
+
     // 인재정보 rank 데이터 get
     List<UserDTO> getRankScore(int page) throws ExecutionException, InterruptedException;
     Page getRankFilter(UserFilter userFilter, int page) throws ExecutionException, InterruptedException;

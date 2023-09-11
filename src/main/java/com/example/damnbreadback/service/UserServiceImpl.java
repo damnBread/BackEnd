@@ -143,15 +143,48 @@ public class UserServiceImpl implements UserService {
                 user.getName() == null || user.getHopeLocation() == null) {
             return null;
         }
-
-//        Authority authority = Authority.builder()
-//                .authorityName("ROLE_USER")
-//                .build();
-//      userDao.insertUser(user);
-
         userRepository.save(User.toEntity(user));
 
         return user;
+    }
+
+    public UserDTO patchUserInfo(String id, UserDTO user) throws ExecutionException, InterruptedException {
+//        UserDTO targetUser = UserDTO.toDTO(userRepository.findById(String.valueOf(id)).get());
+        UserDTO targetUser = UserDTO.toDTO(userRepository.findUserById(id));
+
+        if (targetUser == null) {
+            return null;
+        }
+
+        System.out.println("here"+id);
+
+        targetUser.setUserId(user.getUserId());
+//        targetUser.setTimestamp(user.getUserId());
+        targetUser.setName(user.getName());
+        targetUser.setNickname(user.getNickname());
+        targetUser.setId(user.getId());
+        targetUser.setPw(user.getPw());
+        targetUser.setEmail(user.getEmail());
+        targetUser.setPhone(user.getPhone());
+        targetUser.setHome(user.getHome());
+        targetUser.setBirth(user.getBirth());
+        targetUser.setGender(user.isGender());
+        targetUser.setIntroduce(user.getIntroduce());
+//        targetUser.setBadge(user.getBadge());
+//        targetUser.setNoShow(user.getNoShow());
+//        targetUser.setScore(user.getScore());
+        targetUser.setHopeJob(user.getHopeJob());
+        targetUser.setHopeLocation(user.getHopeLocation());
+        targetUser.setGender(user.isGender());
+        targetUser.setIsPublic(user.getIsPublic());
+//        targetUser.setScraps(user.getScraps());
+//        targetUser.setCareer(user.getCareer());
+//        targetUser.setHistories(user.getHistories());
+
+        System.out.println(targetUser.getUserId() +"//"+targetUser.getName());
+        userRepository.save(User.toEntity(targetUser));
+
+        return targetUser;
     }
 
     // ====================================================================================================
