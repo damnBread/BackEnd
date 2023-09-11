@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -15,7 +14,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name="message")
-public class Message {
+public class ChatMessage {
 
     @Id
     private String chatNum;

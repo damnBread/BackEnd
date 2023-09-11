@@ -34,17 +34,18 @@ public class UserRankController {
 
     //인재 상세 정보
     @RequestMapping(value = "/{userid}/detail", method = RequestMethod.GET)
-    public ResponseEntity<Object> getUserDetail(@PathVariable("userid") Long userId) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> getUserDetail(@PathVariable("userid") String userId) throws ExecutionException, InterruptedException {
         User user = null;
 
-        user = userService.getUserById(userId);
+        user = userService.getUserByUserid(userId);
+//        user = userService.getUserById(userId);
 
         if(user == null) return  ResponseEntity.badRequest().body("can not find user");
         return ResponseEntity.ok().body(user);
     }
 
-    @RequestMapping(value = "/filter", method = RequestMethod.POST)
-    public ResponseEntity<Object> getUserFilter(@RequestBody UserFilter userFilter, @RequestParam int page) throws ExecutionException, InterruptedException {
+    @RequestMapping(value = "/filter/{page}", method = RequestMethod.POST)
+    public ResponseEntity<Object> getUserFilter(@RequestBody UserFilter userFilter, @PathVariable("page") int page) throws ExecutionException, InterruptedException {
         System.out.println(userFilter);
         Page rankScoreUsers = userService.getRankFilter(userFilter, page-1);
         System.out.println(rankScoreUsers.getTotalPages());

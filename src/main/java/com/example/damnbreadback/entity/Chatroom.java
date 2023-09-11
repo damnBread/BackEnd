@@ -6,10 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import org.springframework.web.socket.WebSocketSession;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -21,7 +17,6 @@ import java.util.Set;
 public class Chatroom {
 
     @Id
-    @GeneratedValue
     private String roomId;
 
     private Long user1; // 사용자1
@@ -30,6 +25,6 @@ public class Chatroom {
 
     @OneToMany( fetch = FetchType.EAGER)
     @JoinColumn(name = "chat")
-    private Set<Message> chats; // 채팅메세지
+    private Set<ChatMessage> chats; // 채팅메세지
 
 }
