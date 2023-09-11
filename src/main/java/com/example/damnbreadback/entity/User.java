@@ -1,5 +1,6 @@
 package com.example.damnbreadback.entity;
 
+import com.example.damnbreadback.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -11,12 +12,14 @@ import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
-@Setter
+@Builder
 @ToString
 @Entity
 @Table(name = "user")
 public class User {
+
     @Id
     @GeneratedValue
     @Column(name = "user_id")
@@ -76,8 +79,6 @@ public class User {
     @Column(name = "is_public")
     private String isPublic; // 정보 공개 여부 "0101011" < 이런 식으로 이진값을 받아야할듯
 
-
-
     @OneToMany(mappedBy = "user")
     private Set<Scrap> scraps; // 스크랩한 포스트 목록
 
@@ -86,4 +87,29 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<History> histories; // 땜빵이력
+
+    public static User toEntity(UserDTO dto){
+        return User.builder()
+                .userId(dto.getUserId())
+                .timestamp(dto.getTimestamp())
+                .name(dto.getName())
+                .nickname(dto.getNickname())
+                .id(dto.getId())
+                .pw(dto.getPw())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .home(dto.getHome())
+                .birth(dto.getBirth())
+                .gender(dto.isGender())
+                .noShow(dto.getNoShow())
+                .score(dto.getScore())
+                .hopeJob(dto.getHopeJob())
+                .hopeLocation(dto.getHopeLocation())
+                .isPublic(dto.getIsPublic())
+                .scraps(dto.getScraps())
+                .career(dto.getCareer())
+                .histories(dto.getHistories())
+                .build();
+
+    }
 }

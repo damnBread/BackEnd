@@ -1,6 +1,7 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dto.PostFilter;
+import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.repository.PostRepository;
 import com.example.damnbreadback.repository.PostSpecification;
 import com.example.damnbreadback.repository.ScrapRepository;
@@ -101,10 +102,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public Boolean bookmark(String name, int postNum) throws ExecutionException, InterruptedException{
         Optional<Post> post = postRepository.findById((long) postNum);
-        User user = userService.getUserById(userService.findUserIdById(name));
+        UserDTO user = userService.getUserById(userService.findUserIdById(name));
 
         if(post.isPresent()) {
-            Scrap newScrap = new Scrap(post.get(), user);
+            Scrap newScrap = new Scrap(post.get(), User.toEntity(user));
             scrapRepository.save(newScrap);
             return true;
         }

@@ -1,5 +1,6 @@
 package com.example.damnbreadback.repository;
 
+import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.User;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;

@@ -1,10 +1,10 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.config.JwtUtils;
+import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.RefreshToken;
 import com.example.damnbreadback.repository.TokenRepository;
 import com.example.damnbreadback.repository.UserRepository;
-import com.example.damnbreadback.dao.UserDao;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.dto.UserFilter;
 import com.example.damnbreadback.repository.UserSpecification;
@@ -30,8 +30,6 @@ public class UserServiceImpl implements UserService {
     @Value("${JWT.SECRET}")
     private String secretKey;
 
-    private final UserDao userDao;
-
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -43,7 +41,7 @@ public class UserServiceImpl implements UserService {
     // 로그인 ===============================================================================
     public String login(String id, String pw, HttpServletResponse response) throws ExecutionException, InterruptedException{
         //인증과정 생략
-        User user = loginCheck(id, pw);
+        UserDTO user = loginCheck(id, pw);
 
         if(user== null) return null;
 
@@ -88,8 +86,8 @@ public class UserServiceImpl implements UserService {
 
     // 로그인
     @Override
-    public User loginCheck(String id, String pw){
-        User user = userRepository.findUserById(id);
+    public UserDTO loginCheck(String id, String pw){
+        UserDTO user = UserDTO.toDTO(userRepository.findUserById(id));
         System.out.println(user);
         if(user == null) return null;
 
@@ -127,6 +125,7 @@ public class UserServiceImpl implements UserService {
     public String verifyEmail(String email) {
         if(email == null) return "null exception";
         User user = userRepository.findUserByEmail(email);
+        System.out.println(user);
         if(user == null) return "false";
         else return "true";
 //        return userDao.findEmail(email).toString();
@@ -136,7 +135,7 @@ public class UserServiceImpl implements UserService {
 
     // 회원가입 -> 신규 회원 저장
     @Override
-    public User addUser(User user) {
+    public UserDTO addUser(UserDTO user) {
         if(user.getId() == null || user.getBirth() == null ||
                 user.getEmail() == null || user.getHome() == null ||
                 user.getHopeJob() == null || user.getNickname() == null ||
@@ -149,7 +148,8 @@ public class UserServiceImpl implements UserService {
 //                .authorityName("ROLE_USER")
 //                .build();
 //      userDao.insertUser(user);
-        userRepository.save(user);
+
+        userRepository.save(User.toEntity(user));
 
         return user;
     }
@@ -159,25 +159,30 @@ public class UserServiceImpl implements UserService {
 
     //기본키 userId로 user 찾기.
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(String.valueOf(id)).get();
+    public UserDTO getUserById(Long id) {
+        return UserDTO.toDTO(userRepository.findById(String.valueOf(id)).get());
 //        return userDao.getUserById(id);
 //        return null;
     }
 
-    public User getUserByUserid(String id){
-        return userRepository.findUserById(id);
+    public UserDTO getUserByUserid(String id){
+        return UserDTO.toDTO(userRepository.findUserById(id));
 //        return userDao.getUserById(id);
 //        return null;
     }
 
     // 인재정보 -> rank 정보 get
     @Override
-    public List<User> getRankScore(int page){
+    public List<UserDTO> getRankScore(int page){
         PageRequest pageRequest = PageRequest.of(page, 20);
 //        return userRepository.findAll(pageRequest);
 
-        return userRepository.findUsersByOrderByScoreDesc(pageRequest);
+        List<UserDTO> userDTOList = new ArrayList<UserDTO>();
+        List<User> userList = userRepository.findUsersByOrderByScoreDesc(pageRequest);
+        for(User u : userList){
+            userDTOList.add(UserDTO.toDTO(u));
+        }
+        return userDTOList;
 //        return userDao.getRankScore(page);
 //        return null;
     }
@@ -251,9 +256,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> getUsers() throws ExecutionException, InterruptedException {
-        return userDao.getAllUsers();
-//        return null;
+    public List<UserDTO> getUsers() throws ExecutionException, InterruptedException {
+//        return userDao.getAllUsers();
+        return null;
     }
 
 }

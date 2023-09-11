@@ -3,6 +3,7 @@ package com.example.damnbreadback.controller;
 import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.dto.TokenDTO;
 import com.example.damnbreadback.dto.LoginRequest;
+import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.TokenService;
 import com.example.damnbreadback.service.UserService;
@@ -93,8 +94,8 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> signupRequest(@RequestBody User user) throws ExecutionException, InterruptedException {
-        User newUser =  userService.addUser(user);
+    public ResponseEntity<Object> signupRequest(@RequestBody UserDTO user) throws ExecutionException, InterruptedException {
+        UserDTO newUser =  userService.addUser(user);
         if(newUser == null) return new ResponseEntity<Object>("null exception", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Object>(user, HttpStatus.CREATED);
     }

@@ -1,5 +1,6 @@
 package com.example.damnbreadback.controller;
 
+import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.dto.UserFilter;
 import com.example.damnbreadback.service.UserService;
@@ -24,7 +25,7 @@ public class UserRankController {
     //인재 랭킹 3명 , 새로운 인재 20명 불러오기
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> getUserRank(@RequestParam int page) throws ExecutionException, InterruptedException {
-        List<User> rankScoreUsers = userService.getRankScore(page-1);
+        List<UserDTO> rankScoreUsers = userService.getRankScore(page-1);
 
         if(rankScoreUsers.isEmpty())
             return ResponseEntity.badRequest().body("no rank data");
@@ -35,7 +36,7 @@ public class UserRankController {
     //인재 상세 정보
     @RequestMapping(value = "/{userid}/detail", method = RequestMethod.GET)
     public ResponseEntity<Object> getUserDetail(@PathVariable("userid") String userId) throws ExecutionException, InterruptedException {
-        User user = null;
+        UserDTO user = null;
 
         user = userService.getUserByUserid(userId);
 //        user = userService.getUserById(userId);
