@@ -56,6 +56,13 @@ public class User {
     @Column(name = "gender")
     private boolean gender; // 성별 (true : 남자 , false : 여자)
 
+    @ColumnDefault("introduce")
+    @Column(name = "introduce")
+    private String introduce; //소개글
+
+    @ColumnDefault("00000000")
+    @Column(name = "badge")
+    private String badge; //뱃지 ex. "00000000", "00010000"
 
     @ColumnDefault("0")
     @Column(name = "no_show")
@@ -101,6 +108,8 @@ public class User {
                 .home(dto.getHome())
                 .birth(dto.getBirth())
                 .gender(dto.isGender())
+                .introduce(dto.getIntroduce())
+                .badge(dto.getBadge())
                 .noShow(dto.getNoShow())
                 .score(dto.getScore())
                 .hopeJob(dto.getHopeJob())
