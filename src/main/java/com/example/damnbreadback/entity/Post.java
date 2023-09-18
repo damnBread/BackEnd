@@ -52,7 +52,7 @@ public class Post extends BaseTimeEntity{
     private int ageMin; // 나이 조건 (최소나이 / -1 : 무관 )
     private int careerLimit; // 해당 업직종에 대한 경력 조건 ( -1 : 무관 / 0 : 신입 )
     private int recruitNumber; // 모집인원
-    private String AdditionalLimit; // 우대사항
+    private String additionalLimit; // 우대사항
 
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)

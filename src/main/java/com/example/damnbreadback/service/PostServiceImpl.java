@@ -83,37 +83,58 @@ public class PostServiceImpl implements PostService {
         Post targetPost = postRepository.findById(id).get();
         if(targetPost == null) return null;
 
-        fields.forEach((key, value) -> {
-//            if (key.equals("nickname")) {
+//        fields.forEach((key, value) -> {
+//            if (key.equals("title")) {
 //                targetPost.setNickname((String)value);
 //            }
-//            if (key.equals("pw")) {
+//            if (key.equals("job")) {
 //                targetPost.setPw((String)value);
 //            }
-//            if (key.equals("email")) {
+//            if (key.equals("content")) {
 //                targetPost.setEmail((String)value);
 //            }
-//            if (key.equals("phone")) {
+//            if (key.equals("branchName")) {
 //                targetPost.setPhone((String)value);
 //            }
-//            if (key.equals("home")) {
+//            if (key.equals("location")) {
 //                targetPost.setHome((String)value);
 //            }
-//            if (key.equals("introduce")) {
+//            if (key.equals("workStart")) {
 //                targetPost.setIntroduce((String)value);
 //            }
-//            if (key.equals("hopeJob")) {
+//            if (key.equals("workEnd")) {
 //                targetPost.setHopeJob((String)value);
 //            }
-//            if (key.equals("hopeLocation")) {
+//            if (key.equals("hourPay")) {
 //                targetPost.setHopeLocation((String)value);
 //            }
-//            if (key.equals("isPublic")) {
+//            if (key.equals("payMethod")) {
 //                targetPost.setIsPublic((String)value);
 //            }
-
-
-        });
+//            if (key.equals("deadline")) {
+//                targetPost.setHopeJob((String)value);
+//            }
+//            if (key.equals("recruitNumber")) {
+//                targetPost.setHopeLocation((String)value);
+//            }
+//            if (key.equals("genderLimit")) {
+//                targetPost.setIsPublic((String)value);
+//            }
+//            if (key.equals("careerLimit")) {
+//                targetPost.setHopeJob((String)value);
+//            }
+//            if (key.equals("ageMax")) {
+//                targetPost.setHopeLocation((String)value);
+//            }
+//            if (key.equals("ageMin")) {
+//                targetPost.setIsPublic((String)value);
+//            }
+//            if (key.equals("additionalLimit")) {
+//                targetPost.setIsPublic((String)value);
+//            }
+//
+//
+//        });
 
 //        userRepository.save(User.toEntity(targetUser));
 
