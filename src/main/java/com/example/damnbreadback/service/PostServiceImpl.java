@@ -49,7 +49,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Long createPost(String writerId, Post postRequest) throws ExecutionException, InterruptedException {
         postRequest.setPublisher(userService.findUserIdById(writerId));
-        postRequest.setWorkDay(postRequest.getWorkDate().getDayOfWeek().getValue());
+//        postRequest.setWorkDay(postRequest.getWorkDate().getDayOfWeek().getValue());
         return postRepository.save(postRequest).getPostId();
     }
 
