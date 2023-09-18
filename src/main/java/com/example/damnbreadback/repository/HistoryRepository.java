@@ -1,7 +1,7 @@
 package com.example.damnbreadback.repository;
 
+import com.example.damnbreadback.entity.History;
 import com.example.damnbreadback.entity.Post;
-import com.example.damnbreadback.entity.Story;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,16 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificationExecutor {
+public interface HistoryRepository extends JpaRepository<History, Long>, JpaSpecificationExecutor {
 
-    @Override
-    Optional<Post> findById(Long postId);
+    List<History> findByUserUserId(Long userId);
 
-    @Override
-    <S extends Post> S save(S entity);
+    void deleteByPostPostId(Long damnId);
 
-    // 최신 순으로 가져오기 -페이징-
-    Page<Post> findAllByOrderByCreatedDateDesc(PageRequest pageable);
-
-    List<Post> findPostsByPublisher(Long id);
 }

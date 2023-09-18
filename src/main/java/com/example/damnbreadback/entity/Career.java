@@ -17,9 +17,11 @@ public class Career {
     @GeneratedValue
     private Long careerId;
 
-    @ManyToOne
-    @JoinColumn(name = "user")
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user")
+//    private User user;
+
+    private Long userId;
 
     private String place;
     private int period;

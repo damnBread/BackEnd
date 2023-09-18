@@ -21,12 +21,16 @@ public class History {
     @GeneratedValue
     private Long historyId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user")
     private User user;
-    
-    private String company; // 근무지
-    private Date startDate; // 근무 시작 일시
-    private Date endDate; // 근무 종료 일시
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "post")
+    private Post post;
+
+//    private String company; // 근무지
+//    private Date startDate; // 근무 시작 일시
+//    private Date endDate; // 근무 종료 일시
 
 }

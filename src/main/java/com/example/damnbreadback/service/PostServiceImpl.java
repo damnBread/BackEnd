@@ -1,20 +1,22 @@
 package com.example.damnbreadback.service;
 
+import com.example.damnbreadback.dto.PostDto;
 import com.example.damnbreadback.dto.PostFilter;
 import com.example.damnbreadback.dto.UserDTO;
-import com.example.damnbreadback.repository.PostRepository;
-import com.example.damnbreadback.repository.PostSpecification;
-import com.example.damnbreadback.repository.ScrapRepository;
+import com.example.damnbreadback.entity.History;
+import com.example.damnbreadback.repository.*;
 import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.Scrap;
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.repository.UserSpecification;
+import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +26,14 @@ import java.util.concurrent.ExecutionException;
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
-
     @Autowired
     private final PostRepository postRepository;
 
+    @Autowired
+    private final HistoryRepository historyRepository;
+
+    @Autowired
+    private final CareerRepository careerRepository;
     @Autowired
     private final UserService userService;
 
@@ -55,6 +61,22 @@ public class PostServiceImpl implements PostService {
         PageRequest pageRequest = PageRequest.of(page, 20);
         return postRepository.findAllByOrderByCreatedDateDesc(pageRequest);
     }
+
+    @Transactional
+    @Override
+    public Boolean removePost(Long id) {
+        // First, delete associated History records
+        historyRepository.deleteByPostPostId(id);
+
+        // Then, delete the Post
+        try {
+            postRepository.deleteById(id);
+            return true; // Deletion was successful
+        } catch (EmptyResultDataAccessException e) {
+            return false; // Post with the given id doesn't exist
+        }
+    }
+
 
     @Override
     public Page getPostFilter(PostFilter postFilter, int page) {
@@ -97,6 +119,12 @@ public class PostServiceImpl implements PostService {
             spec = spec.and(PostSpecification.hasPayMethod(postFilter.getPayMethod()));
 
         return postRepository.findAll(spec, pageRequest);
+    }
+
+    //의뢰자로 post찾기
+    @Override
+    public List<Post> getPostByPublisher(Long id){
+        return postRepository.findPostsByPublisher(id);
     }
 
     @Override

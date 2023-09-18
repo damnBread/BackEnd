@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public interface UserService {
@@ -30,7 +31,7 @@ public interface UserService {
     // 회원가입 -> 신규 회원 저장
     UserDTO addUser(UserDTO user) throws ExecutionException, InterruptedException ;
 
-    UserDTO patchUserInfo(String id, UserDTO user) throws ExecutionException, InterruptedException ;
+    UserDTO patchUserInfo(String id, Map<Object, Object> fields) throws ExecutionException, InterruptedException ;
 
     // 인재정보 rank 데이터 get
     List<UserDTO> getRankScore(int page) throws ExecutionException, InterruptedException;

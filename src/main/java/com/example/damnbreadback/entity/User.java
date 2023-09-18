@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 @ToString
 @Entity
@@ -120,5 +121,9 @@ public class User {
 //                .histories(dto.getHistories())
                 .build();
 
+    }
+
+    public void changeName(String name){
+        this.name = name;
     }
 }

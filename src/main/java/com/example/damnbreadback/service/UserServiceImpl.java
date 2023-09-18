@@ -8,6 +8,10 @@ import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.dto.UserFilter;
 import com.example.damnbreadback.repository.UserSpecification;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Persistence;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +21,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -37,6 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     TokenService tokenService;
+
 
     // 로그인 ===============================================================================
     public String login(String id, String pw, HttpServletResponse response) throws ExecutionException, InterruptedException{
@@ -148,41 +155,51 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    public UserDTO patchUserInfo(String id, UserDTO user) throws ExecutionException, InterruptedException {
-//        UserDTO targetUser = UserDTO.toDTO(userRepository.findById(String.valueOf(id)).get());
-        UserDTO targetUser = UserDTO.toDTO(userRepository.findUserById(id));
+    @Transactional
+    public UserDTO patchUserInfo(String id, Map<Object, Object> fields) throws ExecutionException, InterruptedException {
+        UserDTO targetUser = UserDTO.toDTO(userRepository.findById(String.valueOf(findUserIdById(id))).get());
+        if(targetUser == null) return null;
+
+        fields.forEach((key, value) -> {
+            if (key.equals("nickname")) {
+                targetUser.setNickname((String)value);
+            }
+            if (key.equals("pw")) {
+                targetUser.setPw((String)value);
+            }
+            if (key.equals("email")) {
+                targetUser.setEmail((String)value);
+            }
+            if (key.equals("phone")) {
+                targetUser.setPhone((String)value);
+            }
+            if (key.equals("home")) {
+                targetUser.setHome((String)value);
+            }
+            if (key.equals("introduce")) {
+                targetUser.setIntroduce((String)value);
+            }
+            if (key.equals("hopeJob")) {
+                targetUser.setHopeJob((String)value);
+            }
+            if (key.equals("hopeLocation")) {
+                targetUser.setHopeLocation((String)value);
+            }
+            if (key.equals("isPublic")) {
+                targetUser.setIsPublic((String)value);
+            }
+
+
+        });
+
+        userRepository.save(User.toEntity(targetUser));
+
+
+        System.out.println("target ::: " + targetUser.getUserId());
 
         if (targetUser == null) {
             return null;
         }
-
-        System.out.println("here"+id);
-
-        targetUser.setUserId(user.getUserId());
-//        targetUser.setTimestamp(user.getUserId());
-        targetUser.setName(user.getName());
-        targetUser.setNickname(user.getNickname());
-        targetUser.setId(user.getId());
-        targetUser.setPw(user.getPw());
-        targetUser.setEmail(user.getEmail());
-        targetUser.setPhone(user.getPhone());
-        targetUser.setHome(user.getHome());
-        targetUser.setBirth(user.getBirth());
-        targetUser.setGender(user.isGender());
-        targetUser.setIntroduce(user.getIntroduce());
-//        targetUser.setBadge(user.getBadge());
-//        targetUser.setNoShow(user.getNoShow());
-//        targetUser.setScore(user.getScore());
-        targetUser.setHopeJob(user.getHopeJob());
-        targetUser.setHopeLocation(user.getHopeLocation());
-        targetUser.setGender(user.isGender());
-        targetUser.setIsPublic(user.getIsPublic());
-//        targetUser.setScraps(user.getScraps());
-//        targetUser.setCareer(user.getCareer());
-//        targetUser.setHistories(user.getHistories());
-
-        System.out.println(targetUser.getUserId() +"//"+targetUser.getName());
-        userRepository.save(User.toEntity(targetUser));
 
         return targetUser;
     }

@@ -2,6 +2,8 @@ package com.example.damnbreadback.repository;
 
 import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,11 +13,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 
 @Repository
+@Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, String> , JpaSpecificationExecutor{
     @Cacheable(key = "#id", value = "user")
     User findUserById(String id);

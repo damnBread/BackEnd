@@ -1,6 +1,7 @@
 package com.example.damnbreadback.entity;
 
 import com.example.damnbreadback.dto.PostDto;
+import com.example.damnbreadback.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -47,6 +48,10 @@ public class Post extends BaseTimeEntity{
     private int ageMax; // 나이 조건 (최대나이 / -1 : 무관 )
     private int ageMin; // 나이 조건 (최소나이 / -1 : 무관 )
     private int careerLimit; // 해당 업직종에 대한 경력 조건 ( -1 : 무관 / 0 : 신입 )
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<History> histories;
 
     @OneToMany(mappedBy = "post")
     private Set<Scrap> scrap;
