@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -77,6 +78,55 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    @Transactional
+    public Post patchPostInfo(Long id, Map<Object, Object> fields) throws ExecutionException, InterruptedException {
+        Post targetPost = postRepository.findById(id).get();
+        if(targetPost == null) return null;
+
+        fields.forEach((key, value) -> {
+//            if (key.equals("nickname")) {
+//                targetPost.setNickname((String)value);
+//            }
+//            if (key.equals("pw")) {
+//                targetPost.setPw((String)value);
+//            }
+//            if (key.equals("email")) {
+//                targetPost.setEmail((String)value);
+//            }
+//            if (key.equals("phone")) {
+//                targetPost.setPhone((String)value);
+//            }
+//            if (key.equals("home")) {
+//                targetPost.setHome((String)value);
+//            }
+//            if (key.equals("introduce")) {
+//                targetPost.setIntroduce((String)value);
+//            }
+//            if (key.equals("hopeJob")) {
+//                targetPost.setHopeJob((String)value);
+//            }
+//            if (key.equals("hopeLocation")) {
+//                targetPost.setHopeLocation((String)value);
+//            }
+//            if (key.equals("isPublic")) {
+//                targetPost.setIsPublic((String)value);
+//            }
+
+
+        });
+
+//        userRepository.save(User.toEntity(targetUser));
+
+
+//        System.out.println("target ::: " + targetUser.getUserId());
+//
+//        if (targetUser == null) {
+//            return null;
+//        }
+//
+//        return targetUser;
+        return null;
+    }
 
     @Override
     public Page getPostFilter(PostFilter postFilter, int page) {
