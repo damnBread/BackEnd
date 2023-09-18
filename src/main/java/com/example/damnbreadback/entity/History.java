@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +29,9 @@ public class History {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "post")
     private Post post;
+
+    @ColumnDefault("0")
+    private int statusCode;
 
 //    private String company; // 근무지
 //    private Date startDate; // 근무 시작 일시

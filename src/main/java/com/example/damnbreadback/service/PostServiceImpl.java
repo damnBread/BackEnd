@@ -18,10 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -83,71 +80,72 @@ public class PostServiceImpl implements PostService {
         Post targetPost = postRepository.findById(id).get();
         if(targetPost == null) return null;
 
-//        fields.forEach((key, value) -> {
-//            if (key.equals("title")) {
-//                targetPost.setNickname((String)value);
-//            }
-//            if (key.equals("job")) {
-//                targetPost.setPw((String)value);
-//            }
-//            if (key.equals("content")) {
-//                targetPost.setEmail((String)value);
-//            }
-//            if (key.equals("branchName")) {
-//                targetPost.setPhone((String)value);
-//            }
-//            if (key.equals("location")) {
-//                targetPost.setHome((String)value);
-//            }
-//            if (key.equals("workStart")) {
-//                targetPost.setIntroduce((String)value);
-//            }
-//            if (key.equals("workEnd")) {
-//                targetPost.setHopeJob((String)value);
-//            }
-//            if (key.equals("hourPay")) {
-//                targetPost.setHopeLocation((String)value);
-//            }
-//            if (key.equals("payMethod")) {
-//                targetPost.setIsPublic((String)value);
-//            }
-//            if (key.equals("deadline")) {
-//                targetPost.setHopeJob((String)value);
-//            }
-//            if (key.equals("recruitNumber")) {
-//                targetPost.setHopeLocation((String)value);
-//            }
-//            if (key.equals("genderLimit")) {
-//                targetPost.setIsPublic((String)value);
-//            }
-//            if (key.equals("careerLimit")) {
-//                targetPost.setHopeJob((String)value);
-//            }
-//            if (key.equals("ageMax")) {
-//                targetPost.setHopeLocation((String)value);
-//            }
-//            if (key.equals("ageMin")) {
-//                targetPost.setIsPublic((String)value);
-//            }
-//            if (key.equals("additionalLimit")) {
-//                targetPost.setIsPublic((String)value);
-//            }
+        fields.forEach((key, value) -> {
+            if (key.equals("title")) {
+                targetPost.setTitle((String)value);
+            }
+            if (key.equals("job")) {
+                targetPost.setJob((String)value);
+            }
+            if (key.equals("content")) {
+                targetPost.setContent((String)value);
+            }
+            if (key.equals("branchName")) {
+                targetPost.setBranchName((String)value);
+            }
+            if (key.equals("location")) {
+                targetPost.setLocation((String)value);
+            }
+            if (key.equals("workStart")) {
+                targetPost.setWorkStart((Date)value);
+            }
+            if (key.equals("workEnd")) {
+                targetPost.setWorkEnd((Date)value);
+            }
+            if (key.equals("hourPay")) {
+                targetPost.setHourPay((Integer) value);
+            }
+            if (key.equals("payMethod")) {
+                targetPost.setPayMethod((Boolean)value);
+            }
+            if (key.equals("deadline")) {
+                targetPost.setDeadline((Date) value);
+            }
+            if (key.equals("recruitNumber")) {
+                targetPost.setRecruitNumber((Integer) value);
+            }
+            if (key.equals("genderLimit")) {
+                targetPost.setGenderLimit((Boolean)value);
+            }
+            if (key.equals("careerLimit")) {
+                targetPost.setCareerLimit((Integer)value);
+            }
+            if (key.equals("ageMax")) {
+                targetPost.setAgeMax((Integer)value);
+            }
+            if (key.equals("ageMin")) {
+                targetPost.setAgeMin((Integer)value);
+            }
+            if (key.equals("additionalLimit")) {
+                targetPost.setAdditionalLimit((String)value);
+            }
 //
 //
-//        });
+        });
 
-//        userRepository.save(User.toEntity(targetUser));
+        postRepository.save(targetPost);
 
 
-//        System.out.println("target ::: " + targetUser.getUserId());
-//
-//        if (targetUser == null) {
-//            return null;
-//        }
-//
-//        return targetUser;
-        return null;
+        System.out.println("target ::: " + targetPost.getPostId());
+
+        if (targetPost == null) {
+            return null;
+        }
+
+        return targetPost;
+//        return null;
     }
+
 
     @Override
     public Page getPostFilter(PostFilter postFilter, int page) {

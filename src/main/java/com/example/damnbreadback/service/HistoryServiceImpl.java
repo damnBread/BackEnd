@@ -40,7 +40,25 @@ public class HistoryServiceImpl implements HistoryService {
                 posts.add(post);
             }
         }
+        System.out.println(posts.size());
         return posts;
+    }
+
+    public History patchStatus(Long postId, Long userId, int statusCode){
+        //TODO 이것부터해. status 수정.
+        System.out.println(userId+ "//" +  postId );
+        History history = historyRepository.findByUserUserIdAndPostPostId(userId, postId);
+
+        if (history != null) {
+            history.setStatusCode(statusCode);
+            historyRepository.save(history);
+            return history;
+        } else {
+            return null;
+        }
+
+
+
     }
 
 //    @Autowired

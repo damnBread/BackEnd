@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface HistoryRepository extends JpaRepository<History, Long>, JpaSpecificationExecutor {
 
     List<History> findByUserUserId(Long userId);
+    History findByUserUserIdAndPostPostId(Long userId, Long postId);
 
     void deleteByPostPostId(Long damnId);
 

@@ -20,7 +20,7 @@ public interface PostService {
     Page<Post> findPosts(int page);
     Boolean removePost(Long id);
 
-    Post patchPostInfo(Long id, Map<Object, Object> fields) throws ExecutionException, InterruptedException;
+    Post patchPostInfo(Long postId,Map<Object, Object> fields) throws ExecutionException, InterruptedException;
     Page getPostFilter(PostFilter postFilter, int page);
 
     List<Post> getPostByPublisher(Long id);

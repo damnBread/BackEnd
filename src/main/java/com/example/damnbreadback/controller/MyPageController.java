@@ -2,6 +2,7 @@ package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.config.JwtFilter;
 import com.example.damnbreadback.dto.UserDTO;
+import com.example.damnbreadback.entity.History;
 import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.service.HistoryService;
 import com.example.damnbreadback.service.PostService;
@@ -41,7 +42,12 @@ public class MyPageController {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
         UserDTO user = userService.getUserByUserid(authentication.getName()); // 유저 기본 정보
         //TODO//유저 경력 GET
+        int careerCnt = historyService.getHistory(userService.findUserIdById(authentication.getName())).size();
+        System.out.println(careerCnt);
+        user.setCareerCnt(careerCnt);
+
         //TODO//스크랩
+
         if(user == null) return ResponseEntity.badRequest().body("잘못된 유저 정보입니다.");
         return ResponseEntity.ok().body(user);
     }
@@ -116,14 +122,28 @@ public class MyPageController {
 
     // 마이페이지 -> 내가 의뢰한 땜빵 내용 수정
     @RequestMapping(value = "/requestlist/{damnid}", method = RequestMethod.PATCH)
-    public ResponseEntity<Object> updateRequest(Authentication authentication, @PathVariable Long damnId, @RequestBody Map<Object, Object> fields ) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Object> updateRequest(Authentication authentication, @PathVariable Long damnid, @RequestBody Map<Object, Object> fields ) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
         System.out.println(authentication.getName());
 
-        Post updatedPost = postService.patchPostInfo(damnId, fields);
+        Post updatedPost = postService.patchPostInfo(damnid, fields);
 
         if(updatedPost == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
         return ResponseEntity.ok().body(updatedPost);
+    }
+
+    // 마이페이지 -> 내가 의뢰한 땜빵 상태 수정
+    @RequestMapping(value = "/requestlist/{damnid}/{status_code}", method = RequestMethod.PATCH)
+    public ResponseEntity<Object> updateStatusRequest(Authentication authentication, @PathVariable Long damnid,@PathVariable Integer status_code) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+        System.out.println(authentication.getName());
+
+        Long userid = userService.findUserIdById(authentication.getName());
+
+        History updatedHistory = historyService.patchStatus(damnid, userid, status_code);
+
+        if(updatedHistory == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
+        return ResponseEntity.ok().body(updatedHistory);
     }
 
 
