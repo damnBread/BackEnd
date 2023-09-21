@@ -77,73 +77,78 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     public Post patchPostInfo(Long id, Map<Object, Object> fields) throws ExecutionException, InterruptedException {
-        Post targetPost = postRepository.findById(id).get();
-        if(targetPost == null) return null;
+        try{
+            Post targetPost = postRepository.findById(id).get();
+            if(targetPost == null) return null;
 
-        fields.forEach((key, value) -> {
-            if (key.equals("title")) {
-                targetPost.setTitle((String)value);
-            }
-            if (key.equals("job")) {
-                targetPost.setJob((String)value);
-            }
-            if (key.equals("content")) {
-                targetPost.setContent((String)value);
-            }
-            if (key.equals("branchName")) {
-                targetPost.setBranchName((String)value);
-            }
-            if (key.equals("location")) {
-                targetPost.setLocation((String)value);
-            }
-            if (key.equals("workStart")) {
-                targetPost.setWorkStart((Date)value);
-            }
-            if (key.equals("workEnd")) {
-                targetPost.setWorkEnd((Date)value);
-            }
-            if (key.equals("hourPay")) {
-                targetPost.setHourPay((Integer) value);
-            }
-            if (key.equals("payMethod")) {
-                targetPost.setPayMethod((Boolean)value);
-            }
-            if (key.equals("deadline")) {
-                targetPost.setDeadline((Date) value);
-            }
-            if (key.equals("recruitNumber")) {
-                targetPost.setRecruitNumber((Integer) value);
-            }
-            if (key.equals("genderLimit")) {
-                targetPost.setGenderLimit((Boolean)value);
-            }
-            if (key.equals("careerLimit")) {
-                targetPost.setCareerLimit((Integer)value);
-            }
-            if (key.equals("ageMax")) {
-                targetPost.setAgeMax((Integer)value);
-            }
-            if (key.equals("ageMin")) {
-                targetPost.setAgeMin((Integer)value);
-            }
-            if (key.equals("additionalLimit")) {
-                targetPost.setAdditionalLimit((String)value);
-            }
-//
-//
-        });
+            fields.forEach((key, value) -> {
+                if (key.equals("title")) {
+                    targetPost.setTitle((String)value);
+                }
+                if (key.equals("job")) {
+                    targetPost.setJob((String)value);
+                }
+                if (key.equals("content")) {
+                    targetPost.setContent((String)value);
+                }
+                if (key.equals("branchName")) {
+                    targetPost.setBranchName((String)value);
+                }
+                if (key.equals("location")) {
+                    targetPost.setLocation((String)value);
+                }
+                if (key.equals("workStart")) {
+                    targetPost.setWorkStart((Date)value);
+                }
+                if (key.equals("workEnd")) {
+                    targetPost.setWorkEnd((Date)value);
+                }
+                if (key.equals("hourPay")) {
+                    targetPost.setHourPay((Integer) value);
+                }
+                if (key.equals("payMethod")) {
+                    targetPost.setPayMethod((Boolean)value);
+                }
+                if (key.equals("deadline")) {
+                    targetPost.setDeadline((Date) value);
+                }
+                if (key.equals("recruitNumber")) {
+                    targetPost.setRecruitNumber((Integer) value);
+                }
+                if (key.equals("genderLimit")) {
+                    targetPost.setGenderLimit((Boolean)value);
+                }
+                if (key.equals("careerLimit")) {
+                    targetPost.setCareerLimit((Integer)value);
+                }
+                if (key.equals("ageMax")) {
+                    targetPost.setAgeMax((Integer)value);
+                }
+                if (key.equals("ageMin")) {
+                    targetPost.setAgeMin((Integer)value);
+                }
+                if (key.equals("additionalLimit")) {
+                    targetPost.setAdditionalLimit((String)value);
+                }
 
-        postRepository.save(targetPost);
+            });
 
+            postRepository.save(targetPost);
 
-        System.out.println("target ::: " + targetPost.getPostId());
+            System.out.println("target ::: " + targetPost.getPostId());
 
-        if (targetPost == null) {
+            if (targetPost == null) {
+                return null;
+            }
+
+            return targetPost;
+
+        }catch (Error error){
+            System.out.println(error);
             return null;
         }
 
-        return targetPost;
-//        return null;
+
     }
 
 

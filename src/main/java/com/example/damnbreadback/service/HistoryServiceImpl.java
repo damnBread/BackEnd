@@ -1,15 +1,13 @@
 package com.example.damnbreadback.service;
 
+import com.example.damnbreadback.dto.HistoryDto;
 import com.example.damnbreadback.dto.PostFilter;
 import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.History;
 import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.Scrap;
 import com.example.damnbreadback.entity.User;
-import com.example.damnbreadback.repository.HistoryRepository;
-import com.example.damnbreadback.repository.PostRepository;
-import com.example.damnbreadback.repository.PostSpecification;
-import com.example.damnbreadback.repository.ScrapRepository;
+import com.example.damnbreadback.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +27,12 @@ public class HistoryServiceImpl implements HistoryService {
     @Autowired
     private final HistoryRepository historyRepository;
 
+    @Autowired
+    private final UserRepository userRepository;
+
+    @Autowired
+    private final PostRepository postRepository;
+
     @Override
     public List<Post> getHistory(Long userId) throws ExecutionException, InterruptedException {
         List<History> historyList = historyRepository.findByUserUserId(userId);
@@ -36,28 +40,37 @@ public class HistoryServiceImpl implements HistoryService {
 
         for (History history : historyList) {
             Post post = history.getPost();
-            if (post != null) {
+//            Optional<Post> post = postRepository.findById(history.getPost_id());
+//            if (post.isPresent()) {
                 posts.add(post);
-            }
+//            }
+//            else{
+//                return null;
+//            }
         }
         System.out.println(posts.size());
         return posts;
     }
 
-    public History patchStatus(Long postId, Long userId, int statusCode){
-        //TODO 이것부터해. status 수정.
-        System.out.println(userId+ "//" +  postId );
-        History history = historyRepository.findByUserUserIdAndPostPostId(userId, postId);
+    public HistoryDto patchStatus(Long postId, Long userId, int statusCode){
+        HistoryDto history = HistoryDto.toDTO(historyRepository.findByUserIdAndPostId(userId, postId));
 
-        if (history != null) {
-            history.setStatusCode(statusCode);
-            historyRepository.save(history);
-            return history;
-        } else {
+        User user = userRepository.findUserByUserId(userId);
+        Optional<Post> optionalPost = postRepository.findById(postId);
+
+        if(optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            if (history != null) {
+                history.setStatus_code(statusCode);
+                historyRepository.save(History.toEntity(history, user, post));
+                return history;
+            } else {
+                return null;
+            }
+        }
+        else{
             return null;
         }
-
-
 
     }
 

@@ -1,6 +1,7 @@
 package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.config.JwtFilter;
+import com.example.damnbreadback.dto.HistoryDto;
 import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.History;
 import com.example.damnbreadback.entity.Post;
@@ -41,7 +42,6 @@ public class MyPageController {
 
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
         UserDTO user = userService.getUserByUserid(authentication.getName()); // 유저 기본 정보
-        //TODO//유저 경력 GET
         int careerCnt = historyService.getHistory(userService.findUserIdById(authentication.getName())).size();
         System.out.println(careerCnt);
         user.setCareerCnt(careerCnt);
@@ -124,7 +124,6 @@ public class MyPageController {
     @RequestMapping(value = "/requestlist/{damnid}", method = RequestMethod.PATCH)
     public ResponseEntity<Object> updateRequest(Authentication authentication, @PathVariable Long damnid, @RequestBody Map<Object, Object> fields ) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
-        System.out.println(authentication.getName());
 
         Post updatedPost = postService.patchPostInfo(damnid, fields);
 
@@ -140,7 +139,8 @@ public class MyPageController {
 
         Long userid = userService.findUserIdById(authentication.getName());
 
-        History updatedHistory = historyService.patchStatus(damnid, userid, status_code);
+        HistoryDto updatedHistory = historyService.patchStatus(damnid, userid, status_code);
+        System.out.println("hahahah !!?!?!? -- "+updatedHistory);
 
         if(updatedHistory == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
         return ResponseEntity.ok().body(updatedHistory);

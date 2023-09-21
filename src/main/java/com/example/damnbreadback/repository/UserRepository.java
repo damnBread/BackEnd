@@ -21,6 +21,8 @@ import java.util.List;
 @Repository
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, String> , JpaSpecificationExecutor{
+
+    User findUserByUserId(Long id);
     @Cacheable(key = "#id", value = "user")
     User findUserById(String id);
 

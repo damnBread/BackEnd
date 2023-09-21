@@ -1,10 +1,9 @@
 package com.example.damnbreadback.entity;
 
+import com.example.damnbreadback.dto.HistoryDto;
+import com.example.damnbreadback.dto.UserDTO;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
@@ -12,11 +11,12 @@ import java.util.Date;
 import java.util.HashMap;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@Builder
 @Entity
-@Table(name="history")
+@Table(name = "history")
 public class History {
     @Id
     @GeneratedValue
@@ -32,6 +32,16 @@ public class History {
 
     @ColumnDefault("0")
     private int statusCode;
+
+    public static History toEntity(HistoryDto dto,  User user, Post post){
+        return History.builder()
+                .historyId(dto.getId())
+                .post(post)
+                .user(user)
+                .statusCode(dto.getStatus_code())
+                .build();
+
+    }
 
 //    private String company; // 근무지
 //    private Date startDate; // 근무 시작 일시
