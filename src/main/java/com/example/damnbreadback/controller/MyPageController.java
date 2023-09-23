@@ -5,6 +5,7 @@ import com.example.damnbreadback.dto.HistoryDto;
 import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.History;
 import com.example.damnbreadback.entity.Post;
+import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.service.HistoryService;
 import com.example.damnbreadback.service.PostService;
 import com.example.damnbreadback.service.UserService;
@@ -35,7 +36,7 @@ public class MyPageController {
     @Autowired
     private PostService postService;
 
-//    @PreAuthorize("hasRole('USER')") //접근권한 (우리 웹에 ADMIN이 생긴다면.. 필요할 아이)
+    //    @PreAuthorize("hasRole('USER')") //접근권한 (우리 웹에 ADMIN이 생긴다면.. 필요할 아이)
     // 마이페이지 -> 내 정보 (첫화면)
     @RequestMapping(value = "/setting", method = RequestMethod.GET)
     public ResponseEntity<Object> getMyPage(Authentication authentication) throws ExecutionException, InterruptedException {
@@ -146,9 +147,17 @@ public class MyPageController {
         return ResponseEntity.ok().body(updatedHistory);
     }
 
+    // 마이페이지 -> 내가 의뢰한 땜빵 - 지원자 보기 목록
+    @RequestMapping(value = "/requestlist/{damnid}/appliance", method = RequestMethod.GET)
+    public ResponseEntity<Object> getApplianceList(Authentication authentication, @PathVariable Long damnid) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+        System.out.println(authentication.getName());
 
+        List<UserDTO> userList = historyService.getUserByHistory(damnid);
 
-
+        if(userList == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
+        return ResponseEntity.ok().body(userList);
+    }
 
 
     @RequestMapping(value = "/{userid}/bookmark", method = RequestMethod.GET)

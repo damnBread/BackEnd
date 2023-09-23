@@ -1,6 +1,7 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dto.HistoryDto;
+import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.History;
 import com.example.damnbreadback.entity.Post;
 
@@ -11,4 +12,5 @@ public interface HistoryService {
 
     List<Post> getHistory(Long userId) throws ExecutionException, InterruptedException;
     HistoryDto patchStatus(Long id, Long userid, int statusCode);
+    List<UserDTO> getUserByHistory(Long damnId);
 }

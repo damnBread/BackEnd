@@ -22,12 +22,15 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface HistoryRepository extends JpaRepository<History, Long> {
 
-//    History findHistoryByHistoryId(Long historyId);
+    //    History findHistoryByHistoryId(Long historyId);
     List<History> findByUserUserId(Long userId);
 
     @Query(value = "SELECT h FROM History h WHERE h.post.postId = :postId and h.user.userId = :userId")
     History findByUserIdAndPostId(@Param("userId") Long userId, @Param("postId") Long postId);
 
     void deleteByPostPostId(Long damnId);
+
+    @Query("SELECT h.user FROM History h WHERE h.post.postId = :postId")
+    List<User> findUserByPostId(@Param("postId") Long postId);
 
 }

@@ -40,25 +40,18 @@ public class HistoryServiceImpl implements HistoryService {
 
         for (History history : historyList) {
             Post post = history.getPost();
-//            Optional<Post> post = postRepository.findById(history.getPost_id());
-//            if (post.isPresent()) {
-                posts.add(post);
-//            }
-//            else{
-//                return null;
-//            }
+            posts.add(post);
         }
-        System.out.println(posts.size());
         return posts;
     }
 
-    public HistoryDto patchStatus(Long postId, Long userId, int statusCode){
+    public HistoryDto patchStatus(Long postId, Long userId, int statusCode) {
         HistoryDto history = HistoryDto.toDTO(historyRepository.findByUserIdAndPostId(userId, postId));
 
         User user = userRepository.findUserByUserId(userId);
         Optional<Post> optionalPost = postRepository.findById(postId);
 
-        if(optionalPost.isPresent()) {
+        if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
             if (history != null) {
                 history.setStatus_code(statusCode);
@@ -67,16 +60,21 @@ public class HistoryServiceImpl implements HistoryService {
             } else {
                 return null;
             }
-        }
-        else{
+        } else {
             return null;
         }
 
     }
 
-//    @Autowired
-//    private final ScrapRepository scrapRepository;
+    public List<UserDTO> getUserByHistory(Long damnId){
+        List<User> userList = historyRepository.findUserByPostId(damnId);
+        List<UserDTO> userDTOList = new ArrayList<>();
 
+        userList.forEach(u -> {
+            userDTOList.add(UserDTO.toDTO(u));
+        });
 
+        return userDTOList;
+    }
 
 }
