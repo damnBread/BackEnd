@@ -2,13 +2,18 @@ package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.dto.PostDto;
 import com.example.damnbreadback.dto.PostFilter;
+import com.example.damnbreadback.entity.History;
 import com.example.damnbreadback.entity.Post;
+import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.service.HistoryService;
 import com.example.damnbreadback.service.PostService;
+import com.example.damnbreadback.service.UserService;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
@@ -24,6 +29,10 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private HistoryService historyService;
 
     @GetMapping
     public ResponseEntity<Object> getAllPosts(@RequestParam int page) throws ExecutionException, InterruptedException, TimeoutException {
@@ -50,6 +59,17 @@ public class PostController {
         Optional<Post> post = postService.getPostById(postNum);
         if(post.isPresent()) return ResponseEntity.ok().body(post);
         else return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(path="/{postNum}/apply", method = RequestMethod.POST)
+    public ResponseEntity<Object> apply(Authentication authentication,@PathVariable Long postNum) throws ExecutionException, InterruptedException{
+
+        Long newHistoryId = historyService.createHistory(postNum, userService.findUserIdById(authentication.getName()));
+
+        if(newHistoryId == null){
+            return new ResponseEntity<>("null exception", HttpStatus.BAD_REQUEST);
+        }
+        else  return ResponseEntity.ok().body(newHistoryId);
     }
 
     @RequestMapping(path="/new", method = RequestMethod.POST)

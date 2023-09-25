@@ -94,14 +94,15 @@ public class UserServiceImpl implements UserService {
     // 로그인
     @Override
     public UserDTO loginCheck(String id, String pw){
-        UserDTO user = UserDTO.toDTO(userRepository.findUserById(id));
-        System.out.println(user);
+        User userEntity = userRepository.findUserById(id);
+        if(userEntity == null) return null;
+
+        UserDTO user = UserDTO.toDTO(userEntity);
         if(user == null) return null;
 
         if(user.getPw().equals(pw)) return user;
         else return null;
-//        return userDao.findUser(id, pw);
-//        return null;
+
     }
 
     //=========================================================================================

@@ -5,6 +5,7 @@ import com.example.damnbreadback.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -53,6 +54,14 @@ public class Post extends BaseTimeEntity{
     private int careerLimit; // 해당 업직종에 대한 경력 조건 ( -1 : 무관 / 0 : 신입 )
     private int recruitNumber; // 모집인원
     private String additionalLimit; // 우대사항
+
+    @ColumnDefault("0")
+    private int statusCode;
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "matchedUser")
+    private User matchedUser;
+
 
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -18,14 +18,12 @@ public class HistoryDto implements Cloneable {
    private Long user_id;
    private Long post_id;
 
-   private int status_code;
 
     public static HistoryDto toDTO(History entity){
         return HistoryDto.builder()
                 .id(entity.getHistoryId())
 //                .user_id(entity.getUser().getUserId())
 //                .post_id(entity.getPost().getPostId())
-                .status_code(entity.getStatusCode())
                 .build();
 
     }

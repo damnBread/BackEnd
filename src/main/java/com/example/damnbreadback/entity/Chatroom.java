@@ -28,12 +28,12 @@ public class Chatroom {
     private Post post; // 공고
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "user1")
-    private User user1; // 사용자1
+    @JoinColumn(name = "user_publiser")
+    private User user_publisher; // 게시자 사용자
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "user2")
-    private User user2; // 사용자2
+    @JoinColumn(name = "user_appliance")
+    private User user_appliance; // 지원자 사용자
 
 
     @OneToMany( fetch = FetchType.EAGER)

@@ -13,4 +13,5 @@ public interface HistoryService {
     List<Post> getHistory(Long userId) throws ExecutionException, InterruptedException;
     HistoryDto patchStatus(Long id, Long userid, int statusCode);
     List<UserDTO> getUserByHistory(Long damnId);
+    Long createHistory(Long damnId, Long userId) throws ExecutionException, InterruptedException;
 }

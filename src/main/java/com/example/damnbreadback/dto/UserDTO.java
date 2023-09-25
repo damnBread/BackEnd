@@ -43,29 +43,34 @@ public class UserDTO {
 //    private List<History> histories; // 땜빵이력
 
     public static UserDTO toDTO(User entity){
-        return UserDTO.builder()
-                .userId(entity.getUserId())
-                .timestamp(entity.getTimestamp())
-                .name(entity.getName())
-                .nickname(entity.getNickname())
-                .id(entity.getId())
-                .pw(entity.getPw())
-                .email(entity.getEmail())
-                .phone(entity.getPhone())
-                .home(entity.getHome())
-                .birth(entity.getBirth())
-                .gender(entity.isGender())
-                .introduce(entity.getIntroduce())
-                .badge(entity.getBadge())
-                .noShow(entity.getNoShow())
-                .score(entity.getScore())
-                .hopeJob(entity.getHopeJob())
-                .hopeLocation(entity.getHopeLocation())
-                .isPublic(entity.getIsPublic())
+        try{
+            return UserDTO.builder()
+                    .userId(entity.getUserId())
+                    .timestamp(entity.getTimestamp())
+                    .name(entity.getName())
+                    .nickname(entity.getNickname())
+                    .id(entity.getId())
+                    .pw(entity.getPw())
+                    .email(entity.getEmail())
+                    .phone(entity.getPhone())
+                    .home(entity.getHome())
+                    .birth(entity.getBirth())
+                    .gender(entity.isGender())
+                    .introduce(entity.getIntroduce())
+                    .badge(entity.getBadge())
+                    .noShow(entity.getNoShow())
+                    .score(entity.getScore())
+                    .hopeJob(entity.getHopeJob())
+                    .hopeLocation(entity.getHopeLocation())
+                    .isPublic(entity.getIsPublic())
 //                .scraps(entity.getScraps())
 //                .career(entity.getCareer())
 //                .histories(entity.getHistories())
-                .build();
+                    .build();
+        }catch (Error e){
+            return null;
+        }
+
                 
     }
 }

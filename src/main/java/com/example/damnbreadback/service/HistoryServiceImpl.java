@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +25,10 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public class HistoryServiceImpl implements HistoryService {
 
+    @Autowired
+    private final UserService userService;
+    @Autowired
+    private final PostService postService;
     @Autowired
     private final HistoryRepository historyRepository;
 
@@ -54,7 +59,7 @@ public class HistoryServiceImpl implements HistoryService {
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
             if (history != null) {
-                history.setStatus_code(statusCode);
+//                history.setStatus_code(statusCode);
                 historyRepository.save(History.toEntity(history, user, post));
                 return history;
             } else {
@@ -63,7 +68,6 @@ public class HistoryServiceImpl implements HistoryService {
         } else {
             return null;
         }
-
     }
 
     public List<UserDTO> getUserByHistory(Long damnId){
@@ -75,6 +79,19 @@ public class HistoryServiceImpl implements HistoryService {
         });
 
         return userDTOList;
+    }
+
+    public Long createHistory(Long damnId, Long userId) throws ExecutionException, InterruptedException {
+        User user = User.toEntity(userService.getUserById(userId));
+        Optional<Post> post = postService.getPostById(damnId);
+        if(post.isPresent()) {
+            History history = new History();
+            history.setPost(post.get());
+            history.setUser(user);
+
+            return historyRepository.save(history).getHistoryId();
+        }
+        else return null;
     }
 
 }

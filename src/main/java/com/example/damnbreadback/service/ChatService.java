@@ -17,5 +17,5 @@ public interface ChatService {
     List<ChatMessage> getChatMessages(Long roomId) throws ExecutionException, InterruptedException;
     Chatroom createChatRoom(Post post,User user1,User user2) throws ExecutionException, InterruptedException;
 
-    int countByChatId(Long user1_id, Long user2_id);
+    int countByChatId(Long postId, Long user1_id, Long user2_id);
 }

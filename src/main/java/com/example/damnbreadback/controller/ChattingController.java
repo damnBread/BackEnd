@@ -37,26 +37,34 @@ public class ChattingController {
     @Autowired
     ChatService chatService;
 
-    // 마이페이지 -> 내가 의뢰한 땜빵 - 지원자 채팅
-    @RequestMapping(value = "chat/{damnid}/{userid}", method = RequestMethod.POST)
-    public ResponseEntity<Object> startChat(Authentication authentication, @PathVariable Long damnid, @PathVariable Long userid) throws ExecutionException, InterruptedException {
+    // 지원자 -> 게시자 채팅 (damnlist ; 구직게시판)
+    @RequestMapping(value = "/damnlist/{postNum}/chat", method = RequestMethod.POST)
+    public ResponseEntity<Object> startChat1(Authentication authentication, @PathVariable Long postNum) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
         System.out.println(authentication.getName());
 
-        Long user1_id = userService.findUserIdById(authentication.getName());
-        Long user2_id = userid;
+        Long user_appliance = userService.findUserIdById(authentication.getName());
+        Long user_publisher = postService.getPostById(postNum).get().getPublisher();//postNum을 작성한 게시자 찾기.
 
-        Optional<Chatroom> chatroom = chatService.startChat(damnid,user1_id, user2_id);
+        Optional<Chatroom> chatroom = chatService.startChat(postNum,user_appliance, user_publisher);
         if(chatroom.isPresent())  return ResponseEntity.ok().body(chatroom.get());
         else return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
 
-
-//        List<UserDTO> userList = historyService.getUserByHistory(damnid);
-//
-//        if(userList == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
-//        return ResponseEntity.ok().body(userList);
-
-//        return ResponseEntity.ok().body("");
     }
+
+//  게시자 -> 지원자 채팅 (damnrank ; 인재정보)
+//    @RequestMapping(value = "/damnrank/detail/{userid}/chat", method = RequestMethod.POST)
+//    public ResponseEntity<Object> startChat2(Authentication authentication, @PathVariable Long userid) throws ExecutionException, InterruptedException {
+//        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+//        System.out.println(authentication.getName());
+//
+//        Long user_appliance = userService.findUserIdById(authentication.getName());
+//        Long user_publisher = postService.getPostById(postNum).get().getPublisher();//postNum을 작성한 게시자 찾기.
+//
+//        Optional<Chatroom> chatroom = chatService.startChat(postNum,user_appliance, user_publisher);
+//        if(chatroom.isPresent())  return ResponseEntity.ok().body(chatroom.get());
+//        else return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
+//
+//    }
 
 }
