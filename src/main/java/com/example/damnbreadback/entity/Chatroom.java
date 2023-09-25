@@ -1,11 +1,13 @@
 package com.example.damnbreadback.entity;
 
+import com.google.firebase.database.annotations.NotNull;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -17,10 +19,21 @@ import java.util.Set;
 public class Chatroom {
 
     @Id
-    private String roomId;
+    @NotNull
+    @GeneratedValue
+    private Long roomId;
 
-    private Long user1; // 사용자1
-    private Long user2; // 사용자2
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "post")
+    private Post post; // 공고
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user1")
+    private User user1; // 사용자1
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user2")
+    private User user2; // 사용자2
 
 
     @OneToMany( fetch = FetchType.EAGER)

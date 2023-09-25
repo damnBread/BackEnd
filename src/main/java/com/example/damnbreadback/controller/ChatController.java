@@ -31,22 +31,24 @@ public class ChatController {
 
         // 모든 채팅방 목록 반환
         @GetMapping("")
-        public ResponseEntity<Object> getChatList(@RequestParam String userId) throws ExecutionException, InterruptedException {
+        public ResponseEntity<Object> getChatList(@RequestParam Long userId) throws ExecutionException, InterruptedException {
             System.out.println(userId);
-            List<Chatroom> rooms = chatService.getChatRoom(userId);
-            return ResponseEntity.ok().body(rooms);
+//            List<Chatroom> rooms = chatService.getChatRoom(userId);
+//            return ResponseEntity.ok().body(rooms);
+            return null;
         }
 
         // 채팅방 생성
         @PostMapping("/newchat")
         @ResponseBody
         public ResponseEntity<Object> createRoom(@RequestBody String name) throws ExecutionException, InterruptedException {
-            return ResponseEntity.ok().body(chatService.createChatRoom(name));
+            return null;
+//            return ResponseEntity.ok().body(chatService.createChatRoom(name));
         }
 
         // 채팅방 입장 화면
         @GetMapping("/enter")
-        public ResponseEntity<Object> roomDetail(@RequestParam String roomId) throws ExecutionException, InterruptedException {
+        public ResponseEntity<Object> roomDetail(@RequestParam Long roomId) throws ExecutionException, InterruptedException {
             chatService.getChatMessages(roomId);
             return ResponseEntity.ok().body("ok");
         }
