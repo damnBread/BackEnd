@@ -44,7 +44,6 @@ public class MyPageController {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
         UserDTO user = userService.getUserByUserid(authentication.getName()); // 유저 기본 정보
         int careerCnt = historyService.getHistory(userService.findUserIdById(authentication.getName())).size();
-        System.out.println(careerCnt);
         user.setCareerCnt(careerCnt);
 
         //TODO//스크랩
@@ -158,6 +157,32 @@ public class MyPageController {
         if(userList == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
         return ResponseEntity.ok().body(userList);
     }
+
+    // 마이페이지 -> 내가 의뢰한 땜빵 - 지원자 보기 세부
+    @RequestMapping(value = "/requestlist/appliance/profile/{userid}", method = RequestMethod.GET)
+    public ResponseEntity<Object> getApplianceDetail(Authentication authentication, @PathVariable Long userid) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+        System.out.println(authentication.getName());
+
+        UserDTO user = userService.getUserById(userid);
+
+        if(user == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
+        return ResponseEntity.ok().body(user);
+    }
+
+//    // 마이페이지 -> 내가 의뢰한 땜빵 - 지원자 채팅
+//    @RequestMapping(value = "/requestlist/{damnid}/appliance/chat", method = RequestMethod.POST)
+//    public ResponseEntity<Object> startChat(Authentication authentication, @PathVariable Long damnid) throws ExecutionException, InterruptedException {
+//        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+//        System.out.println(authentication.getName());
+//
+//        List<UserDTO> userList = historyService.getUserByHistory(damnid);
+//
+//        if(userList == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
+//        return ResponseEntity.ok().body(userList);
+//    }
+
+
 
 
     @RequestMapping(value = "/{userid}/bookmark", method = RequestMethod.GET)
