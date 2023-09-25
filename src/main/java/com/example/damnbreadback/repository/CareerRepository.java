@@ -12,6 +12,6 @@ import java.util.List;
 public interface CareerRepository extends JpaRepository<Career, Long>, JpaSpecificationExecutor {
 
 //    void deleteByUserUserId(Long userId);
-//    List<History> findHistoriesByUser(Long userId);
+    List<Career> findCareersByUserId(Long userId);
 
 }

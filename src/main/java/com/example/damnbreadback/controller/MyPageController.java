@@ -3,9 +3,8 @@ package com.example.damnbreadback.controller;
 import com.example.damnbreadback.config.JwtFilter;
 import com.example.damnbreadback.dto.HistoryDto;
 import com.example.damnbreadback.dto.UserDTO;
-import com.example.damnbreadback.entity.History;
-import com.example.damnbreadback.entity.Post;
-import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.entity.*;
+import com.example.damnbreadback.service.CareerService;
 import com.example.damnbreadback.service.HistoryService;
 import com.example.damnbreadback.service.PostService;
 import com.example.damnbreadback.service.UserService;
@@ -31,6 +30,8 @@ public class MyPageController {
     private UserService userService;
 
     @Autowired
+    private CareerService careerService;
+    @Autowired
     private HistoryService historyService;
     private JwtFilter jwtFilter;
     @Autowired
@@ -43,10 +44,8 @@ public class MyPageController {
 
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
         UserDTO user = userService.getUserByUserid(authentication.getName()); // 유저 기본 정보
-        int careerCnt = historyService.getHistory(userService.findUserIdById(authentication.getName())).size();
-        user.setCareerCnt(careerCnt);
-
-        //TODO//스크랩
+        List<Career> careers = careerService.getCareers(user.getUserId());
+        user.setCareerCnt(careers.size());
 
         if(user == null) return ResponseEntity.badRequest().body("잘못된 유저 정보입니다.");
         return ResponseEntity.ok().body(user);
