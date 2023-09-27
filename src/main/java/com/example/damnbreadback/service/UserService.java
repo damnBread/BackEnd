@@ -1,6 +1,7 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dto.UserDTO;
+import com.example.damnbreadback.entity.Noshow;
 import com.example.damnbreadback.entity.Scrap;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.dto.SignupRequest;
@@ -18,7 +19,6 @@ import java.util.concurrent.ExecutionException;
 public interface UserService {
     String login(String userName, String password, HttpServletResponse response)  throws ExecutionException, InterruptedException;
     String logout(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException;
-    List<UserDTO> getUsers() throws ExecutionException, InterruptedException;
     UserDTO getUserById(Long id)  throws ExecutionException, InterruptedException;
 
     // 로그인
@@ -39,9 +39,10 @@ public interface UserService {
     Page getRankFilter(UserFilter userFilter, int page) throws ExecutionException, InterruptedException;
     Date calculateBirthDateFromAge(int age);
 
-    String getUserId(String id) throws ExecutionException, InterruptedException;
     UserDTO getUserByUserid(String id) throws ExecutionException, InterruptedException;
-    List<Scrap> getScraps(Long user) throws ExecutionException, InterruptedException;
 
     Long findUserIdById(String id) throws ExecutionException, InterruptedException;
+
+    // 노쇼 신고학
+    Noshow reportNoshow(Long damnId, Long userId) throws ExecutionException, InterruptedException;
 }

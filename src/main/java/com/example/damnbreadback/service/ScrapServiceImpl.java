@@ -23,12 +23,7 @@ public class ScrapServiceImpl implements ScrapService {
     public List<PostDto> getScraps(Long userId) {
         List<Scrap> scraps = scrapRepository.getScrapsByUserUserId(userId);
         List<PostDto> scrapPosts = new ArrayList<>();
-        scraps.forEach( s -> {
-
-//                Page<Post> postPage = postService.findPosts(page-1);
-//                Optional<Post> post = postService.getPostById(s.getPost().getPostId());
-//
-//                if(post.isPresent()) scrapPosts.add(post.get());
+        scraps.forEach(s -> {
             PostDto postDto = PostDto.toDTO(s.getPost());
             scrapPosts.add(postDto);
         });

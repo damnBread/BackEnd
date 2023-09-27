@@ -63,12 +63,12 @@ public class Post extends BaseTimeEntity{
     private User matchedUser;
 
 
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<History> histories;
 
     @OneToMany(mappedBy = "post")
     private Set<Scrap> scrap;
+
 
 
     public Post(PostDto dto) throws CloneNotSupportedException {

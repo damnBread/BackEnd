@@ -112,17 +112,27 @@ public class MyPageController {
     }
 
     //마이페이지 -> 내가 의뢰한 땜빵 목록 - 리뷰 남기기
-
-    //TODO
-    //마이페이지 -> 내가 의뢰한 땜빵 목록 - 리뷰남기기 - 노쇼 신고하기
-    @RequestMapping(value = "/requestlist/{damnid}/noshow", method = RequestMethod.POST)
-    public ResponseEntity<Object> reportNoshow(Authentication authentication, @PathVariable Long damnid) throws ExecutionException, InterruptedException {
+    @RequestMapping(value = "/requestlist/{damnid}/review", method = RequestMethod.POST)
+    public ResponseEntity<Object> reportReview(Authentication authentication, @PathVariable Long damnid, @RequestBody Map<String, String> badge) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
 
-        Post post = postService.getPostById(damnid).get();
+        //리뷰 남기기
+        User user = postService.reportReview(damnid, badge.get("badge"));
 
-        if(post == null) return ResponseEntity.badRequest().body("잘못된 유저 정보입니다.");
-        return ResponseEntity.ok().body(post);
+        if(user == null) return ResponseEntity.badRequest().body("잘못된 유저 정보입니다.");
+        return ResponseEntity.ok().build();
+    }
+
+    //마이페이지 -> 내가 의뢰한 땜빵 목록 - 리뷰남기기 - 노쇼 신고하기
+    @RequestMapping(value = "/requestlist/{damnid}/{userid}/noshow", method = RequestMethod.POST)
+    public ResponseEntity<Object> reportNoshow(Authentication authentication, @PathVariable Long damnid, @PathVariable Long userid) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+
+        Noshow noshow = userService.reportNoshow(damnid, userid);
+
+        if(noshow == null) return ResponseEntity.badRequest().body("잘못된 유저 정보입니다.");
+
+        return ResponseEntity.ok().build();
     }
 
     // 마이페이지 -> 내가 의뢰한 땜빵 삭제

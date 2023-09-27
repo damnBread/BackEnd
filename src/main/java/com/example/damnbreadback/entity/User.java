@@ -65,9 +65,7 @@ public class User {
     @Column(name = "badge")
     private String badge; //뱃지 ex. "00000000", "00010000"
 
-    @ColumnDefault("0")
-    @Column(name = "no_show")
-    private int noShow; // 노쇼 횟수
+
 
     @ColumnDefault("0")
     @Column(name = "score")
@@ -86,6 +84,9 @@ public class User {
     @ColumnDefault("0000000")
     @Column(name = "is_public")
     private String isPublic; // 정보 공개 여부 "0101011" < 이런 식으로 이진값을 받아야할듯
+
+    @OneToMany(mappedBy = "user")
+    private List<Noshow> noShow; // 노쇼
 
     @OneToMany(mappedBy = "user")
     private Set<Scrap> scraps; // 스크랩한 포스트 목록
@@ -111,7 +112,6 @@ public class User {
                 .gender(dto.isGender())
                 .introduce(dto.getIntroduce())
                 .badge(dto.getBadge())
-                .noShow(dto.getNoShow())
                 .score(dto.getScore())
                 .hopeJob(dto.getHopeJob())
                 .hopeLocation(dto.getHopeLocation())

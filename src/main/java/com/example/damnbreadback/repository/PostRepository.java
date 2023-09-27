@@ -25,4 +25,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
 
     List<Post> findPostsByPublisher(Long id);
 
+
+
 }

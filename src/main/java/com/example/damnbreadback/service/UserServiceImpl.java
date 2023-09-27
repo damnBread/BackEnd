@@ -2,14 +2,9 @@ package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.dto.UserDTO;
-import com.example.damnbreadback.entity.RefreshToken;
-import com.example.damnbreadback.entity.Scrap;
-import com.example.damnbreadback.repository.ScrapRepository;
-import com.example.damnbreadback.repository.TokenRepository;
-import com.example.damnbreadback.repository.UserRepository;
-import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.entity.*;
+import com.example.damnbreadback.repository.*;
 import com.example.damnbreadback.dto.UserFilter;
-import com.example.damnbreadback.repository.UserSpecification;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -42,7 +37,10 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     @Autowired
     TokenRepository tokenRepository;
-
+    @Autowired
+    NoshowRepository noshowRepository;
+    @Autowired
+    PostRepository postRepository;
     @Autowired
     TokenService tokenService;
     @Autowired
@@ -293,28 +291,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getUserId(String id)  {
-        //return userDao.getUserId(id);
-        return null;
-    }
-
-    @Override
-    public List<Scrap> getScraps(Long user) {
-        //return userDao.getScraps(user);
-        System.out.println("ksflkadjfk;adf" + scrapRepository.getScrapsByUserUserId(user));
-        return scrapRepository.getScrapsByUserUserId(user);
-    }
-
-    @Override
     public Long findUserIdById(String id) {
         return userRepository.findUserById(id).getUserId();
     }
 
-
     @Override
-    public List<UserDTO> getUsers() throws ExecutionException, InterruptedException {
-//        return userDao.getAllUsers();
-        return null;
+    public Noshow reportNoshow (Long damnId, Long userId) throws ExecutionException, InterruptedException {
+        Noshow noShow = new Noshow();
+        noShow.setUser(User.toEntity(getUserById(userId)));
+        Optional<Post> post = postRepository.findById(damnId);
+        if(post.isPresent())
+            noShow.setPost(post.get());
+        else return null;
+
+        try{
+            return noshowRepository.save(noShow);
+        }catch (Error e){
+            return null;
+        }
+
+
+//        return null;
+
+
     }
+
 
 }

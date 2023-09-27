@@ -31,7 +31,7 @@ public class PostServiceImpl implements PostService {
     private final HistoryRepository historyRepository;
 
     @Autowired
-    private final CareerRepository careerRepository;
+    private final UserRepository userRepository;
     @Autowired
     private final UserService userService;
 
@@ -60,11 +60,6 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAllByOrderByCreatedDateDesc(pageRequest);
     }
 
-//    @Override
-//    public Page<Post> findScrapedPost(Long userId, int page){
-//        PageRequest pageRequest = PageRequest.of(page, 20);
-//        return postRepository
-//    }
 
     @Transactional
     @Override
@@ -218,6 +213,22 @@ public class PostServiceImpl implements PostService {
             return true;
         }
         else return false;
+    }
+
+    @Override
+    public User reportReview(Long damnId, String badge) throws ExecutionException, InterruptedException {
+        Optional<Post> post = postRepository.findById(damnId);
+
+        if(post.isPresent()){
+            User matchedUser = post.get().getMatchedUser();
+            matchedUser.setBadge(badge);
+            userRepository.save(matchedUser);
+
+            return matchedUser;
+        }
+        else {
+            return null;
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import com.example.damnbreadback.dto.PostDto;
 import com.example.damnbreadback.dto.PostFilter;
 import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.Post;
+import com.example.damnbreadback.entity.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -18,7 +19,6 @@ public interface PostService {
 
     Optional<Post> getPostById(Long id) throws ExecutionException, InterruptedException;
     Page<Post> findPosts(int page);
-//    Page<Post> findScrapedPost(Long userId, int page);
     Boolean removePost(Long id);
 
     Post patchPostInfo(Long postId,Map<Object, Object> fields) throws ExecutionException, InterruptedException;
@@ -26,4 +26,5 @@ public interface PostService {
 
     List<Post> getPostByPublisher(Long id);
     Boolean scrap(Long userId, int postNum) throws ExecutionException, InterruptedException;
+    User reportReview(Long damnId, String badge) throws ExecutionException, InterruptedException;
 }
