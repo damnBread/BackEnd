@@ -82,9 +82,12 @@ public class PostController {
     }
 
     //@RequestMapping(path="/detail/bookmark", method = RequestMethod.POST)
-    @PostMapping("/{postNum}/bookmark")
-    public ResponseEntity<Object> bookmark(Authentication authentication, @PathVariable int postNum) throws  ExecutionException, InterruptedException{
-        Boolean isSuccess = postService.bookmark(authentication.getName(), postNum);
+    @PostMapping("/{postNum}/scrap")
+    public ResponseEntity<Object> createScrap(Authentication authentication, @PathVariable int postNum) throws  ExecutionException, InterruptedException{
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+
+        Long userId = userService.findUserIdById(authentication.getName());
+        Boolean isSuccess = postService.scrap(userId, postNum);
 
         if(isSuccess) return new ResponseEntity<> (HttpStatus.ACCEPTED);
         else return new ResponseEntity<>("cannot find post", HttpStatus.NOT_FOUND);

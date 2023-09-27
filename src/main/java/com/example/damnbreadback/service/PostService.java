@@ -18,11 +18,12 @@ public interface PostService {
 
     Optional<Post> getPostById(Long id) throws ExecutionException, InterruptedException;
     Page<Post> findPosts(int page);
+//    Page<Post> findScrapedPost(Long userId, int page);
     Boolean removePost(Long id);
 
     Post patchPostInfo(Long postId,Map<Object, Object> fields) throws ExecutionException, InterruptedException;
     Page getPostFilter(PostFilter postFilter, int page);
 
     List<Post> getPostByPublisher(Long id);
-    Boolean bookmark(String name, int postNum) throws ExecutionException, InterruptedException;
+    Boolean scrap(Long userId, int postNum) throws ExecutionException, InterruptedException;
 }

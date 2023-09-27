@@ -1,6 +1,7 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dto.UserDTO;
+import com.example.damnbreadback.entity.Scrap;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.dto.SignupRequest;
 import com.example.damnbreadback.dto.UserFilter;
@@ -40,7 +41,7 @@ public interface UserService {
 
     String getUserId(String id) throws ExecutionException, InterruptedException;
     UserDTO getUserByUserid(String id) throws ExecutionException, InterruptedException;
-    List<String> getBookmarks(String user) throws ExecutionException, InterruptedException;
+    List<Scrap> getScraps(Long user) throws ExecutionException, InterruptedException;
 
     Long findUserIdById(String id) throws ExecutionException, InterruptedException;
 }

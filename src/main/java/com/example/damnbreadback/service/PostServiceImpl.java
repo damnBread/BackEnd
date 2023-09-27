@@ -60,6 +60,12 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAllByOrderByCreatedDateDesc(pageRequest);
     }
 
+//    @Override
+//    public Page<Post> findScrapedPost(Long userId, int page){
+//        PageRequest pageRequest = PageRequest.of(page, 20);
+//        return postRepository
+//    }
+
     @Transactional
     @Override
     public Boolean removePost(Long id) {
@@ -202,9 +208,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Boolean bookmark(String name, int postNum) throws ExecutionException, InterruptedException{
+    public Boolean scrap(Long userId, int postNum) throws ExecutionException, InterruptedException{
         Optional<Post> post = postRepository.findById((long) postNum);
-        UserDTO user = userService.getUserById(userService.findUserIdById(name));
+        UserDTO user = userService.getUserById(userId);
 
         if(post.isPresent()) {
             Scrap newScrap = new Scrap(post.get(), User.toEntity(user));

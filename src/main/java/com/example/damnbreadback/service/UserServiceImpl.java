@@ -3,6 +3,8 @@ package com.example.damnbreadback.service;
 import com.example.damnbreadback.config.JwtUtils;
 import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.RefreshToken;
+import com.example.damnbreadback.entity.Scrap;
+import com.example.damnbreadback.repository.ScrapRepository;
 import com.example.damnbreadback.repository.TokenRepository;
 import com.example.damnbreadback.repository.UserRepository;
 import com.example.damnbreadback.entity.User;
@@ -43,6 +45,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     TokenService tokenService;
+    @Autowired
+    ScrapRepository scrapRepository;
 
 
     // 로그인 ===============================================================================
@@ -295,9 +299,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> getBookmarks(String user) {
+    public List<Scrap> getScraps(Long user) {
         //return userDao.getScraps(user);
-        return null;
+        System.out.println("ksflkadjfk;adf" + scrapRepository.getScrapsByUserUserId(user));
+        return scrapRepository.getScrapsByUserUserId(user);
     }
 
     @Override

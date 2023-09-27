@@ -2,12 +2,10 @@ package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.config.JwtFilter;
 import com.example.damnbreadback.dto.HistoryDto;
+import com.example.damnbreadback.dto.PostDto;
 import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.*;
-import com.example.damnbreadback.service.CareerService;
-import com.example.damnbreadback.service.HistoryService;
-import com.example.damnbreadback.service.PostService;
-import com.example.damnbreadback.service.UserService;
+import com.example.damnbreadback.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.security.core.Authentication;
@@ -31,6 +29,8 @@ public class MyPageController {
 
     @Autowired
     private CareerService careerService;
+    @Autowired
+    private ScrapService scrapService;
     @Autowired
     private HistoryService historyService;
     private JwtFilter jwtFilter;
@@ -111,6 +111,20 @@ public class MyPageController {
         return ResponseEntity.ok().body(post);
     }
 
+    //마이페이지 -> 내가 의뢰한 땜빵 목록 - 리뷰 남기기
+
+    //TODO
+    //마이페이지 -> 내가 의뢰한 땜빵 목록 - 리뷰남기기 - 노쇼 신고하기
+    @RequestMapping(value = "/requestlist/{damnid}/noshow", method = RequestMethod.POST)
+    public ResponseEntity<Object> reportNoshow(Authentication authentication, @PathVariable Long damnid) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+
+        Post post = postService.getPostById(damnid).get();
+
+        if(post == null) return ResponseEntity.badRequest().body("잘못된 유저 정보입니다.");
+        return ResponseEntity.ok().body(post);
+    }
+
     // 마이페이지 -> 내가 의뢰한 땜빵 삭제
     @RequestMapping(value = "/requestlist/{damnid}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteRequest(Authentication authentication, @PathVariable Long damnid) throws ExecutionException, InterruptedException {
@@ -169,30 +183,27 @@ public class MyPageController {
         return ResponseEntity.ok().body(user);
     }
 
-//    // 마이페이지 -> 내가 의뢰한 땜빵 - 지원자 채팅
-//    @RequestMapping(value = "/requestlist/{damnid}/appliance/chat", method = RequestMethod.POST)
-//    public ResponseEntity<Object> startChat(Authentication authentication, @PathVariable Long damnid) throws ExecutionException, InterruptedException {
-//        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
-//        System.out.println(authentication.getName());
-//
-//        List<UserDTO> userList = historyService.getUserByHistory(damnid);
-//
-//        if(userList == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
-//        return ResponseEntity.ok().body(userList);
-//    }
+    //스크랩한 공고 가져오기
+    @RequestMapping(value = "/scrap", method = RequestMethod.GET)
+    public ResponseEntity<Object> getScarps(Authentication authentication) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
 
+        List<PostDto> scrapPosts = scrapService.getScraps(userService.findUserIdById(authentication.getName()));
 
+        if(scrapPosts.isEmpty()) return ResponseEntity.noContent().build();
 
+        System.out.println(scrapPosts);
 
-    @RequestMapping(value = "/{userid}/bookmark", method = RequestMethod.GET)
-    public ResponseEntity<Object> getBookmarks(@PathVariable String userid) throws ExecutionException, InterruptedException {
-        String user = userService.getUserId(userid);
-        List<String> bookmarked = userService.getBookmarks(user);
-        ArrayList<Post> bookmarkedPosts = new ArrayList<Post>();
-        for (String bookmarkedPost:bookmarked) {
-            //bookmarkedPosts.add(postService.getPostById(bookmarkedPost));
-        }
+        return ResponseEntity.ok().body(scrapPosts);
+//        return ResponseEntity.ok().body("scrapPost");
+    }
 
-        return ResponseEntity.ok().body(bookmarkedPosts);
+    //땜빵 이력 가져오기
+    @RequestMapping(value = "/career", method = RequestMethod.GET)
+    public ResponseEntity<Object> getCareers(Authentication authentication) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+
+        List<Career> careers = careerService.getCareers(userService.findUserIdById(authentication.getName()));
+        return ResponseEntity.ok().body(careers);
     }
 }

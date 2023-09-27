@@ -24,4 +24,5 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     Page<Post> findAllByOrderByCreatedDateDesc(PageRequest pageable);
 
     List<Post> findPostsByPublisher(Long id);
+
 }

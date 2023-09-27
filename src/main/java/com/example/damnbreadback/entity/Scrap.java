@@ -8,7 +8,6 @@ import java.util.Optional;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name="scrap")
 public class Scrap {

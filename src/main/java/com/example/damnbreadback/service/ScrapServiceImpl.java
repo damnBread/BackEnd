@@ -1,13 +1,13 @@
 package com.example.damnbreadback.service;
 
-import com.example.damnbreadback.entity.Career;
+import com.example.damnbreadback.dto.PostDto;
 import com.example.damnbreadback.entity.Scrap;
-import com.example.damnbreadback.repository.CareerRepository;
 import com.example.damnbreadback.repository.ScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,9 +16,24 @@ public class ScrapServiceImpl implements ScrapService {
 
     @Autowired
     ScrapRepository scrapRepository;
+    @Autowired
+    PostService postService;
 
     @Override
-    public List<Scrap> getScraps(Long userId) {
-        return scrapRepository.getScrapsByUserUserId(userId);
+    public List<PostDto> getScraps(Long userId) {
+        List<Scrap> scraps = scrapRepository.getScrapsByUserUserId(userId);
+        List<PostDto> scrapPosts = new ArrayList<>();
+        scraps.forEach( s -> {
+
+//                Page<Post> postPage = postService.findPosts(page-1);
+//                Optional<Post> post = postService.getPostById(s.getPost().getPostId());
+//
+//                if(post.isPresent()) scrapPosts.add(post.get());
+            PostDto postDto = PostDto.toDTO(s.getPost());
+            scrapPosts.add(postDto);
+        });
+        return scrapPosts;
+
+//        return scrapRepository.getScrapsByUserUserId(userId);
     }
 }
