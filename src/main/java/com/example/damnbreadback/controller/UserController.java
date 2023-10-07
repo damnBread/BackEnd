@@ -5,6 +5,7 @@ import com.example.damnbreadback.dto.TokenDTO;
 import com.example.damnbreadback.dto.LoginRequest;
 import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.service.EmailService;
 import com.example.damnbreadback.service.TokenService;
 import com.example.damnbreadback.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +28,8 @@ public class UserController {
 
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/issue")
     public ResponseEntity<Object> issueAccessToken(HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException, AccessDeniedException {
@@ -132,6 +135,49 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<Object> logout(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException {
+
+        userService.logout(request);
+
+        return ResponseEntity.ok().build();
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            session.invalidate();
+//        }
+//
+//        return "logout sucess";
+    }
+
+    //TODO ~~~~~~~~``` -> emailService의 주석처리된 81번째 줄에서 오류남.
+    // 아이디/ 비번 찾기 인증 메일 전송 - 네이버 SMTP 사용
+    @GetMapping("/login/findId/verify")
+    public ResponseEntity<Object> verifyByEmail(HttpServletRequest request, @RequestParam String email) throws Exception {
+        try{
+            String code = emailService.sendSimpleMessage(email);
+            System.out.println("인증코드 : " + code);
+            return ResponseEntity.ok().body(code);
+        }catch (Error e){
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    // TODO 아이디 찾기
+    @GetMapping("/login/findId")
+    public ResponseEntity<Object> findId(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException {
+
+        userService.logout(request);
+
+        return ResponseEntity.ok().build();
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            session.invalidate();
+//        }
+//
+//        return "logout sucess";
+    }
+
+    // TODO 비번 찾기
+    @GetMapping("/login/findPw")
+    public ResponseEntity<Object> findPw(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException {
 
         userService.logout(request);
 

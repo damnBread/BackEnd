@@ -33,7 +33,6 @@ public class MyPageController {
     private ScrapService scrapService;
     @Autowired
     private HistoryService historyService;
-    private JwtFilter jwtFilter;
     @Autowired
     private PostService postService;
 
