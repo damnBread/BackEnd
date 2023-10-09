@@ -70,8 +70,6 @@ public class JwtUtils {
         }
     }
 
-
-
     public static String createAccessToken(String userId, String role, String secretKey) {
         return Jwts.builder()
                 .setSubject(userId)

@@ -9,10 +9,10 @@ import lombok.*;
 
 import java.util.Date;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ChatMessageDTO {
 
@@ -21,8 +21,11 @@ public class ChatMessageDTO {
 
     private String content; // 채팅 내용
     private Date date; // 채팅일
+    //TODO 1 : 둘 중 하나만 쓰기
     private boolean sendingUser; // 채팅 발신자 (true : user_appliance, false : user_publisher)
+    private String sender; // 채팅 발신자 (true : user_appliance, false : user_publisher)
     private boolean isRead; // 읽음 여부
+    private ChatMessageType type; // 메시지 타입
 
     public static ChatMessageDTO toDTO(ChatMessage entity) {
         try {

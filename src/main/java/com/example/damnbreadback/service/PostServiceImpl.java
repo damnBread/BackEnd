@@ -55,9 +55,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<Post> findPosts(int page) {
+    public List<PostDto> findPosts(int page) {
+        List<PostDto> postDtoList = new ArrayList<>();
         PageRequest pageRequest = PageRequest.of(page, 20);
-        return postRepository.findAllByOrderByCreatedDateDesc(pageRequest);
+        List<Post> postList = postRepository.findAllByOrderByCreatedDateDesc(pageRequest).getContent();
+        postList.forEach(p -> {
+            postDtoList.add(PostDto.toDTO(p));
+        });
+        return postDtoList;
     }
 
 

@@ -18,7 +18,7 @@ public interface PostService {
     Long createPost(String writerId, Post postRequest) throws ExecutionException, InterruptedException;
 
     Optional<Post> getPostById(Long id) throws ExecutionException, InterruptedException;
-    Page<Post> findPosts(int page);
+    List<PostDto> findPosts(int page);
     Boolean removePost(Long id);
 
     Post patchPostInfo(Long postId,Map<Object, Object> fields) throws ExecutionException, InterruptedException;

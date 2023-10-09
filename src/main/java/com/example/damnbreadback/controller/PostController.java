@@ -36,10 +36,10 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<Object> getAllPosts(@RequestParam int page) throws ExecutionException, InterruptedException, TimeoutException {
-        Page<Post> postPage = postService.findPosts(page-1);
-        List<Post> list = postPage.getContent();
+        List<PostDto> list = postService.findPosts(page-1);
+        System.out.println(list);
         if(list.isEmpty()) return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
-        return ResponseEntity.ok().body(list);
+        else return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(path="/filter")
