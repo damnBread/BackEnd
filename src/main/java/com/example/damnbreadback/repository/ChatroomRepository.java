@@ -1,18 +1,14 @@
 package com.example.damnbreadback.repository;
 
-import com.example.damnbreadback.dto.ChatRoomDTO;
-import com.example.damnbreadback.entity.ChatMessage;
 import com.example.damnbreadback.entity.Chatroom;
-import com.example.damnbreadback.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Repository
-public interface ChatRepository extends JpaRepository<Chatroom, Long> {
+public interface ChatroomRepository extends JpaRepository<Chatroom, Long> {
 
 //    private Map<String, ChatRoomDTO> chatRoomMap;
 //
@@ -38,8 +34,8 @@ public interface ChatRepository extends JpaRepository<Chatroom, Long> {
 //        nativeQuery = true)
 //    List<Chatroom> getChatrooms(@Param("userId") Long userId);
 
-
-
+    @Query("SELECT c FROM Chatroom c WHERE c.user_appliance.userId = :userId OR c.user_publisher.userId = :userId")
+    List<Chatroom> getChatrooms(Long userId);
     Chatroom getChatroomByRoomId(Long roomId);
 
 

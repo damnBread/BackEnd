@@ -33,4 +33,6 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     @Query("SELECT h.user FROM History h WHERE h.post.postId = :postId")
     List<User> findUserByPostId(@Param("postId") Long postId);
 
+    History findHistoryByUserUserIdAndPostPostId(Long userId, Long postId);
+
 }

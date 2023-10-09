@@ -63,13 +63,15 @@ public class PostController {
 
     @RequestMapping(path="/{postNum}/apply", method = RequestMethod.POST)
     public ResponseEntity<Object> apply(Authentication authentication,@PathVariable Long postNum) throws ExecutionException, InterruptedException{
+        if(authentication != null){
+            Long newHistoryId = historyService.createHistory(postNum, userService.findUserIdById(authentication.getName()));
 
-        Long newHistoryId = historyService.createHistory(postNum, userService.findUserIdById(authentication.getName()));
-
-        if(newHistoryId == null){
-            return new ResponseEntity<>("null exception", HttpStatus.BAD_REQUEST);
+            if(newHistoryId == null){
+                return new ResponseEntity<>("올바르지 않은 입력입니다.", HttpStatus.BAD_REQUEST);
+            }
+            else  return ResponseEntity.ok().body(newHistoryId);
         }
-        else  return ResponseEntity.ok().body(newHistoryId);
+        else return ResponseEntity.status(401).body("인증되지 않은 사용자 입니다.");
     }
 
     @RequestMapping(path="/new", method = RequestMethod.POST)

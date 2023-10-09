@@ -30,7 +30,7 @@ public class History {
     @JoinColumn(name = "post")
     private Post post;
 
-    public static History toEntity(HistoryDto dto,  User user, Post post){
+    public static History toEntity(HistoryDto dto, User user, Post post){
         return History.builder()
                 .historyId(dto.getId())
                 .post(post)

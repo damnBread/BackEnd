@@ -1,19 +1,19 @@
 package com.example.damnbreadback.entity;
 
+import com.example.damnbreadback.dto.ChatRoomDTO;
+import com.example.damnbreadback.dto.UserDTO;
 import com.google.firebase.database.annotations.NotNull;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@Builder
 @Entity
 @Table(name="chatroom")
 public class Chatroom {
