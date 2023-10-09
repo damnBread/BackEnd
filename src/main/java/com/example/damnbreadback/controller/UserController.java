@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -83,16 +84,11 @@ public class UserController {
 //    //test : zara0140 / 1234567a
     @PostMapping("/login")
     public ResponseEntity<Object> loginRequest(@RequestBody LoginRequest loginRequest, HttpServletRequest request,  HttpServletResponse response) throws ExecutionException, InterruptedException {
-        String tok = userService.login(loginRequest.getId(), loginRequest.getPw(), response);
+        Map<Long, String> authResponseBody = userService.login(loginRequest.getId(), loginRequest.getPw(), response);
 
-        if(tok == null) return ResponseEntity.badRequest().body("fail to find user");
+        if(authResponseBody == null) return ResponseEntity.badRequest().body("fail to find user");
 
-        if(tok.equals("fail to find user"))
-            return ResponseEntity.badRequest().body("fail to find user");
-        if(tok.equals("db null exception"))
-            return ResponseEntity.badRequest().body("null exception");
-
-        return ResponseEntity.ok().body(tok);
+        return ResponseEntity.ok().body(authResponseBody);
     }
 
 

@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public interface UserService {
-    String login(String userName, String password, HttpServletResponse response)  throws ExecutionException, InterruptedException;
+    Map<Long, String> login(String userName, String password, HttpServletResponse response)  throws ExecutionException, InterruptedException;
     String logout(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException;
     UserDTO getUserById(Long id)  throws ExecutionException, InterruptedException;
 

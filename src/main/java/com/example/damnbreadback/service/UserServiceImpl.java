@@ -48,14 +48,14 @@ public class UserServiceImpl implements UserService {
 
 
     // 로그인 ===============================================================================
-    public String login(String id, String pw, HttpServletResponse response) throws ExecutionException, InterruptedException{
-        //인증과정 생략
+    public Map<Long, String> login(String id, String pw, HttpServletResponse response) throws ExecutionException, InterruptedException{
+        //인증과정 생Map<Long, String>략
         UserDTO user = loginCheck(id, pw);
 
         if(user== null) return null;
 
-        if (user.getId().equals("fail to find user")) return "fail to find user";
-        else if(user.getId().equals("db null exception")) return "db null exception";
+        if (user.getId().equals("fail to find user")) return null;
+        else if(user.getId().equals("db null exception")) return null;
 //        else return JwtUtils.createJwt(id, secretKey, expiredMs);
         else{
             String accessToken = JwtUtils.createAccessToken(id, "USER", secretKey);
@@ -70,7 +70,10 @@ public class UserServiceImpl implements UserService {
             JwtUtils.setHeaderAccessToken(response, accessToken);
             JwtUtils.setHeaderRefreshToken(response, refreshToken);
 
-            return accessToken;
+            Map<Long, String> authResponseBody = new HashMap<Long, String>();
+            authResponseBody.put(user.getUserId(), accessToken);
+
+            return authResponseBody;
 
         }
 
