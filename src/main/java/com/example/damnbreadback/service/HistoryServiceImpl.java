@@ -92,7 +92,7 @@ public class HistoryServiceImpl implements HistoryService {
 
             if(post.isPresent()) {
                 if(post.get().getPublisher().equals(userId)){
-                    return null;
+                    return -1L; // 공고게시자가 지원
                 }
                 else {
                     History history = new History();
@@ -102,10 +102,10 @@ public class HistoryServiceImpl implements HistoryService {
                     return historyRepository.save(history).getHistoryId();
                 }
             }
-            else return null;
+            else return -2L; // 올바르지 않는 post
         }
         else {
-            return null;
+            return -3L; // 이미 존재하는 지원 데이터
         }
     }
 

@@ -66,10 +66,16 @@ public class PostController {
         if(authentication != null){
             Long newHistoryId = historyService.createHistory(postNum, userService.findUserIdById(authentication.getName()));
 
-            if(newHistoryId == null){
-                return new ResponseEntity<>("올바르지 않은 입력입니다.", HttpStatus.BAD_REQUEST);
+            if(newHistoryId == -1L){ //공고자가 지원
+                return ResponseEntity.status(406).body("게시자는 지원할 수 없습니다.");
             }
-            else  return ResponseEntity.ok().body(newHistoryId);
+            else if(newHistoryId == -2L){ // 올바르지 않은 post 정보
+                return ResponseEntity.status(400).body("올바르지 않은 게시물 정보 입니다.");
+            }
+            else if (newHistoryId == -3L){ // 이미 지원한 공고
+                return ResponseEntity.status(409).body("이미 지원한 공고입니다.");
+            }
+            else return ResponseEntity.ok().body(newHistoryId);
         }
         else return ResponseEntity.status(401).body("인증되지 않은 사용자 입니다.");
     }
