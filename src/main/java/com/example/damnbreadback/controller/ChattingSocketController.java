@@ -27,6 +27,15 @@ public class ChattingSocketController {
         System.out.println(messageDTO);
         this.simpMessagingTemplate.convertAndSend("/queue/addChatToClient/"+id,messageDTO);
     }
+
+    @MessageMapping("/chat/{roomNo}")
+    @SendTo("/sub/chat/{roomNo}")
+    public void broadcasting(@DestinationVariable(value = "roomNo") final String chatRoomNo) {
+
+        System.out.println("{roomNo : {}, request : {}}" + chatRoomNo);
+
+        return;
+    }
 //
 //    @MessageMapping("/join")
 //    public void joinUser(@Payload Integer userId){

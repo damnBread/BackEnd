@@ -67,7 +67,7 @@ public class MyPageController {
     public ResponseEntity<Object> applyList(Authentication authentication) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
 
-        List<Post> postList = historyService.getHistory(userService.findUserIdById(authentication.getName()));
+        List<PostDto> postList = historyService.getHistory(userService.findUserIdById(authentication.getName()));
 
         if(postList.isEmpty()) return ResponseEntity.badRequest().body("해당하는 공고 정보가 없습니다.");
         return ResponseEntity.ok().body(postList);
@@ -78,8 +78,8 @@ public class MyPageController {
     public ResponseEntity<Object> applyListDetail(Authentication authentication, @PathVariable Long damnId) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
 
-        if(postService.getPostById(damnId).isPresent()){
-            Post post = postService.getPostById(damnId).get();
+        if(postService.getPostById(damnId) != null){
+            PostDto post = postService.getPostById(damnId);
             return ResponseEntity.ok().body(post);
         }
         else {
@@ -93,7 +93,7 @@ public class MyPageController {
     public ResponseEntity<Object> requestList(Authentication authentication) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
 
-        List<Post> postList = postService.getPostByPublisher(userService.findUserIdById(authentication.getName()));
+        List<PostDto> postList = postService.getPostByPublisher(userService.findUserIdById(authentication.getName()));
 
         if(postList == null) return ResponseEntity.badRequest().body("의뢰한 땜빵이 없습니다.");
         return ResponseEntity.ok().body(postList);
@@ -104,7 +104,7 @@ public class MyPageController {
     public ResponseEntity<Object> requestListDetail(Authentication authentication, @PathVariable Long damnid) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
 
-        Post post = postService.getPostById(damnid).get();
+        PostDto post = postService.getPostById(damnid);
 
         if(post == null) return ResponseEntity.badRequest().body("잘못된 유저 정보입니다.");
         return ResponseEntity.ok().body(post);
@@ -147,7 +147,7 @@ public class MyPageController {
     public ResponseEntity<Object> updateRequest(Authentication authentication, @PathVariable Long damnid, @RequestBody Map<Object, Object> fields ) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
 
-        Post updatedPost = postService.patchPostInfo(damnid, fields);
+        PostDto updatedPost = postService.patchPostInfo(damnid, fields);
 
         if(updatedPost == null) return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
         return ResponseEntity.ok().body(updatedPost);

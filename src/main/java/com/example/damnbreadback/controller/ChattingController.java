@@ -30,6 +30,9 @@ public class ChattingController {
     //채팅방 목록 가져오기.
     @GetMapping("/chatlist")
     public ResponseEntity<Object> getChatList(Authentication authentication) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+        System.out.println(authentication.getName());
+
         Long userId = userService.findUserIdById(authentication.getName());
         List<ChatRoomDTO> rooms = chatroomService.getChatRooms(userId);
 
@@ -53,7 +56,7 @@ public class ChattingController {
         System.out.println(authentication.getName());
 
         Long user_appliance = userService.findUserIdById(authentication.getName());
-        Long user_publisher = postService.getPostById(postNum).get().getPublisher();//postNum을 작성한 게시자 찾기.
+        Long user_publisher = postService.getPostById(postNum).getPublisher();//postNum을 작성한 게시자 찾기.
 
         ChatRoomDTO chatroom = chatroomService.startChat(postNum,user_appliance, user_publisher);
         if(chatroom != null)  return ResponseEntity.ok().body(chatroom);

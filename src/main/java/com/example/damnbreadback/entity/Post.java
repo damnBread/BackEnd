@@ -11,9 +11,10 @@ import java.time.LocalDate;
 import java.util.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@Builder
 @Entity
 @Table(name = "post")
 public class Post extends BaseTimeEntity{
@@ -69,16 +70,29 @@ public class Post extends BaseTimeEntity{
     @OneToMany(mappedBy = "post")
     private Set<Scrap> scrap;
 
+    public static Post toEntity(PostDto dto){
+        return Post.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .publisher(dto.getPublisher())
+                .deadline(dto.getDeadline())
+                .branchName(dto.getBranchName())
+                .location(dto.getLocation())
+                .hourPay(dto.getHourPay())
+                .payMethod(dto.isPayMethod())
+                .job(dto.getJob())
+                .workStart(dto.getWorkStart())
+                .workEnd(dto.getWorkEnd())
+                .applicantCount(dto.getApplicantCount())
+                .viewCount(dto.getViewCount())
+                .genderLimit(dto.isGenderLimit())
+                .ageMax(dto.getAgeMax())
+                .ageMin(dto.getAgeMin())
+                .careerLimit(dto.getCareerLimit())
+                .recruitNumber(dto.getRecruitNumber())
+                .additionalLimit(dto.getAdditionalLimit())
+                .statusCode(0) // Set default value
+                .build();
 
-
-    public Post(PostDto dto) throws CloneNotSupportedException {
-//        this.title = dto.getTitle();
-//        this.content = dto.getContent();
-//        this.deadline = dto.getDeadline();
-//        this.branchName = dto.getBranchName();
-//        this.location = dto.getLocation();
-//        this.hourPay = dto.getHourPay();
-//        this.payMethod = dto.isPayMethod();
-//        this.job = dto.getJob();
     }
 }

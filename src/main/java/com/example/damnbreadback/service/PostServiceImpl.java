@@ -50,8 +50,12 @@ public class PostServiceImpl implements PostService {
         return postRepository.save(postRequest).getPostId();
     }
 
-    public Optional<Post> getPostById(Long id) throws ExecutionException, InterruptedException {
-        return postRepository.findById(id);
+    public PostDto getPostById(Long id) throws ExecutionException, InterruptedException {
+        Optional<Post> post = postRepository.findById(id);
+        if(post.isPresent()){
+            return PostDto.toDTO(post.get());
+        }
+        else return null;
     }
 
     @Override
@@ -82,7 +86,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Transactional
-    public Post patchPostInfo(Long id, Map<Object, Object> fields) throws ExecutionException, InterruptedException {
+    public PostDto patchPostInfo(Long id, Map<Object, Object> fields) throws ExecutionException, InterruptedException {
         try{
             Post targetPost = postRepository.findById(id).get();
             if(targetPost == null) return null;
@@ -147,7 +151,7 @@ public class PostServiceImpl implements PostService {
                 return null;
             }
 
-            return targetPost;
+            return PostDto.toDTO(targetPost);
 
         }catch (Error error){
             System.out.println(error);
@@ -203,8 +207,14 @@ public class PostServiceImpl implements PostService {
 
     //의뢰자로 post찾기
     @Override
-    public List<Post> getPostByPublisher(Long id){
-        return postRepository.findPostsByPublisher(id);
+    public List<PostDto> getPostByPublisher(Long id){
+        List<Post> postList = postRepository.findPostsByPublisher(id);
+        List<PostDto> postDtoList = new ArrayList<>();
+
+        postList.forEach(p -> {
+            postDtoList.add(PostDto.toDTO(p));
+        });
+        return postDtoList;
     }
 
     @Override

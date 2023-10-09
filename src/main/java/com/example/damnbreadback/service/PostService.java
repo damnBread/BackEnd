@@ -17,14 +17,14 @@ public interface PostService {
     List<Post> getPosts() throws ExecutionException, InterruptedException;
     Long createPost(String writerId, Post postRequest) throws ExecutionException, InterruptedException;
 
-    Optional<Post> getPostById(Long id) throws ExecutionException, InterruptedException;
+    PostDto getPostById(Long id) throws ExecutionException, InterruptedException;
     List<PostDto> findPosts(int page);
     Boolean removePost(Long id);
 
-    Post patchPostInfo(Long postId,Map<Object, Object> fields) throws ExecutionException, InterruptedException;
+    PostDto patchPostInfo(Long postId,Map<Object, Object> fields) throws ExecutionException, InterruptedException;
     Page getPostFilter(PostFilter postFilter, int page);
 
-    List<Post> getPostByPublisher(Long id);
+    List<PostDto> getPostByPublisher(Long id);
     Boolean scrap(Long userId, int postNum) throws ExecutionException, InterruptedException;
     User reportReview(Long damnId, String badge) throws ExecutionException, InterruptedException;
 }

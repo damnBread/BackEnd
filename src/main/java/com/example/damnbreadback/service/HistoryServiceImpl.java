@@ -1,19 +1,14 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dto.HistoryDto;
-import com.example.damnbreadback.dto.PostFilter;
+import com.example.damnbreadback.dto.PostDto;
 import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.History;
 import com.example.damnbreadback.entity.Post;
-import com.example.damnbreadback.entity.Scrap;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,15 +34,21 @@ public class HistoryServiceImpl implements HistoryService {
     private final PostRepository postRepository;
 
     @Override
-    public List<Post> getHistory(Long userId) throws ExecutionException, InterruptedException {
+    public List<PostDto> getHistory(Long userId) throws ExecutionException, InterruptedException {
         List<History> historyList = historyRepository.findByUserUserId(userId);
         List<Post> posts = new ArrayList<>();
+        List<PostDto> postDtoList = new ArrayList<>();
 
         for (History history : historyList) {
             Post post = history.getPost();
             posts.add(post);
         }
-        return posts;
+
+        posts.forEach(p -> {
+            postDtoList.add(PostDto.toDTO(p));
+        });
+
+        return postDtoList;
     }
 
     public HistoryDto patchStatus(Long postId, Long userId, int statusCode) {
@@ -88,15 +89,15 @@ public class HistoryServiceImpl implements HistoryService {
     public Long createHistory(Long damnId, Long userId) throws ExecutionException, InterruptedException {
         if(isUnique(damnId, userId)){
             User user = User.toEntity(userService.getUserById(userId));
-            Optional<Post> post = postService.getPostById(damnId);
+            PostDto post = postService.getPostById(damnId);
 
-            if(post.isPresent()) {
-                if(post.get().getPublisher().equals(userId)){
+            if(post != null) {
+                if(post.getPublisher().equals(userId)){
                     return -1L; // 공고게시자가 지원
                 }
                 else {
                     History history = new History();
-                    history.setPost(post.get());
+                    history.setPost(Post.toEntity(post));
                     history.setUser(user);
 
                     return historyRepository.save(history).getHistoryId();

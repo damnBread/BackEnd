@@ -56,8 +56,8 @@ public class PostController {
     @RequestMapping(path="/{postNum}", method = RequestMethod.GET)
     public ResponseEntity<Object> getPost(@PathVariable Long postNum) throws ExecutionException, InterruptedException{
 
-        Optional<Post> post = postService.getPostById(postNum);
-        if(post.isPresent()) return ResponseEntity.ok().body(post);
+        PostDto post = postService.getPostById(postNum);
+        if(post != null) return ResponseEntity.ok().body(post);
         else return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
     }
 

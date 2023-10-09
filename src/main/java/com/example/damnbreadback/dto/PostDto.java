@@ -41,6 +41,9 @@ public class PostDto implements Cloneable {
     private int ageMax; // 나이 조건 (최대나이)
     private int ageMin; // 나이 조건 (최소나이)
     private int careerLimit; // 해당 업직종에 대한 경력 조건
+    private int recruitNumber; // 모집인원
+    private String additionalLimit; // 우대사항
+
 
     @Override
     public Object clone() throws CloneNotSupportedException {

@@ -2,6 +2,7 @@ package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dto.ChatMessageDTO;
 import com.example.damnbreadback.dto.ChatRoomDTO;
+import com.example.damnbreadback.dto.PostDto;
 import com.example.damnbreadback.entity.ChatMessage;
 import com.example.damnbreadback.entity.Chatroom;
 import com.example.damnbreadback.entity.Post;
@@ -59,16 +60,14 @@ public class ChatroomServiceImpl implements ChatroomService {
             return ChatRoomDTO.toDTO(chatRoom);
         } else {
             //chatRoom 생성
-            Optional<Post> optionalPost = postService.getPostById(postId);
-            if (optionalPost.isPresent()) {
-                Post post = optionalPost.get();
-
+            PostDto post = postService.getPostById(postId);
+            if (post != null) {
                 if (user_appliance == null || user_publisher == null) return null;
 
                 User user_publisher_obj = User.toEntity(userService.getUserById(user_publisher));
                 User user_appliance_obj = User.toEntity(userService.getUserById(user_appliance));
 
-                return ChatRoomDTO.toDTO(createChatRoom(post, user_publisher_obj, user_appliance_obj));
+                return ChatRoomDTO.toDTO(createChatRoom(Post.toEntity(post), user_publisher_obj, user_appliance_obj));
             } else {
                 return null;
             }
