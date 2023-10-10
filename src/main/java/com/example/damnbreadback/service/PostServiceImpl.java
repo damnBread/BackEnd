@@ -59,6 +59,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Post getPostByIdToEntity(Long id) throws ExecutionException, InterruptedException {
+        Optional<Post> post = postRepository.findById(id);
+        if(post.isPresent()){
+            return post.get();
+        }
+        else return null;
+    }
+
+    @Override
     public List<PostDto> findPosts(int page) {
         List<PostDto> postDtoList = new ArrayList<>();
         PageRequest pageRequest = PageRequest.of(page, 20);

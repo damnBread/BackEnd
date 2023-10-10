@@ -24,6 +24,7 @@ public class ChatMessageDTO {
     //TODO 1 : 둘 중 하나만 쓰기
     private boolean sendingUser; // 채팅 발신자 (true : user_appliance, false : user_publisher)
     private String sender; // 채팅 발신자 (true : user_appliance, false : user_publisher)
+    private String receiver;
     private boolean isRead; // 읽음 여부
     private ChatMessageType type; // 메시지 타입
 

@@ -18,6 +18,8 @@ public interface PostService {
     Long createPost(String writerId, Post postRequest) throws ExecutionException, InterruptedException;
 
     PostDto getPostById(Long id) throws ExecutionException, InterruptedException;
+
+    Post getPostByIdToEntity(Long id) throws ExecutionException, InterruptedException;
     List<PostDto> findPosts(int page);
     Boolean removePost(Long id);
 

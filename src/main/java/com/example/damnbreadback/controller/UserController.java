@@ -94,6 +94,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<Object> signupRequest(@RequestBody UserDTO user) throws ExecutionException, InterruptedException {
+        System.out.println(user);
         UserDTO newUser =  userService.addUser(user);
         if(newUser == null) return new ResponseEntity<Object>("null exception", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Object>(user, HttpStatus.CREATED);

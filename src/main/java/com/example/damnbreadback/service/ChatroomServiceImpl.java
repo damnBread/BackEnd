@@ -51,7 +51,6 @@ public class ChatroomServiceImpl implements ChatroomService {
 //        return chatRoomRepository.getChattings();
 //    }
 
-
     public ChatRoomDTO startChat(Long postId, Long user_publisher, Long user_appliance) throws ExecutionException, InterruptedException {
         //이미 chatRoom이 만들어져있는지 -> damnid와 userid로 확인.
         if (countByChatId(postId, user_publisher, user_appliance) > 0) {

@@ -19,28 +19,40 @@ public class ChattingSocketController {
 
     private static Set<Integer> userList = new HashSet<>();
 
-    @Autowired
+//    @Autowired
+//    private SimpMessagingTemplate simpMessagingTemplate;
+//
+//    @MessageMapping("/chat/{id}")
+//    public void sendMessage(@Payload ChatMessageDTO messageDTO, @DestinationVariable Integer id){
+//        System.out.println(messageDTO);
+//        this.simpMessagingTemplate.convertAndSend("/queue/addChatToClient/"+id,messageDTO);
+//    }
+//
+//    @MessageMapping("hello")
+//    @SendTo("/topic/greeting")
+//    public void broadcasting(@DestinationVariable(value = "roomNo") final String chatRoomNo) {
+//
+//        System.out.println("{roomNo : {}, request : {}}" + chatRoomNo);
+//
+//        return;
+//    }
+//
+
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/chat/{id}")
-    public void sendMessage(@Payload ChatMessageDTO messageDTO, @DestinationVariable Integer id){
-        System.out.println(messageDTO);
-        this.simpMessagingTemplate.convertAndSend("/queue/addChatToClient/"+id,messageDTO);
+    @MessageMapping("/message") // /app/message
+    @SendTo("/chatroom/public")
+    private ChatMessageDTO receivePublicMessage(@Payload ChatMessageDTO message){
+        return message;
     }
 
-    @MessageMapping("/chat/{roomNo}")
-    @SendTo("/sub/chat/{roomNo}")
-    public void broadcasting(@DestinationVariable(value = "roomNo") final String chatRoomNo) {
+    @MessageMapping("private-message")
 
-        System.out.println("{roomNo : {}, request : {}}" + chatRoomNo);
+    private ChatMessageDTO receivePrivateMessage(@Payload ChatMessageDTO message){
 
-        return;
+        simpMessagingTemplate.convertAndSendToUser(message.getReceiver(), "/message", message); // /user/gabinTest/message or /usre/1/message
+
+        return message;
     }
-//
-//    @MessageMapping("/join")
-//    public void joinUser(@Payload Integer userId){
-//        userList.add(userId);
-//        userList.forEach(user-> System.out.println(user));
-//    }
 
 }

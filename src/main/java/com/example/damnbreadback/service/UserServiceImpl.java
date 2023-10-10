@@ -156,6 +156,10 @@ public class UserServiceImpl implements UserService {
                 user.getName() == null || user.getHopeLocation() == null) {
             return null;
         }
+
+        user.setBadge("00000000");
+        user.setIsPublic("000000");
+
         userRepository.save(User.toEntity(user));
 
         return user;

@@ -89,7 +89,7 @@ public class HistoryServiceImpl implements HistoryService {
     public Long createHistory(Long damnId, Long userId) throws ExecutionException, InterruptedException {
         if(isUnique(damnId, userId)){
             User user = User.toEntity(userService.getUserById(userId));
-            PostDto post = postService.getPostById(damnId);
+            Post post = postService.getPostByIdToEntity(damnId);
 
             if(post != null) {
                 if(post.getPublisher().equals(userId)){
@@ -97,7 +97,7 @@ public class HistoryServiceImpl implements HistoryService {
                 }
                 else {
                     History history = new History();
-                    history.setPost(Post.toEntity(post));
+                    history.setPost(post);
                     history.setUser(user);
 
                     return historyRepository.save(history).getHistoryId();

@@ -21,6 +21,8 @@ public class ChatMessage {
     private String content; // 채팅 내용
     private Date date; // 채팅일
     private boolean sendingUser; // 채팅 발신자 (true : user1, false : user2)
+    private String sender;
+    private String receiver;
     private boolean isRead; // 읽음 여부
 
     @ManyToOne
