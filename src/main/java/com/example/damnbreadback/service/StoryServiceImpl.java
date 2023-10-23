@@ -1,8 +1,13 @@
 package com.example.damnbreadback.service;
 
+import com.example.damnbreadback.dto.CommentDTO;
 import com.example.damnbreadback.dto.StoryDTO;
+import com.example.damnbreadback.entity.Comment;
+import com.example.damnbreadback.entity.User;
+import com.example.damnbreadback.repository.CommentRepository;
 import com.example.damnbreadback.repository.StoryRepository;
 import com.example.damnbreadback.entity.Story;
+import com.example.damnbreadback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -20,6 +27,12 @@ public class StoryServiceImpl implements StoryService {
 
     @Autowired
     private final StoryRepository storyRepository;
+
+    @Autowired
+    private final UserRepository userRepository;
+
+    @Autowired
+    private final CommentRepository commentRepository;
 
     @Autowired
     private final UserService userService;
@@ -56,5 +69,22 @@ public class StoryServiceImpl implements StoryService {
         story.setContent(uploadRequest.getContent());
         story.setWriter(userService.findUserIdById(writerId));
         return storyRepository.save(story);
+    }
+
+    @Override
+    public boolean createComment(CommentDTO commentDTO) throws ExecutionException, InterruptedException {
+        try{
+            Optional<Story> story = storyRepository.findById(commentDTO.getStoryId());
+            User user = userRepository.findUserByUserId(commentDTO.getWriterId());
+            if(story.isPresent() && user != null){
+
+                commentRepository.save(Objects.requireNonNull(Comment.toEntity(commentDTO, story.get(), user)));
+                return true;
+            }
+            return false;
+        }
+        catch (Error e){
+            return false;
+        }
     }
 }

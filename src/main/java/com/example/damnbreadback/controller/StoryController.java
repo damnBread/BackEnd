@@ -1,5 +1,6 @@
 package com.example.damnbreadback.controller;
 
+import com.example.damnbreadback.dto.CommentDTO;
 import com.example.damnbreadback.dto.StoryDTO;
 import com.example.damnbreadback.entity.Story;
 import com.example.damnbreadback.service.StoryService;
@@ -44,11 +45,15 @@ public class StoryController {
         else return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
     }
 
-//    @PostMapping("/{id}/comment")
-//    public ResponseEntity<Object> commentStory(Authentication authentication, @PathVariable Long id) throws ExecutionException, InterruptedException {
-////        storyService.createComment();
-////        else return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
-//    }
+    @PostMapping("/{id}/comment")
+    public ResponseEntity<Object> commentStory(Authentication authentication, @PathVariable Long id, @RequestBody CommentDTO commentDTO) throws ExecutionException, InterruptedException {
+        commentDTO.setStoryId(id);
+        commentDTO.setWriterId(userService.findUserIdById(authentication.getName()));
+        boolean result = storyService.createComment(commentDTO);
+
+        if(result) return new ResponseEntity<>("댓글을 작성했습니다.", HttpStatus.OK);
+        else return new ResponseEntity<>("댓글을 작성할 수 없습니다.", HttpStatus.BAD_REQUEST);
+    }
 
 
 
