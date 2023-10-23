@@ -76,13 +76,13 @@ public class EmailService {
         h.setSubject("테스트메일");
         h.setText("메일테스트");
         javaMailSender.send(m);
-//        MimeMessage message = createMessage(to);
-//        try{
-//            javaMailSender.send(message); // 메일 발송
-//        }catch(MailException es){
-//            es.printStackTrace();
-//            throw new IllegalArgumentException();
-//        }
+        MimeMessage message = createMessage(to);
+        try{
+            javaMailSender.send(message); // 메일 발송
+        }catch(MailException es){
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
         return ePw; // 메일로 보냈던 인증 코드를 서버로 리턴
     }
 }

@@ -157,11 +157,11 @@ public class UserController {
         }
     }
 
-    // TODO 아이디 찾기
+    // TODO : 아이디 찾기
     @GetMapping("/login/findId")
     public ResponseEntity<Object> findId(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException {
 
-        userService.logout(request);
+//        userService.logout(request);
 
         return ResponseEntity.ok().build();
 //        HttpSession session = request.getSession(false);
@@ -172,7 +172,7 @@ public class UserController {
 //        return "logout sucess";
     }
 
-    // TODO 비번 찾기
+    // TODO : 비번 찾기
     @GetMapping("/login/findPw")
     public ResponseEntity<Object> findPw(HttpServletRequest request) throws ExecutionException, InterruptedException, AccessDeniedException {
 

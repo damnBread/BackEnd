@@ -69,7 +69,7 @@ public class MyPageController {
 
         List<PostDto> postList = historyService.getHistory(userService.findUserIdById(authentication.getName()));
 
-        if(postList.isEmpty()) return ResponseEntity.badRequest().body("해당하는 공고 정보가 없습니다.");
+        if(postList.isEmpty()) return ResponseEntity.badRequest().body("지원한 땜빵이 없습니다.");
         return ResponseEntity.ok().body(postList);
     }
 
@@ -94,8 +94,8 @@ public class MyPageController {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
 
         List<PostDto> postList = postService.getPostByPublisher(userService.findUserIdById(authentication.getName()));
-
-        if(postList == null) return ResponseEntity.badRequest().body("의뢰한 땜빵이 없습니다.");
+        
+        if(postList.isEmpty()) return ResponseEntity.badRequest().body("의뢰한 땜빵이 없습니다.");
         return ResponseEntity.ok().body(postList);
     }
 
