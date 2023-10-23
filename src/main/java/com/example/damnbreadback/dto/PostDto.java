@@ -53,6 +53,10 @@ public class PostDto implements Cloneable {
     }
 
     public static PostDto toDTO(Post entity){
+        Long matchedUserID = null;
+        if(entity.getMatchedUser() == null) matchedUserID = null;
+        else matchedUserID = entity.getMatchedUser().getUserId();
+
         try{
             return PostDto.builder()
                     .postId(entity.getPostId())
@@ -74,7 +78,7 @@ public class PostDto implements Cloneable {
                     .ageMax(entity.getAgeMax())
                     .ageMin(entity.getAgeMin())
                     .careerLimit(entity.getCareerLimit())
-                    .matched_user(entity.getMatchedUser().getUserId())
+                    .matched_user(matchedUserID)
                     .build();
         }catch (Error e){
             return null;

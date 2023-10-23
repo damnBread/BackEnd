@@ -44,6 +44,13 @@ public class StoryController {
         else return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
     }
 
+//    @PostMapping("/{id}/comment")
+//    public ResponseEntity<Object> commentStory(Authentication authentication, @PathVariable Long id) throws ExecutionException, InterruptedException {
+////        storyService.createComment();
+////        else return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
+//    }
+
+
 
     @RequestMapping(path="/new", method = RequestMethod.POST)
     public ResponseEntity<Object> createStory(Authentication authentication, @RequestBody StoryDTO uploadRequest) throws ExecutionException, InterruptedException {

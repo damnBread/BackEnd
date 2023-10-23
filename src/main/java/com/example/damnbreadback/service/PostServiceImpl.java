@@ -263,8 +263,7 @@ public class PostServiceImpl implements PostService {
 
         boolean isNew = true;
         if(post.isPresent()){
-            System.out.println(post.get().getMatchedUser().getUserId());
-            if(post.get().getMatchedUser().getUserId() != null) isNew = false;
+            if(post.get().getMatchedUser() != null) isNew = false;
 
             // user 정보 가져오기.
             User matchingUser = userRepository.findUserByUserId(userId);
