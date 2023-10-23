@@ -29,4 +29,6 @@ public interface PostService {
     List<PostDto> getPostByPublisher(Long id);
     Boolean scrap(Long userId, int postNum) throws ExecutionException, InterruptedException;
     User reportReview(Long damnId, String badge) throws ExecutionException, InterruptedException;
+
+    String matchUser(Long damnId, Long userId) throws ExecutionException, InterruptedException;
 }

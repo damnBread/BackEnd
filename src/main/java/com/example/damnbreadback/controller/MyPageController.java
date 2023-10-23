@@ -122,6 +122,20 @@ public class MyPageController {
         return ResponseEntity.ok().build();
     }
 
+    //마이페이지 -> 내가 의뢰한 땜빵 목록 - 매칭 확정하기.
+    @RequestMapping(value = "/requestlist/{damnid}/{userid}/match", method = RequestMethod.POST)
+    public ResponseEntity<Object> matchUser(Authentication authentication, @PathVariable Long damnid, @PathVariable Long userid) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+
+        String result = "";
+
+        result = postService.matchUser(damnid, userid) ;
+
+        if(result.equals("매칭이 확정되었습니다.")) return ResponseEntity.status(201).body(result);
+        else if(result.equals("매칭이 변경되었습니다.")) return ResponseEntity.status(202).body(result);
+        else return ResponseEntity.badRequest().body("사용자를 매칭할 수 없습니다.");
+    }
+
     //마이페이지 -> 내가 의뢰한 땜빵 목록 - 리뷰남기기 - 노쇼 신고하기
     @RequestMapping(value = "/requestlist/{damnid}/{userid}/noshow", method = RequestMethod.POST)
     public ResponseEntity<Object> reportNoshow(Authentication authentication, @PathVariable Long damnid, @PathVariable Long userid) throws ExecutionException, InterruptedException {

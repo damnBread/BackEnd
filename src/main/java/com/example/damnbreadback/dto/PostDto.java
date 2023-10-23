@@ -44,6 +44,8 @@ public class PostDto implements Cloneable {
     private int recruitNumber; // 모집인원
     private String additionalLimit; // 우대사항
 
+    private Long matched_user;
+
 
     @Override
     public Object clone() throws CloneNotSupportedException {
@@ -68,9 +70,11 @@ public class PostDto implements Cloneable {
                     .publisher(entity.getPublisher())
                     .deadline(entity.getDeadline())
                     .genderLimit(entity.isGenderLimit())
+                    .recruitNumber(entity.getRecruitNumber())
                     .ageMax(entity.getAgeMax())
                     .ageMin(entity.getAgeMin())
                     .careerLimit(entity.getCareerLimit())
+                    .matched_user(entity.getMatchedUser().getUserId())
                     .build();
         }catch (Error e){
             return null;

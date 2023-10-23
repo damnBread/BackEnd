@@ -18,6 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -251,6 +253,28 @@ public class PostServiceImpl implements PostService {
             return matchedUser;
         }
         else {
+            return null;
+        }
+    }
+
+    @Override
+    public String matchUser(Long damnId, Long userId) throws ExecutionException, InterruptedException {
+        Optional<Post> post = postRepository.findById(damnId);
+
+        boolean isNew = true;
+        if(post.isPresent()){
+            System.out.println(post.get().getMatchedUser().getUserId());
+            if(post.get().getMatchedUser().getUserId() != null) isNew = false;
+
+            // user 정보 가져오기.
+            User matchingUser = userRepository.findUserByUserId(userId);
+            post.get().setMatchedUser(matchingUser);
+
+            postRepository.save(post.get());
+            if(isNew) return "매칭이 확정되었습니다.";
+            else return "매칭이 변경되었습니다.";
+        } else {
+            System.out.println("No Post found with id " + damnId);
             return null;
         }
     }

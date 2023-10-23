@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +20,7 @@ public class ChattingSocketController {
 
     private static Set<Integer> userList = new HashSet<>();
 
-//    @Autowired
+    //    @Autowired
 //    private SimpMessagingTemplate simpMessagingTemplate;
 //
 //    @MessageMapping("/chat/{id}")
@@ -39,20 +40,8 @@ public class ChattingSocketController {
 //
 
     private SimpMessagingTemplate simpMessagingTemplate;
-
-    @MessageMapping("/message") // /app/message
-    @SendTo("/chatroom/public")
-    private ChatMessageDTO receivePublicMessage(@Payload ChatMessageDTO message){
-        return message;
+    @MessageMapping("/chat")
+    public void sendMessage(ChatMessageDTO messageDTO, SimpMessageHeaderAccessor accessor) {
+        simpMessagingTemplate.convertAndSend("/sub/chat/" + messageDTO.getChatId(), messageDTO);
     }
-
-    @MessageMapping("private-message")
-
-    private ChatMessageDTO receivePrivateMessage(@Payload ChatMessageDTO message){
-
-        simpMessagingTemplate.convertAndSendToUser(message.getReceiver(), "/message", message); // /user/gabinTest/message or /usre/1/message
-
-        return message;
-    }
-
 }
