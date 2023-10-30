@@ -24,8 +24,6 @@ public class StoryDTO {
 
     private int viewCount; // 썰 조회수
 
-    private Set<Comment> comments; //댓글들
-
     public static StoryDTO toDTO(Story entity) {
         try {
             return StoryDTO.builder()
@@ -34,7 +32,6 @@ public class StoryDTO {
                     .content(entity.getContent())
                     .writer(entity.getWriter())
                     .viewCount(entity.getViewCount())
-                    .comments(entity.getComments())
                     .build();
         } catch (Error e) {
             return null;

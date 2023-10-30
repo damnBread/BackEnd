@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 public interface StoryService {
 
-    public Page<Story> findStories(int page);
+    public List<StoryDTO> findStories(int page);
 
     public List<Story> getAllStories() throws ExecutionException, InterruptedException;
     public Optional<Story> getStory(Long id) throws ExecutionException, InterruptedException;

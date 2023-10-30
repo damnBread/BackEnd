@@ -1,6 +1,7 @@
 package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.dto.CommentDTO;
+import com.example.damnbreadback.dto.PostDto;
 import com.example.damnbreadback.dto.StoryDTO;
 import com.example.damnbreadback.entity.Story;
 import com.example.damnbreadback.service.StoryService;
@@ -31,16 +32,11 @@ public class StoryController {
 
     @GetMapping
     public ResponseEntity<Object> getAllStories(@RequestParam int page) throws ExecutionException, InterruptedException {
+        System.out.println("get All Stories");
+        List<StoryDTO> list = storyService.findStories(page-1);
 
-        Page<Story> storyPage = storyService.findStories(page-1);
-        List<Story> list = storyPage.getContent();
-        List<StoryDTO> storyDTOList  = new ArrayList<>();
-        list.forEach(s -> {
-            storyDTOList.add(StoryDTO.toDTO(s));
-        });
-
-        if(storyDTOList.isEmpty()) return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
-        return ResponseEntity.ok().body(storyDTOList);
+        if(list.isEmpty()) return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok().body(list);
     }
 
     @GetMapping("/{id}")

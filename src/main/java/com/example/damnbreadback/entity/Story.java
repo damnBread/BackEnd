@@ -41,7 +41,6 @@ public class Story extends BaseTimeEntity {
                 .content(dto.getContent())
                 .writer(dto.getWriter())
                 .viewCount(dto.getViewCount())
-                .comments(dto.getComments())
                 .build();
     }
 

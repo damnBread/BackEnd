@@ -1,8 +1,10 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dto.CommentDTO;
+import com.example.damnbreadback.dto.PostDto;
 import com.example.damnbreadback.dto.StoryDTO;
 import com.example.damnbreadback.entity.Comment;
+import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.User;
 import com.example.damnbreadback.repository.CommentRepository;
 import com.example.damnbreadback.repository.StoryRepository;
@@ -15,10 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -47,9 +46,17 @@ public class StoryServiceImpl implements StoryService {
 //        return storyDao.getStory(id);
 //    }
 
-    public Page<Story> findStories(int page) {
+    public List<StoryDTO> findStories(int page) {
+        List<StoryDTO> storyDTOList = new ArrayList<>();
+        System.out.println("haha 0");
         PageRequest pageRequest = PageRequest.of(page, 20);
-        return storyRepository.findAllByOrderByCreatedDateDesc(pageRequest);
+        System.out.println("haha 1");
+        List<Story> storyList = storyRepository.findAllByOrderByCreatedDateDesc(pageRequest).getContent();
+        System.out.println("haha 2");
+        storyList.forEach(p -> {
+            storyDTOList.add(StoryDTO.toDTO(p));
+        });
+        return storyDTOList;
     }
 
     @Override
