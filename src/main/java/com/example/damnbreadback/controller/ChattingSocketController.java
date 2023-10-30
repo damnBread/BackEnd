@@ -42,6 +42,7 @@ public class ChattingSocketController {
     private SimpMessagingTemplate simpMessagingTemplate;
     @MessageMapping("/chat")
     public void sendMessage(ChatMessageDTO messageDTO, SimpMessageHeaderAccessor accessor) {
+        System.out.println(messageDTO.getContent());
         simpMessagingTemplate.convertAndSend("/sub/chat/" + messageDTO.getChatId(), messageDTO);
     }
 }

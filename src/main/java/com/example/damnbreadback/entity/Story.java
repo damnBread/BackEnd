@@ -1,10 +1,9 @@
 package com.example.damnbreadback.entity;
 
+import com.example.damnbreadback.dto.StoryDTO;
+import com.example.damnbreadback.dto.UserDTO;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
@@ -12,9 +11,10 @@ import java.util.Date;
 import java.util.Set;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@Builder
 @Entity
 @Table(name="story")
 public class Story extends BaseTimeEntity {
@@ -33,5 +33,16 @@ public class Story extends BaseTimeEntity {
     @OneToMany
     @JoinColumn(name="story")
     private Set<Comment> comments; //댓글들
+
+    public static Story toEntity(StoryDTO dto){
+        return Story.builder()
+                .id(dto.getId())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .writer(dto.getWriter())
+                .viewCount(dto.getViewCount())
+                .comments(dto.getComments())
+                .build();
+    }
 
 }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -33,15 +34,21 @@ public class StoryController {
 
         Page<Story> storyPage = storyService.findStories(page-1);
         List<Story> list = storyPage.getContent();
-        if(list.isEmpty()) return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
-        return ResponseEntity.ok().body(list);
+        List<StoryDTO> storyDTOList  = new ArrayList<>();
+        list.forEach(s -> {
+            storyDTOList.add(StoryDTO.toDTO(s));
+        });
+
+        if(storyDTOList.isEmpty()) return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok().body(storyDTOList);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getStory(@PathVariable Long id) throws ExecutionException, InterruptedException {
         Optional<Story> story = storyService.getStory(id);
-        if(story.isPresent())
-            return ResponseEntity.ok().body(story);
+        if(story.isPresent()){
+            return ResponseEntity.ok().body(StoryDTO.toDTO(story.get()));
+        }
         else return new ResponseEntity<>("null exception", HttpStatus.NO_CONTENT);
     }
 
