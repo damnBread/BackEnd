@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -18,9 +19,15 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
 
-    @Transactional
-    public void save(final ChatMessage chatMessage) {
-//        ChatMessage chatMessage = requestDto.toEntity();
+    public void saveChatMessage(String message) {
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setContent(message);
+        chatMessage.setDate(new Date());
+        chatMessage.setRead(false);
+//        chatMessage.setReceiver();
+//        chatMessage.setSender();
+//        chatMessage.setRoom();
+
         chatMessageRepository.save(chatMessage);
     }
 

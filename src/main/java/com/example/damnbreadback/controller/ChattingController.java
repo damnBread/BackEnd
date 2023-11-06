@@ -34,6 +34,8 @@ public class ChattingController {
         System.out.println(authentication.getName());
 
         Long userId = userService.findUserIdById(authentication.getName());
+
+        if(userId == null) return ResponseEntity.status(405).body("잘못된 접근입니다.");
         List<ChatRoomDTO> rooms = chatroomService.getChatRooms(userId);
 
         if(rooms == null) return ResponseEntity.badRequest().body("잘못된 접근입니다.");
@@ -56,7 +58,9 @@ public class ChattingController {
         System.out.println(authentication.getName());
 
         Long user_appliance = userService.findUserIdById(authentication.getName());
+        if(user_appliance == null) return ResponseEntity.status(405).body("잘못된 접근입니다.");
         Long user_publisher = postService.getPostById(postNum).getPublisher();//postNum을 작성한 게시자 찾기.
+        if(user_publisher == null) return ResponseEntity.status(405).body("잘못된 접근입니다.");
 
         ChatRoomDTO chatroom = chatroomService.startChat(postNum,user_appliance, user_publisher);
         if(chatroom != null)  return ResponseEntity.ok().body(chatroom);

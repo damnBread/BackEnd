@@ -21,12 +21,9 @@ public class ChatMessageDTO {
 
     private String content; // 채팅 내용
     private Date date; // 채팅일
-    //TODO 1 : 둘 중 하나만 쓰기
-    private boolean sendingUser; // 채팅 발신자 (true : user_appliance, false : user_publisher)
-    private String sender; // 채팅 발신자 (true : user_appliance, false : user_publisher)
-    private String receiver;
+    private Long sender; // 채팅 발신자 (true : user_appliance, false : user_publisher)
+    private Long receiver;
     private boolean isRead; // 읽음 여부
-    private ChatMessageType type; // 메시지 타입
 
     public static ChatMessageDTO toDTO(ChatMessage entity) {
         try {
@@ -34,8 +31,9 @@ public class ChatMessageDTO {
                     .chatId(entity.getChatNum())
                     .chatRoomId(entity.getRoom().getRoomId())
                     .content(entity.getContent())
+                    .sender(entity.getSender().getUserId())
+                    .receiver(entity.getReceiver().getUserId())
                     .date(entity.getDate())
-                    .sendingUser(entity.isSendingUser())
                     .isRead(entity.isRead())
                     .build();
         } catch (Error e) {

@@ -2,6 +2,7 @@ package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.dto.ChatMessageDTO;
 import com.example.damnbreadback.entity.ChatMessage;
+import com.example.damnbreadback.service.ChatMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -13,12 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
 public class ChattingSocketController {
-
-    private static Set<Integer> userList = new HashSet<>();
 
     //    @Autowired
 //    private SimpMessagingTemplate simpMessagingTemplate;
@@ -39,10 +39,14 @@ public class ChattingSocketController {
 //    }
 //
 
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    private ChatMessageService chatMessageService;
+
     @MessageMapping("/chat")
-    public void sendMessage(ChatMessageDTO messageDTO, SimpMessageHeaderAccessor accessor) {
-        System.out.println(messageDTO.getContent());
-        simpMessagingTemplate.convertAndSend("/sub/chat/" + messageDTO.getChatId(), messageDTO);
+    public void sendMessage(Map<Object, Object> messageMap, SimpMessageHeaderAccessor accessor) {
+        chatMessageService.saveChatMessage(messageMap.get("chat").toString());
+        this.simpMessagingTemplate.convertAndSend("/sub/chat/" + messageMap, messageMap);
     }
 }

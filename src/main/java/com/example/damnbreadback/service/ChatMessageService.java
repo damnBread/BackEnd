@@ -11,4 +11,5 @@ import java.util.concurrent.ExecutionException;
 
 public interface ChatMessageService {
 
+    void saveChatMessage(String chat);
 }

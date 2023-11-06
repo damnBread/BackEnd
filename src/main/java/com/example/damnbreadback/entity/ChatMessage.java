@@ -20,22 +20,30 @@ public class ChatMessage {
 
     private String content; // 채팅 내용
     private Date date; // 채팅일
-    private boolean sendingUser; // 채팅 발신자 (true : user1, false : user2)
-    private String sender;
-    private String receiver;
     private boolean isRead; // 읽음 여부
+
+    @ManyToOne
+    @JoinColumn(name = "sender")
+    private User sender;
+
+    @ManyToOne
+    @JoinColumn(name="receiver")
+    private User receiver;
+
+
 
     @ManyToOne
     @JoinColumn(name = "chat")
     private Chatroom room;
 
-    public static ChatMessage toEntity(ChatMessageDTO dto, Chatroom room) {
+    public static ChatMessage toEntity(ChatMessageDTO dto, Chatroom room, User sender, User receiver) {
         try {
             return ChatMessage.builder()
                     .chatNum(dto.getChatId())
                     .content(dto.getContent())
                     .date(dto.getDate())
-                    .sendingUser(dto.isSendingUser())
+                    .sender(sender)
+                    .receiver(receiver)
                     .isRead(dto.isRead())
                     .room(room)
                     .build();
