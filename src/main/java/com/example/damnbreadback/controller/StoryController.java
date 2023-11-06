@@ -50,12 +50,21 @@ public class StoryController {
 
     @PostMapping("/{id}/comment")
     public ResponseEntity<Object> commentStory(Authentication authentication, @PathVariable Long id, @RequestBody CommentDTO commentDTO) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
         commentDTO.setStoryId(id);
         commentDTO.setWriterId(userService.findUserIdById(authentication.getName()));
         boolean result = storyService.createComment(commentDTO);
 
         if(result) return new ResponseEntity<>("댓글을 작성했습니다.", HttpStatus.OK);
         else return new ResponseEntity<>("댓글을 작성할 수 없습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/{id}/comment")
+    public ResponseEntity<Object> getCommentStory(Authentication authentication, @PathVariable Long id) throws ExecutionException, InterruptedException {
+        List<CommentDTO> commentDTOList = storyService.getComment(id);
+
+        if(commentDTOList!=null) return new ResponseEntity<>("댓글을 조회했습니다..", HttpStatus.OK);
+        else return new ResponseEntity<>("댓글을 조회할 수 없습니다.", HttpStatus.BAD_REQUEST);
     }
 
 

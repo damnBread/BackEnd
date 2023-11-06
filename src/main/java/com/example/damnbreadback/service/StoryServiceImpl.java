@@ -27,6 +27,7 @@ public class StoryServiceImpl implements StoryService {
     @Autowired
     private final StoryRepository storyRepository;
 
+
     @Autowired
     private final UserRepository userRepository;
 
@@ -92,6 +93,23 @@ public class StoryServiceImpl implements StoryService {
         }
         catch (Error e){
             return false;
+        }
+    }
+
+    @Override
+    public List<CommentDTO> getComment(Long id) throws ExecutionException, InterruptedException {
+        try{
+            List<Comment> commentList = commentRepository.findAllByStory(id);
+            List<CommentDTO> commentDTOList = new ArrayList<>();
+            if(commentList == null) return null;
+
+            commentList.forEach(c -> {
+                commentDTOList.add(CommentDTO.toDTO(c));
+            });
+            return commentDTOList;
+        }
+        catch (Error e){
+            return null;
         }
     }
 }
