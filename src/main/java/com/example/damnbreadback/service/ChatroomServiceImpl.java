@@ -65,7 +65,6 @@ public class ChatroomServiceImpl implements ChatroomService {
             User user_appliance_obj = User.toEntity(userService.getUserById(user_appliance));
 
             return ChatRoomDTO.toDTO(createChatRoom(user_publisher_obj, user_appliance_obj));
-
         }
 
     }
