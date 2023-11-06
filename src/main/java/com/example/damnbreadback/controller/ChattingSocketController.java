@@ -50,7 +50,8 @@ public class ChattingSocketController {
         System.out.println("message ::: " + chatMessageInfo);
 //        chatMessageService.saveChatMessage(chatMessageInfo);
         Long sender = Long.parseLong(chatMessageInfo.get("sender").toString());
-        long receiver = Long.parseLong(chatMessageInfo.get("receiver").toString());
-        this.simpMessagingTemplate.convertAndSend("/sub/chat/" + receiver, "chatMessageInfo");
+        Long receiver = Long.parseLong(chatMessageInfo.get("receiver").toString());
+        System.out.println(sender + " -> " + receiver);
+        this.simpMessagingTemplate.convertAndSend("/sub/chat/" + chatMessageInfo.get("receiver").toString(), chatMessageInfo);
     }
 }
