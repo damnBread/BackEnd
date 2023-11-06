@@ -24,10 +24,6 @@ public class Chatroom {
     private Long roomId;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "post")
-    private Post post; // 공고
-
-    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_publiser")
     private User user_publisher; // 게시자 사용자
 

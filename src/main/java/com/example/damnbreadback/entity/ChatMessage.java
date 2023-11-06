@@ -30,10 +30,8 @@ public class ChatMessage {
     @JoinColumn(name="receiver")
     private User receiver;
 
-
-
     @ManyToOne
-    @JoinColumn(name = "chat")
+    @JoinColumn(name = "chatroom")
     private Chatroom room;
 
     public static ChatMessage toEntity(ChatMessageDTO dto, Chatroom room, User sender, User receiver) {

@@ -2,6 +2,7 @@ package com.example.damnbreadback.controller;
 
 import com.example.damnbreadback.dto.ChatMessageDTO;
 import com.example.damnbreadback.dto.ChatRoomDTO;
+import com.example.damnbreadback.entity.Chatroom;
 import com.example.damnbreadback.service.ChatroomService;
 import com.example.damnbreadback.service.PostService;
 import com.example.damnbreadback.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -51,35 +53,29 @@ public class ChattingController {
     }
 
 
-    // 지원자 -> 게시자 채팅 (damnlist ; 구직게시판)
-    @RequestMapping(value = "/damnlist/{postNum}/chat", method = RequestMethod.POST)
-    public ResponseEntity<Object> startChat1(Authentication authentication, @PathVariable Long postNum) throws ExecutionException, InterruptedException {
+    // 지원자(appliance) -> 게시자(publisher) 채팅 (damnlist ; 구직게시판)
+    @RequestMapping(value = "/damnlist/chat", method = RequestMethod.POST)
+    public ResponseEntity<Object> startChatDamnList(Authentication authentication, @RequestBody Map<String, Long> chattingUsers) throws ExecutionException, InterruptedException {
         if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
         System.out.println(authentication.getName());
 
-        Long user_appliance = userService.findUserIdById(authentication.getName());
-        if(user_appliance == null) return ResponseEntity.status(405).body("잘못된 접근입니다.");
-        Long user_publisher = postService.getPostById(postNum).getPublisher();//postNum을 작성한 게시자 찾기.
-        if(user_publisher == null) return ResponseEntity.status(405).body("잘못된 접근입니다.");
-
-        ChatRoomDTO chatroom = chatroomService.startChat(postNum,user_appliance, user_publisher);
+        ChatRoomDTO chatroom = chatroomService.startChat(chattingUsers.get("user_appliance"), chattingUsers.get("user_publisher"));
         if(chatroom != null)  return ResponseEntity.ok().body(chatroom);
         else return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
     }
 
-//  게시자 -> 지원자 채팅 (damnrank ; 인재정보)
-//    @RequestMapping(value = "/damnrank/detail/{userid}/chat", method = RequestMethod.POST)
-//    public ResponseEntity<Object> startChat2(Authentication authentication, @PathVariable Long userid) throws ExecutionException, InterruptedException {
-//        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
-//        System.out.println(authentication.getName());
-//
-//        Long user_appliance = userService.findUserIdById(authentication.getName());
-//        Long user_publisher = postService.getPostById(postNum).get().getPublisher();//postNum을 작성한 게시자 찾기.
-//
-//        Optional<Chatroom> chatroom = chatroomService.startChat(postNum,user_appliance, user_publisher);
-//        if(chatroom.isPresent())  return ResponseEntity.ok().body(chatroom.get());
-//        else return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
-//
-//    }
+    // 게시자(publisher) -> 지원자(appliance) 채팅 (damnrank ; 인재정보)
+    @RequestMapping(value = "/damnrank/detail/chat", method = RequestMethod.POST)
+    public ResponseEntity<Object> startChatDamnRank(Authentication authentication, @RequestBody Map<String, Long> chattingUsers) throws ExecutionException, InterruptedException {
+        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+        System.out.println(authentication.getName());
+
+        ChatRoomDTO chatroom = chatroomService.startChat(chattingUsers.get("user_appliance"), chattingUsers.get("user_publisher"));
+        if(chatroom != null)  return ResponseEntity.ok().body(chatroom);
+        else return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
+
+    }
+
+    //TODO : 채팅방 지우는 것도 해야함. ( 채팅방 나가기, 채팅방 없애기 )
 
 }
