@@ -45,12 +45,12 @@ public class ChattingSocketController {
     private ChatMessageService chatMessageService;
 
     @MessageMapping("/chat")
-    public void sendMessage(Map<Object, Object> messageMap, SimpMessageHeaderAccessor accessor) {
+    public void sendMessage(Map<Object, Object> chatMessageInfo, SimpMessageHeaderAccessor accessor) {
         System.out.println(accessor.getSessionId());
-        System.out.println("message ::: " + messageMap);
-//        chatMessageService.saveChatMessage(messageMap.get("chat").toString());
-        Long sender = Long.parseLong(messageMap.get("sender").toString());
-        Long reciever = Long.parseLong(messageMap.get("reciever").toString());
-        this.simpMessagingTemplate.convertAndSend("/sub/chat/" + reciever, messageMap);
+        System.out.println("message ::: " + chatMessageInfo);
+//        chatMessageService.saveChatMessage(chatMessageInfo);
+        Long sender = Long.parseLong(chatMessageInfo.get("sender").toString());
+        long receiver = Long.parseLong(chatMessageInfo.get("receiver").toString());
+        this.simpMessagingTemplate.convertAndSend("/sub/chat/" + receiver, "chatMessageInfo");
     }
 }

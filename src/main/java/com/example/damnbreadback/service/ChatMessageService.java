@@ -7,9 +7,10 @@ import com.example.damnbreadback.entity.Post;
 import com.example.damnbreadback.entity.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public interface ChatMessageService {
 
-    void saveChatMessage(String chat);
+    void saveChatMessage(Map<Object, Object> chatMessageInfo);
 }
