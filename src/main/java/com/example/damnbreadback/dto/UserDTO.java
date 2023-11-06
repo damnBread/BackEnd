@@ -54,7 +54,7 @@ public class UserDTO {
                     .email(entity.getEmail())
                     .phone(entity.getPhone())
                     .home(entity.getHome())
-                    .noShow(entity.getNoShow().size())
+//                    .noShow(entity.getNoShow()==null ? 0 : entity.getNoShow())
                     .birth(entity.getBirth())
                     .gender(entity.isGender())
                     .introduce(entity.getIntroduce())

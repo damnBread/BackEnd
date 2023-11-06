@@ -53,28 +53,28 @@ public class ChattingController {
     }
 
 
-    // 지원자(appliance) -> 게시자(publisher) 채팅 (damnlist ; 구직게시판)
-    @RequestMapping(value = "/damnlist/chat", method = RequestMethod.POST)
-    public ResponseEntity<Object> startChatDamnList(Authentication authentication, @RequestBody Map<String, Long> chattingUsers) throws ExecutionException, InterruptedException {
-        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
-        System.out.println(authentication.getName());
-
-        ChatRoomDTO chatroom = chatroomService.startChat(chattingUsers.get("user_appliance"), chattingUsers.get("user_publisher"));
-        if(chatroom != null)  return ResponseEntity.ok().body(chatroom);
-        else return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
-    }
-
-    // 게시자(publisher) -> 지원자(appliance) 채팅 (damnrank ; 인재정보)
-    @RequestMapping(value = "/damnrank/detail/chat", method = RequestMethod.POST)
-    public ResponseEntity<Object> startChatDamnRank(Authentication authentication, @RequestBody Map<String, Long> chattingUsers) throws ExecutionException, InterruptedException {
-        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
-        System.out.println(authentication.getName());
-
-        ChatRoomDTO chatroom = chatroomService.startChat(chattingUsers.get("user_appliance"), chattingUsers.get("user_publisher"));
-        if(chatroom != null)  return ResponseEntity.ok().body(chatroom);
-        else return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
-
-    }
+//    // 지원자(appliance) -> 게시자(publisher) 채팅 (damnlist ; 구직게시판)
+//    @RequestMapping(value = "/damnlist/chat", method = RequestMethod.POST)
+//    public ResponseEntity<Object> startChatDamnList(Authentication authentication, @RequestBody Map<String, Long> chattingUsers) throws ExecutionException, InterruptedException {
+//        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+//        System.out.println(authentication.getName());
+//
+//        ChatRoomDTO chatroom = chatroomService.startChat(chattingUsers.get("user_appliance"), chattingUsers.get("user_publisher"));
+//        if(chatroom != null)  return ResponseEntity.ok().body(chatroom);
+//        else return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
+//    }
+//
+//    // 게시자(publisher) -> 지원자(appliance) 채팅 (damnrank ; 인재정보)
+//    @RequestMapping(value = "/damnrank/detail/chat", method = RequestMethod.POST)
+//    public ResponseEntity<Object> startChatDamnRank(Authentication authentication, @RequestBody Map<String, Long> chattingUsers) throws ExecutionException, InterruptedException {
+//        if(authentication == null) return ResponseEntity.badRequest().body("올바르지 않은 인증입니다");
+//        System.out.println(authentication.getName());
+//
+//        ChatRoomDTO chatroom = chatroomService.startChat(chattingUsers.get("user_appliance"), chattingUsers.get("user_publisher"));
+//        if(chatroom != null)  return ResponseEntity.ok().body(chatroom);
+//        else return ResponseEntity.badRequest().body("잘못된 공고 정보입니다.");
+//
+//    }
 
     //TODO : 채팅방 지우는 것도 해야함. ( 채팅방 나가기, 채팅방 없애기 )
 

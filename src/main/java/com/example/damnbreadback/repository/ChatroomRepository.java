@@ -34,14 +34,14 @@ public interface ChatroomRepository extends JpaRepository<Chatroom, Long> {
 //        nativeQuery = true)
 //    List<Chatroom> getChatrooms(@Param("userId") Long userId);
 
-    @Query("SELECT c FROM Chatroom c WHERE c.user_appliance.userId = :userId OR c.user_publisher.userId = :userId")
+    @Query("SELECT c FROM Chatroom c WHERE c.user1.userId = :userId OR c.user2.userId = :userId")
     List<Chatroom> getChatrooms(Long userId);
     Chatroom getChatroomByRoomId(Long roomId);
 
 
-    @Query("SELECT COUNT(c) FROM Chatroom c WHERE  c.user_publisher.userId = :user1 AND c.user_appliance.userId = :user2")
+    @Query("SELECT COUNT(c) FROM Chatroom c WHERE  c.user1.userId = :user1 AND c.user2.userId = :user2")
     int countChatroomByAll(Long user1, Long user2);
 
-    @Query("SELECT c FROM Chatroom c WHERE c.user_publisher.userId = :user1 AND c.user_appliance.userId = :user2")
+    @Query("SELECT c FROM Chatroom c WHERE c.user1.userId = :user1 AND c.user2.userId = :user2")
     Chatroom getChatroomByAll(Long user1, Long user2);
 }

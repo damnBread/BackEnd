@@ -3,6 +3,7 @@ package com.example.damnbreadback.service;
 import com.example.damnbreadback.dto.ChatMessageDTO;
 import com.example.damnbreadback.dto.ChatRoomDTO;
 import com.example.damnbreadback.dto.PostDto;
+import com.example.damnbreadback.dto.UserDTO;
 import com.example.damnbreadback.entity.ChatMessage;
 import com.example.damnbreadback.entity.Chatroom;
 import com.example.damnbreadback.entity.Post;
@@ -51,20 +52,25 @@ public class ChatroomServiceImpl implements ChatroomService {
 //        return chatRoomRepository.getChattings();
 //    }
 
-    public ChatRoomDTO startChat(Long user_publisher, Long user_appliance) throws ExecutionException, InterruptedException {
+    public Chatroom startChat(Long user1, Long user2) throws ExecutionException, InterruptedException {
         //이미 chatRoom이 만들어져있는지 -> damnid와 userid로 확인.
-        if (countByChatId(user_publisher, user_appliance) > 0) {
-            Chatroom chatRoom = chatroomRepository.getChatroomByAll(user_publisher, user_appliance);
+        if (countByChatId(user1, user2) > 0) {
+            Chatroom chatRoom = chatroomRepository.getChatroomByAll(user1, user2);
 
-            return ChatRoomDTO.toDTO(chatRoom);
+            return chatRoom;
         } else {
             //chatRoom 생성
-            if (user_appliance == null || user_publisher == null) return null;
+            if (user1 == null || user2 == null) return null;
 
-            User user_publisher_obj = User.toEntity(userService.getUserById(user_publisher));
-            User user_appliance_obj = User.toEntity(userService.getUserById(user_appliance));
+            UserDTO user1_DTO = userService.getUserById(user1);
+            UserDTO user2_DTO = userService.getUserById(user2);
 
-            return ChatRoomDTO.toDTO(createChatRoom(user_publisher_obj, user_appliance_obj));
+            if(user1_DTO == null || user2_DTO == null) return null;
+
+            User user1_obj = User.toEntity(user1_DTO);
+            User user2_obj = User.toEntity(user2_DTO);
+
+            return createChatRoom(user1_obj, user2_obj);
         }
 
     }
@@ -98,8 +104,8 @@ public class ChatroomServiceImpl implements ChatroomService {
 //        String randomId = UUID.randomUUID().toString();
 
         Chatroom chatRoom = new Chatroom();
-        chatRoom.setUser_publisher(user_publisher);
-        chatRoom.setUser_appliance(user_appliance);
+        chatRoom.setUser1(user_publisher);
+        chatRoom.setUser2(user_appliance);
 //        chatRoom.setRoomId(Math.random(0, 10));
 
         chatroomRepository.save(chatRoom);

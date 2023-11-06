@@ -16,7 +16,7 @@ import java.util.Date;
 @Builder
 public class ChatMessageDTO {
 
-    private String chatId;
+    private Long chatId;
     private Long chatRoomId;
 
     private String content; // 채팅 내용

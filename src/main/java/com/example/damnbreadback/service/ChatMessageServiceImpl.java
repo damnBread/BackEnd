@@ -1,6 +1,7 @@
 package com.example.damnbreadback.service;
 
 import com.example.damnbreadback.dto.ChatMessageDTO;
+import com.example.damnbreadback.dto.ChatRoomDTO;
 import com.example.damnbreadback.entity.ChatMessage;
 import com.example.damnbreadback.entity.Chatroom;
 import com.example.damnbreadback.entity.User;
@@ -30,33 +31,18 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Autowired
     private final ChatroomRepository chatroomRepository;
 
-    public void saveChatMessage(Map<Object, Object> chatMessageInfo) {
+    public void saveChatMessage(Chatroom chatroom, Long sender_id, Long receiver_id, String message) {
         ChatMessage chatMessage = new ChatMessage();
-//        chatMessage.setContent(chatMessageInfo.get("chat").toString());
-//        chatMessage.setDate(new Date());
-//        chatMessage.setRead(false);
-//
-//        User receiver = userRepository.findUserByUserId(Long.parseLong(chatMessageInfo.get("receiver").toString()));
-//        User sender = userRepository.findUserByUserId(Long.parseLong(chatMessageInfo.get("sender").toString()));
-//        chatMessage.setReceiver(receiver);
-//        chatMessage.setSender(sender);
-//
-//        Chatroom chatroom = chatroomRepository.getChatroomByAll(receiver.getUserId(), receiver.getUserId());
-//        chatMessage.setRoom(chatroom);
+        chatMessage.setContent(message);
+        chatMessage.setDate(new Date());
+        chatMessage.setRead(false);
 
-//        chatMessageRepository.save(chatMessage);
+        User receiver = userRepository.findUserByUserId(receiver_id);
+        User sender = userRepository.findUserByUserId(sender_id);
+        chatMessage.setReceiver(receiver);
+        chatMessage.setSender(sender);
+        chatMessage.setRoom(chatroom);
+
+        chatMessageRepository.save(chatMessage);
     }
-
-//    @Transactional
-//    public List<ChatMessageResponseDto> findRoom(int roomNumber) {
-//
-//        List<ChatMessage> chatMessage = this.chatMessageRepository.findByRoomNumber(roomNumber);
-//
-//        List<ChatMessageResponseDto> dtolist = new ArrayList<>();
-//        for (ChatMessage chatMessage1 : chatMessage) {
-//            ChatMessageResponseDto responseDto = new ChatMessageResponseDto(chatMessage1);
-//            dtolist.add(responseDto);
-//        }
-//        return dtolist;
-//    }
 }

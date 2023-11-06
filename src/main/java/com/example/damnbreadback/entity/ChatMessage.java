@@ -1,6 +1,7 @@
 package com.example.damnbreadback.entity;
 
 import com.example.damnbreadback.dto.ChatMessageDTO;
+import com.google.firebase.database.annotations.NotNull;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +17,9 @@ import java.util.Date;
 public class ChatMessage {
 
     @Id
-    private String chatNum;
+    @NotNull
+    @GeneratedValue
+    private Long chatNum;
 
     private String content; // 채팅 내용
     private Date date; // 채팅일

@@ -63,7 +63,7 @@ public class StoryController {
     public ResponseEntity<Object> getCommentStory(Authentication authentication, @PathVariable Long id) throws ExecutionException, InterruptedException {
         List<CommentDTO> commentDTOList = storyService.getComment(id);
 
-        if(commentDTOList!=null) return new ResponseEntity<>("댓글을 조회했습니다..", HttpStatus.OK);
+        if(commentDTOList!=null) return ResponseEntity.ok().body(commentDTOList);
         else return new ResponseEntity<>("댓글을 조회할 수 없습니다.", HttpStatus.BAD_REQUEST);
     }
 

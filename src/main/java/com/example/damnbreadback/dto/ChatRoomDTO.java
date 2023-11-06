@@ -23,8 +23,8 @@ public class ChatRoomDTO {
         try {
             return ChatRoomDTO.builder()
                     .id(entity.getRoomId())
-                    .user_appliance_id(entity.getUser_appliance().getUserId())
-                    .user_publisher_id(entity.getUser_publisher().getUserId())
+                    .user_appliance_id(entity.getUser1().getUserId())
+                    .user_publisher_id(entity.getUser2().getUserId())
                     .build();
         } catch (Error e) {
             return null;

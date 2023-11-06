@@ -12,5 +12,5 @@ import java.util.concurrent.ExecutionException;
 
 public interface ChatMessageService {
 
-    void saveChatMessage(Map<Object, Object> chatMessageInfo);
+    void saveChatMessage(Chatroom chatRoomDTO,Long user1, Long user2, String message);
 }

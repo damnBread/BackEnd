@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -220,7 +221,9 @@ public class UserServiceImpl implements UserService {
     //기본키 userId로 user 찾기.
     @Override
     public UserDTO getUserById(Long id) {
-        return UserDTO.toDTO(userRepository.findById(String.valueOf(id)).get());
+        Optional<User> user = userRepository.findById(String.valueOf(id));
+        if(user.isPresent()) return UserDTO.toDTO(user.get());
+        else return null;
 //        return userDao.getUserById(id);
 //        return null;
     }

@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 public interface ChatroomService {
 
     List<ChatRoomDTO> getChatRooms(Long userId);
-    ChatRoomDTO startChat (Long user1_id, Long user2_id) throws ExecutionException, InterruptedException;
+    Chatroom startChat (Long user1_id, Long user2_id) throws ExecutionException, InterruptedException;
     // /chatlist에서 채팅방 목록 불러오기
     Chatroom getChatRoom(Long postId,Long user1_id,Long user2_id) throws ExecutionException, InterruptedException;
 

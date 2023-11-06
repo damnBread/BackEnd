@@ -24,16 +24,16 @@ public class Chatroom {
     private Long roomId;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "user_publiser")
-    private User user_publisher; // 게시자 사용자
+    @JoinColumn(name = "user1")
+    private User user1; // 게시자 사용자
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "user_appliance")
-    private User user_appliance; // 지원자 사용자
+    @JoinColumn(name = "user2")
+    private User user2; // 지원자 사용자
 
 
     @OneToMany( fetch = FetchType.EAGER)
-    @JoinColumn(name = "chat")
+    @JoinColumn(name = "chatroom")
     private Set<ChatMessage> chats; // 채팅메세지
 
 }

@@ -85,6 +85,7 @@ public class User {
     @Column(name = "is_public")
     private String isPublic; // 정보 공개 여부 "0101011" < 이런 식으로 이진값을 받아야할듯
 
+    @ColumnDefault("")
     @OneToMany(mappedBy = "user")
     private List<Noshow> noShow; // 노쇼
 
