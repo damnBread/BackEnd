@@ -50,8 +50,10 @@ public class UserSpecification {
             subquery.select(criteriaBuilder.sum(subqueryRoot.get("period")));
             subquery.groupBy(subqueryRoot.get("id"));
 
+            System.out.println("subquerryyy ??? :: " + subquery.getGroupList());
+
             // Use a correlated subquery to relate 'User' to the subquery
-            Predicate correlatedPredicate = criteriaBuilder.equal(root, subqueryRoot.get("user"));
+            Predicate correlatedPredicate = criteriaBuilder.equal(root.get("userId"), subqueryRoot.get("userId"));
             subquery.where(correlatedPredicate);
 
             // Create the main query to check if the sum is greater than 'career'

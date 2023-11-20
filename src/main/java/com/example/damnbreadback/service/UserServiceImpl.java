@@ -261,7 +261,7 @@ public class UserServiceImpl implements UserService {
 
 
         List<Boolean> gender = new ArrayList<Boolean>();
-        System.out.println(userFilter.getGender());
+
         if(userFilter.getGender()[0] != 0) gender.add(true);
         if(userFilter.getGender()[1] != 0) gender.add(false);
 
@@ -270,7 +270,7 @@ public class UserServiceImpl implements UserService {
 
         Specification<User> spec = (root, query, criteriaBuilder) -> null;
 
-        System.out.println(userFilter.getCareer());
+        System.out.println("career ::: " + userFilter.getCareer());
         if(location != null)
             spec = spec.and(UserSpecification.hasLocation(location));
         if(job != null)
