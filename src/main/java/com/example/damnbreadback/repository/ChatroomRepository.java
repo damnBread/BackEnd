@@ -42,6 +42,8 @@ public interface ChatroomRepository extends JpaRepository<Chatroom, Long> {
     @Query("SELECT COUNT(c) FROM Chatroom c WHERE  c.user1.userId = :user1 AND c.user2.userId = :user2")
     int countChatroomByAll(Long user1, Long user2);
 
-    @Query("SELECT c FROM Chatroom c WHERE c.user1.userId = :user1 AND c.user2.userId = :user2")
+    @Query("SELECT c FROM Chatroom c WHERE " +
+            "(c.user1.userId = :user1 AND c.user2.userId = :user2) OR " +
+            "(c.user1.userId = :user2 AND c.user2.userId = :user1)")
     Chatroom getChatroomByAll(Long user1, Long user2);
 }

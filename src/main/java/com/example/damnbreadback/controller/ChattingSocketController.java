@@ -13,6 +13,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 
@@ -51,17 +52,33 @@ public class ChattingSocketController {
     private ChatroomService chatroomService;
 
     @MessageMapping("/chat")
-    public void sendMessage(Map<Object, Object> chatMessageInfo, SimpMessageHeaderAccessor accessor) throws ExecutionException, InterruptedException {
-        System.out.println(accessor.getSessionId());
+    public void sendMessage(Authentication authentication, Map<Object, Object> chatMessageInfo, SimpMessageHeaderAccessor accessor) throws ExecutionException, InterruptedException {
+        System.out.println(authentication);
+        if (authentication == null) {
+            this.simpMessagingTemplate.convertAndSend("/topic/errors", "인증되지 않은 사용자입니다.");
+            return;
+        }
+
+        System.out.println("authentication :: " + authentication.getName());
         System.out.println("message ::: " + chatMessageInfo);
-        String message = chatMessageInfo.get("chat").toString();
-        Long sender = Long.parseLong(chatMessageInfo.get("sender").toString());
-        Long receiver = Long.parseLong(chatMessageInfo.get("receiver").toString());
+        String message = (chatMessageInfo.get("chat") == null) ? "" : chatMessageInfo.get("chat").toString();
 
-        Chatroom chatRoom = chatroomService.startChat(sender, receiver);
-        chatMessageService.saveChatMessage(chatRoom, sender, receiver, message );
+        try {
+            if (chatMessageInfo.get("sender") == null || chatMessageInfo.get("receiver") == null) {
+                this.simpMessagingTemplate.convertAndSend("/topic/errors", "송신자 혹은 수신자가 올바르지 않습니다.");
+            } else {
+                Long sender = Long.parseLong(chatMessageInfo.get("sender").toString());
+                Long receiver = Long.parseLong(chatMessageInfo.get("receiver").toString());
 
-        System.out.println(sender + " -> " + receiver);
-        this.simpMessagingTemplate.convertAndSend("/sub/chat/" + chatMessageInfo.get("receiver").toString(), chatMessageInfo);
+                Chatroom chatRoom = chatroomService.startChat(sender, receiver);
+                chatMessageService.saveChatMessage(chatRoom, sender, receiver, message);
+
+                System.out.println(sender + " -> " + receiver);
+                this.simpMessagingTemplate.convertAndSend("/sub/chat/" + chatMessageInfo.get("receiver").toString(), chatMessageInfo);
+            }
+        } catch (Error e) {
+            System.out.println(e);
+        }
+
     }
 }

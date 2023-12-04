@@ -100,4 +100,25 @@ public class PostController {
         if(isSuccess) return new ResponseEntity<> (HttpStatus.ACCEPTED);
         else return new ResponseEntity<>("cannot find post", HttpStatus.NOT_FOUND);
     }
+
+    // 홈화면 다이렉트
+    // 근처 땜빵
+//    @RequestMapping(path = "/neardamn", method = RequestMethod.GET){
+//
+//    }
+//
+//    // 마감 임박 땜빵
+//    @RequestMapping(path = "/endlinedamn", method = RequestMethod.GET){
+//
+//    }
+//
+//    // 최신 땜빵
+//    @RequestMapping(path = "/newdamn", method = RequestMethod.GET){
+//
+//    }
+//
+//    // 추천 땜빵
+//    @RequestMapping(path = "/recomdamn ", method = RequestMethod.GET){
+//
+//    }
 }

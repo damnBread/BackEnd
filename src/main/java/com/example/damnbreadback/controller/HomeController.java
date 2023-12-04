@@ -36,10 +36,4 @@ public class HomeController {
         return "loginHome";
     }
 
-    @GetMapping("/showMe")
-    public List<String> hello() {
-        System.out.println("sssssssssssss");
-        return Arrays.asList("인사", "두번째");
-    }
-
 }
